@@ -1,0 +1,17 @@
+C:\Users\kulmala\Documents\Visual Studio 2010\Projects\NighclubDancer\NighclubDancer\obj\Release\ResolveAssemblyReference.cache
+C:\Users\kulmala\Documents\Visual Studio 2010\Projects\NighclubDancer\NighclubDancer\bin\Release\NighclubDancer.dll
+C:\Users\kulmala\Documents\Visual Studio 2010\Projects\NighclubDancer\NighclubDancer\bin\Release\NighclubDancer.pdb
+C:\Users\kulmala\Documents\Visual Studio 2010\Projects\NighclubDancer\NighclubDancer\obj\Release\NighclubDancer.dll
+C:\Users\kulmala\Documents\Visual Studio 2010\Projects\NighclubDancer\NighclubDancer\obj\Release\NighclubDancer.pdb
+C:\Move\NighclubDancer\NighclubDancer\obj\Release\ResolveAssemblyReference.cache
+C:\Move\NighclubDancer\NighclubDancer\obj\Release\NighclubDancer.dll
+C:\Move\NighclubDancer\NighclubDancer\bin\Release\NighclubDancer.dll
+C:\Move\NighclubDancer\NighclubDancer\bin\Release\NighclubDancer.pdb
+C:\Move\NighclubDancer\NighclubDancer\bin\Release\ScriptCore.dll
+C:\Move\NighclubDancer\NighclubDancer\bin\Release\SimIFace.dll
+C:\Move\NighclubDancer\NighclubDancer\bin\Release\Sims3GameplayObjects.dll
+C:\Move\NighclubDancer\NighclubDancer\bin\Release\Sims3GameplaySystems.dll
+C:\Move\NighclubDancer\NighclubDancer\bin\Release\Sims3Metadata.dll
+C:\Move\NighclubDancer\NighclubDancer\bin\Release\Sims3StoreObjects.dll
+C:\Move\NighclubDancer\NighclubDancer\bin\Release\UI.dll
+C:\Move\NighclubDancer\NighclubDancer\obj\Release\NighclubDancer.pdb

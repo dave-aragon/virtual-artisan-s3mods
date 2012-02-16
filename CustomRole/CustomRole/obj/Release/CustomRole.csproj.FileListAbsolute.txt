@@ -1,0 +1,5 @@
+C:\Users\kulmala\documents\visual studio 2010\Projects\CustomRole\CustomRole\bin\Release\CustomRole.dll
+C:\Users\kulmala\documents\visual studio 2010\Projects\CustomRole\CustomRole\bin\Release\CustomRole.pdb
+C:\Users\kulmala\documents\visual studio 2010\Projects\CustomRole\CustomRole\obj\Release\ResolveAssemblyReference.cache
+C:\Users\kulmala\documents\visual studio 2010\Projects\CustomRole\CustomRole\obj\Release\CustomRole.dll
+C:\Users\kulmala\documents\visual studio 2010\Projects\CustomRole\CustomRole\obj\Release\CustomRole.pdb

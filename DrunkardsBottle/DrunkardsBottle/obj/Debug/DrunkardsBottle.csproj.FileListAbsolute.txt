@@ -1,0 +1,5 @@
+C:\Users\kulmala\Documents\Visual Studio 2010\Projects\DrunkardsBottle\DrunkardsBottle\bin\Debug\DrunkardsBottle.dll
+C:\Users\kulmala\Documents\Visual Studio 2010\Projects\DrunkardsBottle\DrunkardsBottle\bin\Debug\DrunkardsBottle.pdb
+C:\Users\kulmala\Documents\Visual Studio 2010\Projects\DrunkardsBottle\DrunkardsBottle\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\kulmala\Documents\Visual Studio 2010\Projects\DrunkardsBottle\DrunkardsBottle\obj\Debug\DrunkardsBottle.dll
+C:\Users\kulmala\Documents\Visual Studio 2010\Projects\DrunkardsBottle\DrunkardsBottle\obj\Debug\DrunkardsBottle.pdb
