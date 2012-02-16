@@ -18,7 +18,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
         public void GetRoleTimes(out float startTime, out float endTime)
         {
-            //Message.Show("Someone is asking role times " + new StackTrace().ToString());
+            // Our custom role will create alarms for the role based on these times
             if (base.LotCurrent == null)
             {
                 startTime = 0f;
@@ -33,15 +33,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
         public void AddRoleGivingInteraction(Actors.Sim sim)
         {
-            //try
-            //{
-
-            //    Message.Show("Adding role actions to " + (sim != null ? sim.FullName : "null"));
-            //}
-            //catch (Exception ex)
-            //{
-            //    Message.Show("Adding role actions to null " + ex.Message + " - " + new StackTrace().ToString());
-            //}
+           // When role is activated, this one gets called (once per day)
         }
 
         public Roles.Role CurrentRole
@@ -55,53 +47,60 @@ namespace Sims3.Gameplay.Objects.Misukisu
                 CustomRole newRole = value as CustomRole;
                 if (newRole != null)
                 {
-                    Message.Show("Custom role set! who the hack did this: " + new StackTrace().ToString());
                     this.mCurrentRole = newRole;
                 }
                 else if (value != null)
                 {
-                    try
-                    {
-                        Sim currentActor = value.SimInRole;
-                        if (currentActor != null)
-                        {
-                            value.RemoveSimFromRole();
-                            CustomRole aRole = CustomRole.clone(value, currentActor);
-
-                            if (aRole != null)
-                            {
-                                this.mCurrentRole = aRole;
-                                RoleManager.sRoleManager.AddRole(aRole);
-                                Message.Show("Cloned pianist and swapped it to custom role");
-                            }
-                            else
-                            {
-                                Message.Show("Cloning failed");
-                            }
-
-                            
-                        }
-                        else
-                        {
-                            Message.Show("Cannot clone, actor not instantiated");
-                        }
-
-                    }
-                    catch (Exception ex)
-                    {
-                        Message.Show("Cloning custom role failed " + ex.Message + " : " + new StackTrace().ToString());
-                        this.mCurrentRole = value;
-                    }
+                    EndRoleAndReplaceWithNew(value);
 
                 }
                 else
                 {
-                    Message.Show("Null role was set " + new StackTrace().ToString());
                     this.mCurrentRole = value;
                 }
 
             }
 
+        }
+
+        private void EndRoleAndReplaceWithNew(Role value)
+        {
+            if (value != null)
+            {
+                try
+                {
+                    Sim currentActor = value.SimInRole;
+                    if (currentActor != null)
+                    {
+                        value.RemoveSimFromRole();
+                        CustomRole aRole = CustomRole.clone(value, currentActor);
+
+                        if (aRole != null)
+                        {
+                            this.mCurrentRole = aRole;
+                            RoleManager.sRoleManager.AddRole(aRole);
+                            //Message.Show("Cloned pianist and swapped it to custom role");
+                        }
+                        else
+                        {
+                            Message.ShowError("Custom Role", "Cannot create custom role, clone failed", true, null);
+                        }
+
+
+                    }
+                    else
+                    {
+                        Message.ShowError("Custom Role", "Cannot create custom role, Pianist was not instantiated", true, null);
+                      
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Message.ShowError("Custom Role", "Cannot create custom role", true, ex);
+                    this.mCurrentRole = value;
+                }
+            }
         }
 
         public void PushRoleStartingInteraction(Actors.Sim sim)
@@ -118,11 +117,12 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
         public void RemoveRoleGivingInteraction(Actors.Sim sim)
         {
-            //Message.Show("RemoveRoleGivingInteraction from " + (sim != null ? sim.FullName : "null"));
+            // This is also called once a day, when role time ends
         }
 
         public string RoleName(bool isFemale)
         {
+            // Shows after name in tooltip
             return "custom person";
         }
 

@@ -24,6 +24,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
     public class DrunkardsBottle : GameObject, IRoleGiver, IRoleGiverExtended
     {
+        public static sealed string NAME="Drunkard's Bottle";
         public enum Owner { Hangaround, CivilizedDrinker, Drunkard };
         private Roles.Role mCurrentRole;
         private float mStartTime = 0F;
@@ -158,20 +159,21 @@ namespace Sims3.Gameplay.Objects.Misukisu
                         }
                         else
                         {
-                            Message.Show("Virtual Artisan - Creating a Regular Role failed!");
+                            Message.ShowError(DrunkardsBottle.NAME, "Cannot create custom role, clone failed", true, null);
+                           
                         }
 
 
                     }
                     else
                     {
-                        Message.Show("Virtual Artisan - Creating a Regular Role failed, actor not instantiated!");
-                    }
+                        Message.ShowError(DrunkardsBottle.NAME, "Cannot create custom role, Pianist sim not instantiated", true, null);
+                           }
 
                 }
                 catch (Exception ex)
                 {
-                    Message.Show("Virtual Artisan - Creating a Regular Role failed " + ex.Message + " : " + new StackTrace().ToString());
+                    Message.ShowError(DrunkardsBottle.NAME, "Cannot create custom role", true, ex);
                     this.mCurrentRole = value;
                 }
             }
