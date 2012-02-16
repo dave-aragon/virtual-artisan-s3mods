@@ -8,6 +8,7 @@ using Misukisu;
 using Sims3.Gameplay.Core;
 using Sims3.Gameplay.Interactions;
 using System.Diagnostics;
+using Sims3.Gameplay.Objects.Misukisu;
 
 namespace Sims3.Gameplay.Roles.Misukisu
 {
@@ -64,7 +65,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             return newRole;
         }
 
-  
+
         public override void SimulateRole(float minPassed)
         {
             //Message.Show("Custom role in simulation " + new StackTrace().ToString());
@@ -115,11 +116,10 @@ namespace Sims3.Gameplay.Roles.Misukisu
                     this.SwitchIntoOutfit();
                     if (this.mSim.CreatedSim != null)
                     {
+                        AddNeededMotives();
+
                         // Give her some drinking money
                         this.mSim.CreatedSim.ModifyFunds(100);
-                        // And a motive to drink
-                       // this.mSim.CreatedSim.Motives.CreateMotive(Sims3.Gameplay.Autonomy.CommodityKind.);
-
 
                         if (base.RoleGivingObject != null)
                         {
@@ -142,7 +142,22 @@ namespace Sims3.Gameplay.Roles.Misukisu
             }
             catch (Exception e)
             {
-                Message.Show("Virtual Artisan - Cannot start role: " + e.Message + " - " + e.StackTrace);
+            }
+        }
+
+        private void AddNeededMotives()
+        {
+            DrunkardsBottle bottle = this.RoleGivingObject as DrunkardsBottle;
+            if (bottle != null)
+            {
+                if (bottle.OwnerType != DrunkardsBottle.Owner.Hangaround)
+                {
+                    Lot.MetaAutonomyType venueType = base.RoleGivingObject.LotCurrent.GetMetaAutonomyType;
+                    if (venueType == Lot.MetaAutonomyType.DiveBarCriminal || venueType == Lot.MetaAutonomyType.DiveBarIrish || venueType == Lot.MetaAutonomyType.DiveBarSports)
+                    {
+                        this.mSim.CreatedSim.Motives.CreateMotive(Autonomy.CommodityKind.BeInDiveBar);
+                    }
+                }
             }
         }
 
