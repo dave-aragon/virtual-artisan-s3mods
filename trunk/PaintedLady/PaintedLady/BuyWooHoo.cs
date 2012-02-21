@@ -20,7 +20,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions
 
         public static readonly InteractionDefinition Singleton = new Definition();
         private LongTermRelationshipTypes relationshipBeforeWooHoo;
-        private global::Sims3.Gameplay.ActorSystems.BuffNames[] happyBuffs=new BuffNames[1]{BuffNames.StrideOfPride};
+        private global::Sims3.Gameplay.ActorSystems.BuffNames[] happyBuffs = new BuffNames[1] { BuffNames.StrideOfPride };
 
         protected override bool Run()
         {
@@ -28,7 +28,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions
             {
                 Sim buyer = base.Actor;
                 Sim seller = base.Target;
-                Message.Show("Ok, Let's Woo and Hoo then.");
+                //Message.Show("Ok, Let's Woo and Hoo then.");
                 CreateRelationship(buyer, seller);
 
                 Bed place = findNearestBed(seller);
@@ -37,13 +37,13 @@ namespace Misukisu.Sims3.Gameplay.Interactions
                     place.MakeSimsWooHooOnMe(buyer, seller);
 
                     seller.InteractionQueue.AddAfterCheckingForDuplicates(
-                        PutClothesOnAndRestoreRelations.Singleton.CreateInstanceWithCallbacks(seller, seller, 
+                        AfterWooHooCleanup.Singleton.CreateInstanceWithCallbacks(seller, seller,
                         new InteractionPriority(InteractionPriorityLevel.UserDirected), false, false,
                         new Callback(this.RestoreRelationshipAndPay), new Callback(this.DoNothing), new Callback(this.DoNothing)
                         ));
 
                     buyer.InteractionQueue.AddAfterCheckingForDuplicates(
-                       PutClothesOnAndRestoreRelations.Singleton.CreateInstance(buyer, buyer,
+                       AfterWooHooCleanup.Singleton.CreateInstance(buyer, buyer,
                        new InteractionPriority(InteractionPriorityLevel.UserDirected), false, false));
                 }
             }
@@ -55,7 +55,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions
             return true;
         }
 
-        
+
         public void DoNothing(Sim s, float x)
         {
         }
@@ -64,21 +64,19 @@ namespace Misukisu.Sims3.Gameplay.Interactions
         {
             try
             {
-                               
+
                 Relationship relationToTarget = base.Actor.GetRelationship(base.Target, true);
                 relationToTarget.LTR.ForceChangeState(relationshipBeforeWooHoo);
-                Message.Show("Relations restored: " + relationToTarget.LTR.CurrentLTR + " - " + base.Target.GetRelationship(base.Actor, true).LTR.CurrentLTR);
+                //Message.Show("Relations restored: " + relationToTarget.LTR.CurrentLTR + " - " + base.Target.GetRelationship(base.Actor, true).LTR.CurrentLTR);
 
-                int amount = 100;
-                if (amount < base.Actor.FamilyFunds)
+                if (base.Actor.BuffManager.HasAnyElement(happyBuffs))
                 {
-                    base.Actor.ModifyFunds(-amount);
+                    int amount = 100;
+                    if (amount < base.Actor.FamilyFunds)
+                    {
+                        base.Actor.ModifyFunds(-amount);
+                    }
                 }
-
-
-                //if (base.Actor.BuffManager.HasAnyElement(happyBuffs))
-                //{
-                //}
             }
             catch (Exception e)
             {
@@ -107,7 +105,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions
 
             protected override string GetInteractionName(Sim a, Sim target, InteractionObjectPair interaction)
             {
-                return "Buy WooHoo (§100)";
+                return "Ask to WooHoo for Money (§100)";
             }
 
             protected override bool Test(Sim actor, Sim target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
@@ -117,23 +115,22 @@ namespace Misukisu.Sims3.Gameplay.Interactions
                     return false;
                 }
 
-                //SocialComponent social = target.SocialComponent;
-                //if (social != null)
-                //{
-                //    Conversation conversation = social.Conversation;
-                //    if (conversation != null && conversation.ContainsSim(target))
-                //    {
-                //        return true;
-                //    }
-                //}
+                SocialComponent social = target.SocialComponent;
+                if (social != null)
+                {
+                    Conversation conversation = social.Conversation;
+                    if (conversation != null && conversation.ContainsSim(target))
+                    {
+                        return true;
+                    }
+                }
 
-                //if (target.LastTalkingTo == actor)
-                //{
-                //    return true;
-                //}
-                //Message.Show("Trying to buy woohoo is disabled");
-                //return false;
-                return true;
+                if (actor.InteractionQueue.HasInteractionOfTypeAndTarget(BuyWooHoo.Singleton, target))
+                {
+                    return true;
+                }
+                
+                return false;
             }
         }
     }

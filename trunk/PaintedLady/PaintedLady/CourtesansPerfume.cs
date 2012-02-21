@@ -67,11 +67,11 @@ namespace Sims3.Gameplay.Objects.Misukisu
                     {
                         mStartTime = startTime;
                         mEndTime = endTime;
-                        Message.Show("Setting relative role times from " + startTime + " to " + endTime);
+                        //Message.Show("Setting relative role times from " + startTime + " to " + endTime);
                     }
                     else
                     {
-                        Message.Show("Setting fixed role times");
+                        //Message.Show("Setting fixed role times");
                         startTime = 18F;
                         mStartTime = startTime;
                         endTime = 24F;
@@ -191,7 +191,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
         public string RoleName(bool isFemale)
         {
-            return "Courtesan";
+            return "";
         }
 
         public Roles.Role.RoleType RoleType

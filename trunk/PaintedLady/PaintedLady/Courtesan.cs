@@ -94,13 +94,8 @@ namespace Sims3.Gameplay.Roles.Misukisu
             {
                 this.mSim.CreatedSim.InteractionQueue.CancelAllInteractions();
                 Lot.MetaAutonomyType venueType = base.RoleGivingObject.LotCurrent.GetMetaAutonomyType;
-                SimIFace.CAS.OutfitCategories outfitType = SimIFace.CAS.OutfitCategories.Everyday;
-                if (venueType == Lot.MetaAutonomyType.CocktailLoungeAsian || venueType == Lot.MetaAutonomyType.CocktailLoungeCelebrity || venueType == Lot.MetaAutonomyType.CocktailLoungeVampire)
-                {
-                    outfitType = SimIFace.CAS.OutfitCategories.Formalwear;
-                }
-
-                this.mSim.CreatedSim.SwitchToOutfitWithoutSpin(Sim.ClothesChangeReason.GoingToWork, outfitType);
+                Sim sim = this.mSim.CreatedSim;
+                SwitchToProperClothing(venueType, sim);
 
             }
             catch (Exception e)
@@ -108,6 +103,17 @@ namespace Sims3.Gameplay.Roles.Misukisu
                 Message.ShowError(CourtesansPerfume.NAME,"Cannot change sim's clothes",false, e);
             }
 
+        }
+
+        public static void SwitchToProperClothing(Lot.MetaAutonomyType venueType, Sim sim)
+        {
+            SimIFace.CAS.OutfitCategories outfitType = SimIFace.CAS.OutfitCategories.Everyday;
+            if (venueType == Lot.MetaAutonomyType.CocktailLoungeAsian || venueType == Lot.MetaAutonomyType.CocktailLoungeCelebrity || venueType == Lot.MetaAutonomyType.CocktailLoungeVampire)
+            {
+                outfitType = SimIFace.CAS.OutfitCategories.Formalwear;
+            }
+
+            sim.SwitchToOutfitWithoutSpin(Sim.ClothesChangeReason.GoingToWork, outfitType);
         }
 
         protected override void StartRole()
@@ -144,7 +150,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             }
             catch (Exception e)
             {
-                Message.ShowError(CourtesansPerfume.NAME, "Cannot change sim's clothes", false, e);
+                Message.ShowError(CourtesansPerfume.NAME, "Cannot start the role", false, e);
             }
         }
 

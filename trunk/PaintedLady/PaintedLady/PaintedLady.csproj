@@ -37,7 +37,7 @@
     <Compile Include="Message.cs" />
     <Compile Include="Courtesan.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PutYourClothesOn.cs" />
+    <Compile Include="AfterWooHooCleanup.cs" />
     <Compile Include="TuneCourtesan.cs" />
   </ItemGroup>
   <ItemGroup>
