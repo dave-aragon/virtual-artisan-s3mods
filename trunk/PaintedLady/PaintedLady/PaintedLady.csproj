@@ -10,8 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PaintedLady</RootNamespace>
     <AssemblyName>PaintedLady</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,38 +32,43 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="PaintedLady.cs" />
+    <Compile Include="BuyWooHoo.cs" />
+    <Compile Include="CourtesansPerfume.cs" />
+    <Compile Include="Message.cs" />
+    <Compile Include="Courtesan.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PutYourClothesOn.cs" />
+    <Compile Include="TuneCourtesan.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="ScriptCore">
-      <HintPath>..\..\..\..\..\..\Documents\Visual Studio 2010\ExtractedDlls\ScriptCore.dll</HintPath>
+      <HintPath>..\..\..\..\..\Documents\Visual Studio 2010\References\ScriptCore.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SimIFace">
-      <HintPath>..\..\..\..\..\..\Documents\Visual Studio 2010\ExtractedDlls\SimIFace.dll</HintPath>
+      <HintPath>..\..\..\..\..\Documents\Visual Studio 2010\References\SimIFace.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Sims3GameplayObjects">
-      <HintPath>..\..\..\..\..\..\Documents\Visual Studio 2010\ExtractedDlls\Sims3GameplayObjects.dll</HintPath>
+      <HintPath>..\..\..\..\..\Documents\Visual Studio 2010\References\Sims3GameplayObjects.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Sims3GameplaySystems">
-      <HintPath>..\..\..\..\..\..\Documents\Visual Studio 2010\ExtractedDlls\Sims3GameplaySystems.dll</HintPath>
+      <HintPath>..\..\..\..\..\Documents\Visual Studio 2010\References\Sims3GameplaySystems.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Sims3Metadata">
-      <HintPath>..\..\..\..\..\..\Documents\Visual Studio 2010\ExtractedDlls\Sims3Metadata.dll</HintPath>
+      <HintPath>..\..\..\..\..\Documents\Visual Studio 2010\References\Sims3Metadata.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Sims3StoreObjects">
-      <HintPath>..\..\..\..\..\..\Documents\Visual Studio 2010\ExtractedDlls\Sims3StoreObjects.dll</HintPath>
+      <HintPath>..\..\..\..\..\Documents\Visual Studio 2010\References\Sims3StoreObjects.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="UI">
-      <HintPath>..\..\..\..\..\..\Documents\Visual Studio 2010\ExtractedDlls\UI.dll</HintPath>
+      <HintPath>..\..\..\..\..\Documents\Visual Studio 2010\References\UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
