@@ -20,7 +20,6 @@ namespace Misukisu.Sims3.Gameplay.Interactions
 
         public static readonly InteractionDefinition Singleton = new Definition();
         private LongTermRelationshipTypes relationshipBeforeWooHoo;
-        private global::Sims3.Gameplay.ActorSystems.BuffNames[] happyBuffs = new BuffNames[1] { BuffNames.StrideOfPride };
 
         protected override bool Run()
         {
@@ -69,7 +68,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions
                 relationToTarget.LTR.ForceChangeState(relationshipBeforeWooHoo);
                 //Message.Show("Relations restored: " + relationToTarget.LTR.CurrentLTR + " - " + base.Target.GetRelationship(base.Actor, true).LTR.CurrentLTR);
 
-                if (base.Actor.BuffManager.HasAnyElement(happyBuffs))
+                if (base.Actor.BuffManager.HasElement(BuffNames.StrideOfPride))
                 {
                     int amount = 100;
                     if (amount < base.Actor.FamilyFunds)
