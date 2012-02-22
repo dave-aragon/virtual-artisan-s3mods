@@ -1,4 +1,4 @@
-﻿State Machine "danceoncounterandtable"
+﻿State Machine "misudanceshow"
 {
     Properties Default
     Actor "Counter"
@@ -42,35 +42,35 @@
         {
             Weight 1
             {
-                Play 0x6b20c4f3:0x28000000:"a2a_danceClub_dance_medSkill_loop1_y" for "x"
+                Play "a2a_danceClub_dance_medSkill_loop1_y" for "x"
                 {
                     Flags AtEnd, BaseClipIsSocial
                 }
             }
             Weight 1
             {
-                Play 0x6b20c4f3:0x28000000:"a2a_danceClub_dance_medSkill_loop2_x" for "x"
+                Play "a2a_danceClub_dance_medSkill_loop2_x" for "x"
                 {
                     Flags AtEnd, BaseClipIsSocial
                 }
             }
             Weight 1
             {
-                Play 0x6b20c4f3:0x28000000:"a2a_danceClub_dance_medSkill_loop3_x" for "x"
+                Play "a2a_danceClub_dance_medSkill_loop3_x" for "x"
                 {
                     Flags AtEnd, BaseClipIsSocial
                 }
             }
             Weight 1
             {
-                Play 0x6b20c4f3:0x28000000:"a2a_danceClub_dance_medSkill_loop5_x" for "x"
+                Play "a2a_danceClub_dance_medSkill_loop5_x" for "x"
                 {
                     Flags AtEnd, BaseClipIsSocial
                 }
             }
             Weight 1
             {
-                Play 0x6b20c4f3:0x28000000:"a2a_danceClub_dance_medSkill_loop5_y" for "x"
+                Play "a2a_danceClub_dance_medSkill_loop5_y" for "x"
                 {
                     Flags AtEnd, BaseClipIsSocial
                 }
@@ -84,35 +84,35 @@
         {
             Weight 1
             {
-                Play 0x6b20c4f3:0x28000000:"a2a_danceClub_dance_medSkill_loop1_y" for "x"
+                Play "a2a_danceClub_dance_medSkill_loop1_y" for "x"
                 {
                     Flags AtEnd, BaseClipIsSocial
                 }
             }
             Weight 1
             {
-                Play 0x6b20c4f3:0x28000000:"a2a_danceClub_dance_medSkill_loop2_x" for "x"
+                Play "a2a_danceClub_dance_medSkill_loop2_x" for "x"
                 {
                     Flags AtEnd, BaseClipIsSocial
                 }
             }
             Weight 1
             {
-                Play 0x6b20c4f3:0x28000000:"a2a_danceClub_dance_medSkill_loop3_x" for "x"
+                Play "a2a_danceClub_dance_medSkill_loop3_x" for "x"
                 {
                     Flags AtEnd, BaseClipIsSocial
                 }
             }
             Weight 1
             {
-                Play 0x6b20c4f3:0x28000000:"a2a_danceClub_dance_medSkill_loop5_x" for "x"
+                Play "a2a_danceClub_dance_medSkill_loop5_x" for "x"
                 {
                     Flags AtEnd, BaseClipIsSocial
                 }
             }
             Weight 1
             {
-                Play 0x6b20c4f3:0x28000000:"a2a_danceClub_dance_medSkill_loop5_y" for "x"
+                Play "a2a_danceClub_dance_medSkill_loop5_y" for "x"
                 {
                     Flags AtEnd, BaseClipIsSocial
                 }
@@ -122,17 +122,17 @@
     State "a2a_danceClub_dance_medSkill_loop1_y"
     {
         Transitions to "Dance"
-        Play 0x6b20c4f3:0x28000000:"a2a_danceClub_dance_medSkill_loop1_y" for "x"
+        Play "a2a_danceClub_dance_medSkill_loop1_y" for "x"
         {
             Flags AtEnd, BaseClipIsSocial
-            Blend In 0,2666667.0
-            Unknown Value 9 = 0,4.0
+            Blend In 0.2666667
+            Unknown Value 9 = 0.4
         }
     }
     State "a2a_danceClub_dance_medSkill_loop2_onCounter_x"
     {
         Transitions to "Dance"
-        Play 0x6b20c4f3:0x28000000:"a2a_danceClub_dance_medSkill_loop2_onCounter_x" for "x"
+        Play "a2a_danceClub_dance_medSkill_loop2_onCounter_x" for "x"
         {
             Flags AtEnd, BaseClipIsSocial
         }
@@ -140,17 +140,17 @@
     State "a2a_danceClub_dance_medSkill_loop3_x"
     {
         Transitions to "Dance"
-        Play 0x6b20c4f3:0x28000000:"a2a_danceClub_dance_medSkill_loop3_x" for "x"
+        Play "a2a_danceClub_dance_medSkill_loop3_x" for "x"
         {
             Flags AtEnd, BaseClipIsSocial
-            Blend In 0,2666667.0
-            Unknown Value 9 = 0,4.0
+            Blend In 0.2666667
+            Unknown Value 9 = 0.4
         }
     }
     State "a2a_danceClub_dance_medSkill_loop5_onCounter_x"
     {
         Transitions to "Dance"
-        Play 0x6b20c4f3:0x28000000:"a2a_danceClub_dance_medSkill_loop5_onCounter_x" for "x"
+        Play "a2a_danceClub_dance_medSkill_loop5_onCounter_x" for "x"
         {
             Flags AtEnd, BaseClipIsSocial
         }
@@ -158,11 +158,11 @@
     State "a2a_danceClub_dance_medSkill_loop5_y"
     {
         Transitions to "Dance"
-        Play 0x6b20c4f3:0x28000000:"a2a_danceClub_dance_medSkill_loop5_y" for "x"
+        Play "a2a_danceClub_dance_medSkill_loop5_y" for "x"
         {
             Flags AtEnd, BaseClipIsSocial
-            Blend In 0,2666667.0
-            Unknown Value 9 = 0,4.0
+            Blend In 0.2666667
+            Unknown Value 9 = 0.4
         }
     }
     State "a2o_danceOnTables_start_x"
@@ -172,7 +172,7 @@
         {
             Value "no"
             {
-                Play 0x6b20c4f3:0x28000000:0x70A369ADA2A43107 for "x"
+                Play 0x70A369ADA2A43107 for "x"
             }
             Value "yes"
             {
@@ -180,11 +180,11 @@
                 {
                     Value "no"
                     {
-                        Play 0x6b20c4f3:0x28000000:0x83DFC0868509841 for "x"
+                        Play 0x83DFC0868509841 for "x"
                     }
                     Value "yes"
                     {
-                        Play 0x6b20c4f3:0x28000000:0x4DFE2419FBD36F38 for "x"
+                        Play 0x4DFE2419FBD36F38 for "x"
                     }
                 }
             }
@@ -197,7 +197,7 @@
         {
             Value "no"
             {
-                Play 0x6b20c4f3:0x28000000:0x77CEECDD35F53C67 for "x"
+                Play 0x77CEECDD35F53C67 for "x"
             }
             Value "yes"
             {
@@ -205,11 +205,11 @@
                 {
                     Value "no"
                     {
-                        Play 0x6b20c4f3:0x28000000:0x3A051AA14CC3ACDD for "x"
+                        Play 0x3A051AA14CC3ACDD for "x"
                     }
                     Value "yes"
                     {
-                        Play 0x6b20c4f3:0x28000000:0x5F25007E6E00856 for "x"
+                        Play 0x5F25007E6E00856 for "x"
                     }
                 }
             }
@@ -229,7 +229,7 @@
     State "Enter"
     {
         Properties Public, Entry, Explicit
-        Transitions to "a2o_danceOnTables_start_x"
+        Transitions to "Dance"
     }
     State "ExitNeutral"
     {
