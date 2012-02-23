@@ -131,12 +131,13 @@ namespace Sims3.Gameplay.Roles.Misukisu
             {
                 if (!this.mIsActive && this.mSim.IsValidDescription)
                 {
-                    AddNeededSkills();
+
                     InstantiateSim();
                     this.SwitchIntoOutfit();
                     if (this.mSim.CreatedSim != null)
                     {
                         //AddNeededMotives();
+                        AddNeededSkills();
 
                         if (base.RoleGivingObject != null)
                         {
@@ -170,29 +171,31 @@ namespace Sims3.Gameplay.Roles.Misukisu
                 SkillManager skillManager = base.mSim.SkillManager;
                 if (skillManager != null)
                 {
-                    DancingSkill skill = skillManager.GetSkill<DancingSkill>(SkillNames.ClubDancing);
+                    Skill skill = skillManager.GetSkill<Skill>(SkillNames.ClubDancing);
                     if (skill == null)
                     {
                         skillManager.AddAutomaticSkill(SkillNames.ClubDancing);
-                        skill = skillManager.GetSkill<DancingSkill>(SkillNames.ClubDancing);
+                        skill = skillManager.GetSkill<Skill>(SkillNames.ClubDancing);
                     }
-                    
+
                     if (skill != null)
                     {
                         skill.SkillLevel = skill.MaxSkillLevel;
+                        //Message.Show("Maxed the dancing skills!");
                     }
-                    else
-                    {
-                        StringBuilder s = new StringBuilder();
-                       ICollection<Skill> skills= skillManager.List;
-                        foreach(Skill i in skills)
-                        {
-                            s.Append(i.Name);
-                            s.Append("\n");
-                        }
 
-                        Message.Show("Could not add dancing skills to this sim: ");
-                    }
+                    //StringBuilder s = new StringBuilder();
+                    //ICollection<Skill> skills = skillManager.List;
+                    //foreach (Skill i in skills)
+                    //{
+                    //    s.Append(i.Name);
+                    //    s.Append(" - ");
+                    //    s.Append(i.GetType().Name);
+                    //    s.Append("\n");
+                    //}
+
+                    //Message.Show("Skills if this sim: " + s.ToString());
+
                 }
             }
             catch (Exception e)
@@ -200,6 +203,8 @@ namespace Sims3.Gameplay.Roles.Misukisu
                 Message.ShowError(DancersStage.NAME, "Cannot add skills to dancer", false, e);
             }
         }
+
+       
 
         public override string CareerTitleKey
         {

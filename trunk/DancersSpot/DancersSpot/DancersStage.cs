@@ -20,6 +20,7 @@ using Sims3.UI;
 using Sims3.Gameplay.Objects.Counters;
 using Misukisu.Sims3.Gameplay.Interactions;
 using Sims3.Gameplay.Objects.Tables.Mimics;
+using Sims3.SimIFace.CAS;
 
 namespace Sims3.Gameplay.Objects.Misukisu
 {
@@ -30,6 +31,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
         private Roles.Role mCurrentRole;
         private float mStartTime = 0F;
         private float mEndTime = 0F;
+        private OutfitCategories[] mShowOutfits = new OutfitCategories[] { OutfitCategories.Career, OutfitCategories.Sleepwear,OutfitCategories.Naked };
         //private float[] mShowtimes;
 
 
@@ -175,10 +177,19 @@ namespace Sims3.Gameplay.Objects.Misukisu
             {
                 if (sim != null)
                 {
-                    Message.Show("Pushing sim to perform");
+                    ExoticDancer currentRole = this.CurrentRole as ExoticDancer;
+                    if (currentRole != null)
+                    {
+                        currentRole.FreezeMotivesWhilePlaying();
+                    }
+
+                    //Message.Show("Pushing sim to perform");
+
                     InteractionInstance instance = PerformShow.Singleton.CreateInstance(this, sim,
-                        new InteractionPriority(InteractionPriorityLevel.RequiredNPCBehavior), true, false);
+                        new InteractionPriority(InteractionPriorityLevel.RequiredNPCBehavior), false, false);
                     sim.InteractionQueue.AddAfterCheckingForDuplicates(instance);
+
+                   
                 }
             }
             catch (Exception ex)
@@ -200,6 +211,11 @@ namespace Sims3.Gameplay.Objects.Misukisu
         public Roles.Role.RoleType RoleType
         {
             get { return Role.RoleType.Pianist; }
+        }
+
+        public OutfitCategories[] ShowOutfits
+        {
+            get { return mShowOutfits; }
         }
     }
 }
