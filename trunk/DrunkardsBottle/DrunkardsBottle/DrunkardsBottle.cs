@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using Misukisu;
+using Misukisu.Common;
 using Sims3.Gameplay.Abstracts;
 using Sims3.Gameplay.Actors;
 using Sims3.Gameplay.Autonomy;
@@ -18,26 +18,41 @@ using Sims3.Gameplay.Utilities;
 using Sims3.SimIFace;
 using Sims3.UI;
 using Sims3.Gameplay.Objects.Counters;
+using Misukisu.Sims3.Gameplay.Interactions.Drunkard;
 
 namespace Sims3.Gameplay.Objects.Misukisu
 {
 
     public class DrunkardsBottle : GameObject, IRoleGiver, IRoleGiverExtended
     {
-        public static sealed string NAME="Drunkard's Bottle";
-        public enum Owner { Hangaround, CivilizedDrinker, Drunkard };
+        public static  string NAME="Drunkard's Bottle";
+        //public enum Owner { Hangaround, CivilizedDrinker, Drunkard };
+        public enum Owner { Hangaround, Drinker };
         private Roles.Role mCurrentRole;
         private float mStartTime = 0F;
         private float mEndTime = 0F;
-        private Owner mOwnerType = Owner.Drunkard;
+        private Owner mOwnerType = Owner.Drinker;
+        private Sim mSlaveOwner;
         
         
         public override void OnStartup()
         {
             base.OnStartup();
-            base.AddInteraction(ShowTuningDialog.Singleton);
-            base.AddInteraction(GetInfo.Singleton);
+            base.AddInteraction(TuneDrunkard.Singleton);
+            base.AddInteraction(TakeDrunkardHome.Singleton);
            
+        }
+
+        public Lot GetTargetLot()
+        {
+            if (SlaveOwner != null)
+            {
+                return SlaveOwner.LotHome;
+            }
+            else
+            {
+                return LotCurrent;
+            }
         }
 
         public void TuningChanged(Owner ownerType,float startTime, float endTime)
@@ -70,11 +85,11 @@ namespace Sims3.Gameplay.Objects.Misukisu
                         mStartTime = startTime;
                         endTime -= 1;
                         mEndTime = endTime;
-                        Message.Show("Setting relative role times from " + startTime + " to " + endTime);
+                        //Message.Show("Setting relative role times from " + startTime + " to " + endTime);
                     }
                     else
                     {
-                        Message.Show("Setting fixed role times");
+                        //Message.Show("Setting fixed role times");
                         startTime = 12;
                         mStartTime = startTime;
                         endTime = 11.5F;
@@ -108,6 +123,18 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
         public Owner OwnerType {
             get { return mOwnerType; }
+        }
+
+        public Sim SlaveOwner
+        {
+            get
+            {
+                return this.mSlaveOwner;
+            }
+            set
+            {
+                this.mSlaveOwner = value;
+            }
         }
 
         public Roles.Role CurrentRole
@@ -186,11 +213,10 @@ namespace Sims3.Gameplay.Objects.Misukisu
                 if (mOwnerType != Owner.Hangaround)
                 {
                     //Message.Show("PushRoleStartingInteraction to " + (sim != null ? sim.FullName : "null"));
-                    if (sim != null)
+                    if (sim != null && GetTargetLot().IsCommunityLot)
                     {
-
                         IBarProfessional bar = findNearestBar(sim);
-                        if (bar != null)
+                        if (bar != null && bar.InUse)
                         {
                             Bartending.DrinkDescription bestDrink = Bartending.GetBestDrinkFor(sim, base.LotCurrent.GetMetaAutonomyType);
                             String bestDrinkName = null;
@@ -202,7 +228,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
                             if (bestDrinkName != null)
                             {
                                 PushSimToDrink(sim, bar, bestDrinkName);
-
+                                //Message.Show("Sim was pushed to drink");
                             }
                         }
                     }
@@ -211,7 +237,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
             }
             catch (Exception ex)
             {
-                Message.Show("Virtual Artisan - Sim cannot perform role " + ex.Message + " : " + ex.StackTrace);
+                Message.ShowError(DrunkardsBottle.NAME,"Cannot order drink from bar ",false,ex);
             }
         }
 
@@ -234,7 +260,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
             if (drinkingDefinition != null)
             {
-                StringBuilder s = new StringBuilder();
+               
                 IEnumerable<InteractionInstance> actions = sim.InteractionQueue.InteractionList;
                 List<InteractionInstance> toCancel = new List<InteractionInstance>();
                 bool alreadyDrinking = false;
@@ -242,21 +268,17 @@ namespace Sims3.Gameplay.Objects.Misukisu
                 {
                     if (!(action is BarProfessional.BarInteraction))
                     {
-                        Message.Show("Canceling " + action.GetInteractionName());
+                        //Message.Show("Canceling " + action.GetInteractionName());
                         toCancel.Add(action);
                     }
                     else
                     {
 
-                        Message.Show("Sim is already drinking");
+                        //Message.Show("Sim is already drinking");
                         alreadyDrinking = true;
                         break;
                     }
-                    s.Append(action.GetInteractionName());
-                    s.Append(" - ");
-                    s.Append(action.GetType().ToString());
-                    s.Append("\n");
-                    // BArProfessional order drink
+                   
                 }
 
                 foreach (InteractionInstance action in toCancel)
@@ -269,10 +291,10 @@ namespace Sims3.Gameplay.Objects.Misukisu
                     sim.InteractionQueue.AddAfterCheckingForDuplicates(drinkingDefinition.CreateInstance(bar, sim, new InteractionPriority(InteractionPriorityLevel.RequiredNPCBehavior), true, false));
                 }
             }
-            else
-            {
-                Message.Show("I wanted " + bestDrinkName + " but it was not in the list");
-            }
+            //else
+            //{
+            //    Message.Show("I wanted " + bestDrinkName + " but it was not in the list");
+            //}
         }
 
         private IBarProfessional findNearestBar(Actors.Sim sim)

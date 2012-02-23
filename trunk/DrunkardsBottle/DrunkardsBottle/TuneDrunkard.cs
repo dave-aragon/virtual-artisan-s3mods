@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Text;
 using Sims3.Gameplay.Actors;
 using Sims3.Gameplay.Interactions;
-using Misukisu;
+using Misukisu.Common;
 using Sims3.Gameplay.Autonomy;
 using Sims3.UI;
 using Sims3.SimIFace;
+using Sims3.Gameplay.Objects.Misukisu;
 
-namespace Sims3.Gameplay.Objects.Misukisu
+namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
 {
     
-    public class ShowTuningDialog : Interaction<Sim, DrunkardsBottle>
+    public class TuneDrunkard : Interaction<Sim, DrunkardsBottle>
     {
         public static readonly InteractionDefinition Singleton = new Definition();
 
@@ -54,8 +55,8 @@ namespace Sims3.Gameplay.Objects.Misukisu
         {
             Dictionary<string, object> regTypes = new Dictionary<string, object>();
             regTypes.Add("Just likes to hang around", DrunkardsBottle.Owner.Hangaround);
-            regTypes.Add("Is a civilized and responsible drinker", DrunkardsBottle.Owner.CivilizedDrinker);
-            regTypes.Add("Is alcoholist", DrunkardsBottle.Owner.Drunkard);
+            regTypes.Add("Is a tippler", DrunkardsBottle.Owner.Drinker);
+            //regTypes.Add("Is alcoholist", DrunkardsBottle.Owner.Drunkard);
 
             object result = ComboSelectionDialog.Show("The owner of the bottle", regTypes, ownerType);
             DrunkardsBottle.Owner newOwnerType = ownerType;
@@ -66,7 +67,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
             return newOwnerType;
         }
 
-        private sealed class Definition : InteractionDefinition<Sim, DrunkardsBottle, ShowTuningDialog>
+        private sealed class Definition : InteractionDefinition<Sim, DrunkardsBottle, TuneDrunkard>
         {
 
             protected override string GetInteractionName(Sim a, DrunkardsBottle target, InteractionObjectPair interaction)
@@ -76,7 +77,11 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
             protected override bool Test(Sim a, DrunkardsBottle target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
-                return !isAutonomous;
+                if (!isAutonomous && target.CurrentRole != null && target.CurrentRole.SimInRole != null)
+                {
+                    return true;
+                }
+                return false;
             }
         }
     }

@@ -11,6 +11,7 @@ using System.Diagnostics;
 using Misukisu.Common;
 using Sims3.Gameplay.Objects.Misukisu;
 using Sims3.Gameplay.Skills;
+using System.Collections;
 
 namespace Sims3.Gameplay.Roles.Misukisu
 {
@@ -130,11 +131,12 @@ namespace Sims3.Gameplay.Roles.Misukisu
             {
                 if (!this.mIsActive && this.mSim.IsValidDescription)
                 {
+                    AddNeededSkills();
                     InstantiateSim();
                     this.SwitchIntoOutfit();
                     if (this.mSim.CreatedSim != null)
                     {
-                        AddNeededMotives();
+                        //AddNeededMotives();
 
                         if (base.RoleGivingObject != null)
                         {
@@ -161,7 +163,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             }
         }
 
-        private void AddNeededMotives()
+        private void AddNeededSkills()
         {
             try
             {
@@ -181,7 +183,15 @@ namespace Sims3.Gameplay.Roles.Misukisu
                     }
                     else
                     {
-                        Message.Show("Could not add dancing skills to this sim");
+                        StringBuilder s = new StringBuilder();
+                       ICollection<Skill> skills= skillManager.List;
+                        foreach(Skill i in skills)
+                        {
+                            s.Append(i.Name);
+                            s.Append("\n");
+                        }
+
+                        Message.Show("Could not add dancing skills to this sim: ");
                     }
                 }
             }
