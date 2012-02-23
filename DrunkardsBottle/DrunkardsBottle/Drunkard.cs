@@ -4,11 +4,12 @@ using System.Text;
 using Sims3.Gameplay.CAS;
 using Sims3.Gameplay.Interfaces;
 using Sims3.Gameplay.Actors;
-using Misukisu;
+using Misukisu.Common;
 using Sims3.Gameplay.Core;
 using Sims3.Gameplay.Interactions;
 using System.Diagnostics;
 using Sims3.Gameplay.Objects.Misukisu;
+using Misukisu.Sims3.Gameplay.Interactions.Drunkard;
 
 namespace Sims3.Gameplay.Roles.Misukisu
 {
@@ -87,20 +88,25 @@ namespace Sims3.Gameplay.Roles.Misukisu
             //Message.Show("Switching into outft");
             try
             {
-                this.mSim.CreatedSim.InteractionQueue.CancelAllInteractions();
-                Lot.MetaAutonomyType venueType = base.RoleGivingObject.LotCurrent.GetMetaAutonomyType;
-                SimIFace.CAS.OutfitCategories outfitType = SimIFace.CAS.OutfitCategories.Everyday;
-                if (venueType == Lot.MetaAutonomyType.CocktailLoungeAsian || venueType == Lot.MetaAutonomyType.CocktailLoungeCelebrity || venueType == Lot.MetaAutonomyType.CocktailLoungeVampire)
+                Lot roleLot = (base.RoleGivingObject as DrunkardsBottle).GetTargetLot();
+                if (roleLot != null)
                 {
-                    outfitType = SimIFace.CAS.OutfitCategories.Formalwear;
-                }
+                    this.mSim.CreatedSim.InteractionQueue.CancelAllInteractions();
 
-                this.mSim.CreatedSim.SwitchToOutfitWithoutSpin(Sim.ClothesChangeReason.GoingToWork, outfitType);
+                    Lot.MetaAutonomyType venueType = roleLot.GetMetaAutonomyType;
+                    SimIFace.CAS.OutfitCategories outfitType = SimIFace.CAS.OutfitCategories.Everyday;
+                    if (venueType == Lot.MetaAutonomyType.CocktailLoungeAsian || venueType == Lot.MetaAutonomyType.CocktailLoungeCelebrity || venueType == Lot.MetaAutonomyType.CocktailLoungeVampire)
+                    {
+                        outfitType = SimIFace.CAS.OutfitCategories.Formalwear;
+                    }
+
+                    this.mSim.CreatedSim.SwitchToOutfitWithoutSpin(Sim.ClothesChangeReason.GoingToWork, outfitType);
+                }
 
             }
             catch (Exception e)
             {
-                Message.Show("Virtual Artisan - Cannot change Regular's clothes: " + e.Message + " - " + e.StackTrace);
+                Message.ShowError(DrunkardsBottle.NAME, "Cannot change tippler's clothes: ", false, e);
             }
 
         }
@@ -142,20 +148,27 @@ namespace Sims3.Gameplay.Roles.Misukisu
             }
             catch (Exception e)
             {
+                Message.ShowError(DrunkardsBottle.NAME, "Cannot start the role", false, e);
             }
         }
 
-        private void AddNeededMotives()
+        public void AddNeededMotives()
         {
+            Sim sim = this.mSim.CreatedSim;
             DrunkardsBottle bottle = this.RoleGivingObject as DrunkardsBottle;
+
             if (bottle != null)
             {
-                if (bottle.OwnerType != DrunkardsBottle.Owner.Hangaround)
+                if (sim != null)
                 {
-                    Lot.MetaAutonomyType venueType = base.RoleGivingObject.LotCurrent.GetMetaAutonomyType;
-                    if (venueType == Lot.MetaAutonomyType.DiveBarCriminal || venueType == Lot.MetaAutonomyType.DiveBarIrish || venueType == Lot.MetaAutonomyType.DiveBarSports)
+                    if (bottle.OwnerType != DrunkardsBottle.Owner.Hangaround)
                     {
-                        this.mSim.CreatedSim.Motives.CreateMotive(Autonomy.CommodityKind.BeInDiveBar);
+                        Lot targetLot = bottle.GetTargetLot();
+                        if (targetLot.IsCommunityLot)
+                        {
+                            sim.Motives.CreateMotive(Autonomy.CommodityKind.BeInDiveBar);
+                            //Message.Show("Added motives to drink");
+                        }
                     }
                 }
             }
@@ -163,13 +176,17 @@ namespace Sims3.Gameplay.Roles.Misukisu
 
         public void MakeSimComeToRoleLot()
         {
-            Lot roleLot = base.RoleGivingObject.LotCurrent;
+            Lot roleLot = (base.RoleGivingObject as DrunkardsBottle).GetTargetLot();
+
             if ((this.mSim.CreatedSim.LotCurrent == null) || !(this.mSim.CreatedSim.LotCurrent == roleLot))
             {
-                this.mSim.CreatedSim.InteractionQueue.Add(Sim.GoToLotThatSatisfiesMyRole.Singleton.CreateInstance(this.mSim.CreatedSim, this.mSim.CreatedSim, new InteractionPriority(InteractionPriorityLevel.High), true, true));
+                this.mSim.CreatedSim.InteractionQueue.Add(GoToALot.Singleton.CreateInstance(this.mSim.CreatedSim, this.mSim.CreatedSim,
+                    new InteractionPriority(InteractionPriorityLevel.High), true, true));
                 //Message.Show("Called sim to arrive");
             }
         }
+
+
 
         public void InstantiateSim()
         {

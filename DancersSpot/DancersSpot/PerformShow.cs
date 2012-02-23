@@ -114,7 +114,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions
 
         protected override bool Run()
         {
-            Message.Show("Show is starting");
+            //Message.Show("Show is starting");
             List<Slot> danceOnRoutingSlots = base.Target.GetDanceOnRoutingSlots(base.Actor);
             danceOnRoutingSlots.Sort(new Comparison<Slot>(this.ClosestRoutingSlotFirstComparer));
             for (int i = 0; i < danceOnRoutingSlots.Count; i++)
@@ -142,12 +142,15 @@ namespace Misukisu.Sims3.Gameplay.Interactions
             this.mReservedTile = GlobalFunctions.CreateObject("DynamicFootprintPlacement", slotPosition, 0, forwardOfSlot) as GameObject;
         
             base.StandardEntry();
-           
+
+            //base.EnterStateMachine("misudanceshow", "Enter", "x", "counter");
             base.EnterStateMachine("danceOnCounterAndTable", "Enter", "x", "counter");
             int skillLevel = base.Actor.SkillManager.GetSkillLevel(SkillNames.ClubDancing);
             base.SetParameter("ClubDanceSkill", (DanceExpertise)Math.Max(0, skillLevel - 1));
             bool slotIsBackSide = false;
             bool paramValue = base.Target.IsIslandCounter(this.mEnterSlot, ref slotIsBackSide);
+            base.SetParameter("hasDrink", false);
+
             base.SetParameter("IsIslandCounter", paramValue);
             base.SetParameter("IsIslandCounterBack", slotIsBackSide);
             base.Actor.AddInteraction(WatchSimDancingOnCounterOrTable.Singleton);
@@ -155,7 +158,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions
             base.AddSynchronousOneShotScriptEventHandler(0x65, new SacsEventHandler(this.SnapSimToTop));
             base.Actor.LookAtManager.SetInteractionLookAtThreshold(150);
             base.AnimateSim("Dance");
-            bool succeeded = this.DoLoop(~(ExitReason.Replan | ExitReason.MidRoutePushRequested | ExitReason.ObjectStateChanged | ExitReason.PlayIdle | ExitReason.MaxSkillPointsReached), 
+            bool succeeded = this.DoLoop(~(ExitReason.Replan | ExitReason.MidRoutePushRequested | ExitReason.ObjectStateChanged | ExitReason.PlayIdle | ExitReason.MaxSkillPointsReached),
                 new InteractionInstance.InsideLoopFunction(this.DanceLoop), base.mCurrentStateMachine);
             if (this.mReservedTile != null)
             {
@@ -165,11 +168,12 @@ namespace Misukisu.Sims3.Gameplay.Interactions
                 }
             }
             base.AddSynchronousOneShotScriptEventHandler(0x66, new SacsEventHandler(this.SnapSimToBottom));
-            base.AnimateSim("GetDown");
+            //base.AnimateSim("get_down");
             base.Actor.RemoveInteractionByType(WatchSimDancingOnCounterOrTable.Singleton);
             this.Watchable = false;
+            base.EndCommodityUpdates(true);
             base.EndCommodityUpdates(succeeded);
-            Message.Show("Eciting the machine");
+            //Message.Show("Exiting the machine");
             base.StandardExit();
             return true;
         }
