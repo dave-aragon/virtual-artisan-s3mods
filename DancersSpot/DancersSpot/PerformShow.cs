@@ -16,21 +16,26 @@ using Sims3.Gameplay.Objects;
 using Sims3.Gameplay.Interfaces;
 using Sims3.Gameplay.Objects.Misukisu;
 using Misukisu.Common;
+using Sims3.SimIFace.CAS;
+using Sims3.Gameplay.Core;
+using Sims3.Gameplay.Roles.Misukisu;
 
 namespace Misukisu.Sims3.Gameplay.Interactions
 {
+
+
     public class PerformShow : Interaction<Sim, DancersStage>
     {
         // Fields
         private Slot mEnterSlot;
-       
+
         private GameObject mReservedTile;
         public static readonly InteractionDefinition Singleton = new Definition();
         public bool Watchable = true;
 
         // Methods
         public override void Cleanup()
-        {           
+        {
             if (this.mReservedTile != null)
             {
                 this.mReservedTile.Destroy();
@@ -52,6 +57,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions
 
         private void DanceLoop(StateMachineClient smc, InteractionInstance.LoopData ld)
         {
+            Message.Show("DanceLoop at " + ld.mLifeTime + " Delta - " + ld.mDeltaTime);
             int skillLevel = base.Actor.SkillManager.GetSkillLevel(SkillNames.ClubDancing);
             if (skillLevel > 1)
             {
@@ -61,7 +67,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions
             {
                 base.Actor.AddExitReason(ExitReason.Finished);
             }
-            
+
             TimePassedOnLotEvent e = new TimePassedOnLotEvent(EventTypeId.kSimDanced, base.Actor, base.Target, ld.mDeltaTime, base.Target.LotCurrent.LotId);
             EventTracker.SendEvent(e);
         }
@@ -114,7 +120,10 @@ namespace Misukisu.Sims3.Gameplay.Interactions
 
         protected override bool Run()
         {
-            //Message.Show("Show is starting");
+            OutfitCategories[] outfits = base.Target.ShowOutfits;
+            OutfitCategories startOutfit = outfits[0];
+            base.Actor.SwitchToOutfitWithSpin(Sim.ClothesChangeReason.GoingToWork, startOutfit);
+
             List<Slot> danceOnRoutingSlots = base.Target.GetDanceOnRoutingSlots(base.Actor);
             danceOnRoutingSlots.Sort(new Comparison<Slot>(this.ClosestRoutingSlotFirstComparer));
             for (int i = 0; i < danceOnRoutingSlots.Count; i++)
@@ -140,16 +149,16 @@ namespace Misukisu.Sims3.Gameplay.Interactions
             Vector3 slotPosition = base.Target.GetSlotPosition(this.mEnterSlot);
             Vector3 forwardOfSlot = base.Target.GetForwardOfSlot(this.mEnterSlot);
             this.mReservedTile = GlobalFunctions.CreateObject("DynamicFootprintPlacement", slotPosition, 0, forwardOfSlot) as GameObject;
-        
+
             base.StandardEntry();
 
+            base.EnterStateMachine("clubdance_solo", "Enter", "x");
             //base.EnterStateMachine("misudanceshow", "Enter", "x", "counter");
-            base.EnterStateMachine("danceOnCounterAndTable", "Enter", "x", "counter");
+            //base.EnterStateMachine("danceOnCounterAndTable", "Enter", "x", "counter");
             int skillLevel = base.Actor.SkillManager.GetSkillLevel(SkillNames.ClubDancing);
             base.SetParameter("ClubDanceSkill", (DanceExpertise)Math.Max(0, skillLevel - 1));
             bool slotIsBackSide = false;
             bool paramValue = base.Target.IsIslandCounter(this.mEnterSlot, ref slotIsBackSide);
-            base.SetParameter("hasDrink", false);
 
             base.SetParameter("IsIslandCounter", paramValue);
             base.SetParameter("IsIslandCounterBack", slotIsBackSide);
@@ -157,9 +166,17 @@ namespace Misukisu.Sims3.Gameplay.Interactions
             base.BeginCommodityUpdates();
             base.AddSynchronousOneShotScriptEventHandler(0x65, new SacsEventHandler(this.SnapSimToTop));
             base.Actor.LookAtManager.SetInteractionLookAtThreshold(150);
-            base.AnimateSim("Dance");
-            bool succeeded = this.DoLoop(~(ExitReason.Replan | ExitReason.MidRoutePushRequested | ExitReason.ObjectStateChanged | ExitReason.PlayIdle | ExitReason.MaxSkillPointsReached),
-                new InteractionInstance.InsideLoopFunction(this.DanceLoop), base.mCurrentStateMachine);
+            //base.AnimateSim("Dance");
+            base.AnimateSim("Club_Dance");
+
+            bool succeeded = this.DoTimedLoop(15F);
+            for (int i = 1; i <= outfits.Length; i++)
+            {
+                base.Actor.SwitchToOutfitWithSpin(Sim.ClothesChangeReason.GoingToWork, outfits[i]);
+                succeeded = this.DoTimedLoop(30F);
+            }
+            //bool succeeded = this.DoLoop(~(ExitReason.Finished | ExitReason.CanceledByScript ),
+            //    new InteractionInstance.InsideLoopFunction(this.DanceLoop), base.mCurrentStateMachine);
             if (this.mReservedTile != null)
             {
                 foreach (uint num3 in this.mReservedTile.GetFootprintNameHashes())
@@ -168,13 +185,19 @@ namespace Misukisu.Sims3.Gameplay.Interactions
                 }
             }
             base.AddSynchronousOneShotScriptEventHandler(0x66, new SacsEventHandler(this.SnapSimToBottom));
-            //base.AnimateSim("get_down");
+            //base.AnimateSim("ExitNeutral");
+            base.AnimateSim("Exit");
+
             base.Actor.RemoveInteractionByType(WatchSimDancingOnCounterOrTable.Singleton);
             this.Watchable = false;
             base.EndCommodityUpdates(true);
             base.EndCommodityUpdates(succeeded);
-            //Message.Show("Exiting the machine");
             base.StandardExit();
+
+            Lot.MetaAutonomyType venueType = base.Target.LotCurrent.GetMetaAutonomyType;
+
+            ExoticDancer.SwitchToProperClothing(venueType, base.Actor);
+
             return true;
         }
 
@@ -234,7 +257,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions
                     return false;
                 }
 
-                
+
                 return true;
             }
         }
