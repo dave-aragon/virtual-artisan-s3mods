@@ -21,6 +21,7 @@ using Sims3.Gameplay.Objects.Counters;
 using Misukisu.Sims3.Gameplay.Interactions;
 using Sims3.Gameplay.Objects.Tables.Mimics;
 using Sims3.SimIFace.CAS;
+using Sims3.Gameplay.ActorSystems;
 
 namespace Sims3.Gameplay.Objects.Misukisu
 {
@@ -29,11 +30,12 @@ namespace Sims3.Gameplay.Objects.Misukisu
         public static string NAME = "Dancer's Stage";
 
         private Roles.Role mCurrentRole;
-        private float mStartTime = 0F;
-        private float mEndTime = 0F;
-        private OutfitCategories[] mShowOutfits = new OutfitCategories[] { OutfitCategories.Career, OutfitCategories.Sleepwear,OutfitCategories.Naked };
-        //private float[] mShowtimes;
-
+        private float mTimeToPee = 0.5F;
+        private float[] mShowTimes = new float[] { 19F, 23F };
+        private float mShowDurationMins = 60F;
+        private OutfitCategories[] mShowOutfits = new OutfitCategories[] { OutfitCategories.Career };
+        private int mShowIndex = 0;
+        private long mNextShowTime = 0;
 
         public override void OnStartup()
         {
@@ -42,65 +44,76 @@ namespace Sims3.Gameplay.Objects.Misukisu
             base.AddInteraction(PerformShow.Singleton);
         }
 
-        public void TuningChanged(float startTime, float endTime)
+        public void TuningChanged(float[] newShowTimes, float newShowDuration, OutfitCategories newFirstOutfit, OutfitCategories newLastOutfit)
         {
-            mStartTime = startTime;
-            mEndTime = endTime;
+            Message.Show("New tuning, role will reset");
+            if (newShowTimes.Length > 0)
+            {
+                mShowTimes = newShowTimes;
+                for (int i = 0; i < mShowTimes.Length; i++)
+                {
+                    if (mShowTimes[i] < 0) { mShowTimes[i] = 0; }
+                    if (mShowTimes[i] > 24) { mShowTimes[i] = 24; }
+                }
+            }
+
+            mShowDurationMins = newShowDuration;
+            if (mShowDurationMins < 0) { mShowDurationMins = 5; }
+            if (mShowDurationMins > 300) { mShowDurationMins = 300; }
+
+            if (newFirstOutfit == newLastOutfit)
+            {
+                mShowOutfits = new OutfitCategories[] { newFirstOutfit };
+            }
+            else if (newLastOutfit == OutfitCategories.Naked)
+            {
+                mShowOutfits = new OutfitCategories[] { newFirstOutfit, OutfitCategories.Sleepwear, newLastOutfit };
+            }
+
             ResetRole();
         }
 
+
+
         private void ResetRole()
         {
+            if (CurrentRole.SimInRole != null)
+            {
+                CurrentRole.SimInRole.InteractionQueue.CancelAllInteractions();
+            }
             EndRoleAndReplaceWithNew(CurrentRole);
         }
 
         public void GetRoleTimes(out float startTime, out float endTime)
         {
-            startTime = mStartTime;
-            endTime = mEndTime;
-
-            //Message.Show("Someone is asking role times " + new StackTrace().ToString());
-            if (startTime == 0)
-            {
-                if (base.LotCurrent != null)
-                {
-                    if (Bartending.TryGetHoursOfOperation(base.LotCurrent, ref startTime, ref endTime))
-                    {
-                        mStartTime = startTime;
-                        mEndTime = endTime;
-                        //Message.Show("Setting relative role times from " + startTime + " to " + endTime);
-                    }
-                    else
-                    {
-                        //Message.Show("Setting fixed role times");
-                        startTime = 18F;
-                        mStartTime = startTime;
-                        endTime = 24F;
-                        mEndTime = endTime;
-                    }
-
-                }
-            }
-            else
-            {
-                //Message.Show("Role time is from " + startTime + " to " + endTime);
-            }
+            startTime = mShowTimes[0] - 1F;
+            endTime = mShowTimes[mShowTimes.Length - 1] + (mShowDurationMins / 60) + 1F;
 
         }
 
         public void AddRoleGivingInteraction(Actors.Sim sim)
         {
+            this.mShowIndex = 0;
+            calculateNextShowTime();
 
-            Message.Show("Role started");
-            //try
-            //{
 
-            //    Message.Show("Adding role actions to " + (sim != null ? sim.FullName : "null"));
-            //}
-            //catch (Exception ex)
-            //{
-            //    Message.Show("Adding role actions to null " + ex.Message + " - " + new StackTrace().ToString());
-            //}
+        }
+
+        private void calculateNextShowTime()
+        {
+            if (mShowIndex < ShowTimes.Length)
+            {
+                float timeUntilShow = SimClock.HoursUntil(ShowTimes[mShowIndex] - mTimeToPee);
+
+                long timeAsLong = SimClock.ConvertToTicks(timeUntilShow, TimeUnit.Hours);
+                this.mNextShowTime = SimClock.CurrentTicks + timeAsLong;
+                //Message.Show("Show " + mShowIndex + " is in " + timeUntilShow.ToString() + " hours");
+                mShowIndex++;
+            }
+            else
+            {
+                mNextShowTime = long.MaxValue;
+            }
         }
 
 
@@ -175,27 +188,73 @@ namespace Sims3.Gameplay.Objects.Misukisu
         {
             try
             {
-                if (sim != null)
+                if (sim != null && this.mNextShowTime <= SimClock.CurrentTicks)
                 {
+                    //Message.Show("It is SHOWTIME");
+                    calculateNextShowTime();
                     ExoticDancer currentRole = this.CurrentRole as ExoticDancer;
                     if (currentRole != null)
                     {
                         currentRole.FreezeMotivesWhilePlaying();
                     }
 
-                    //Message.Show("Pushing sim to perform");
+                    pushSimToPeeBeforeShow(sim);
 
                     InteractionInstance instance = PerformShow.Singleton.CreateInstance(this, sim,
                         new InteractionPriority(InteractionPriorityLevel.RequiredNPCBehavior), false, false);
                     sim.InteractionQueue.AddAfterCheckingForDuplicates(instance);
 
-                   
+
                 }
             }
             catch (Exception ex)
             {
                 Message.ShowError(DancersStage.NAME, "Sim cannot play the role", false, ex);
             }
+        }
+
+        private void pushSimToPeeBeforeShow(Sim sim)
+        {
+            try
+            {
+                IToilet toilet = findNearestToilet(sim);
+                if (toilet != null && !toilet.InUse)
+                {
+                    List<InteractionObjectPair> interactions = toilet.GetAllInteractionsForActor(sim);
+                    InteractionDefinition peeDefinition = null;
+                    foreach (InteractionObjectPair interaction in interactions)
+                    {
+                        InteractionDefinition interactionDef = interaction.InteractionDefinition;
+                        string name = interactionDef.GetType().ToString();
+
+
+                        if (name != null && name.Contains("UseToilet"))
+                        {
+
+                            peeDefinition = interactionDef;
+                            break;
+                        }
+                    }
+
+                    if (peeDefinition != null)
+                    {
+
+                        InteractionInstance instance = peeDefinition.CreateInstance(toilet, sim,
+                                    new InteractionPriority(InteractionPriorityLevel.RequiredNPCBehavior), false, false);
+                        sim.InteractionQueue.AddAfterCheckingForDuplicates(instance);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Message.ShowError(DancersStage.NAME, "Sim cannot pee before show", false, ex);
+            }
+        }
+
+        private IToilet findNearestToilet(Actors.Sim sim)
+        {
+            return GlobalFunctions.GetClosestObject<IToilet>(sim, true, true, new List<IToilet>(), null);
+
         }
 
         public void RemoveRoleGivingInteraction(Actors.Sim sim)
@@ -205,17 +264,53 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
         public string RoleName(bool isFemale)
         {
-            return "Exotic Dancer";
+            return "Dancer";
         }
+
 
         public Roles.Role.RoleType RoleType
         {
             get { return Role.RoleType.Pianist; }
         }
 
+
+        public float[] ShowTimes
+        {
+            get { return mShowTimes; }
+        }
+
+        public float ShowDurationMins
+        {
+            get { return mShowDurationMins; }
+        }
+
         public OutfitCategories[] ShowOutfits
         {
             get { return mShowOutfits; }
+        }
+
+        public OutfitCategories GetFirstOutfit()
+        {
+            if (mShowOutfits.Length > 0)
+            {
+                return mShowOutfits[0];
+            }
+            else
+            {
+                return OutfitCategories.Career;
+            }
+        }
+
+        public OutfitCategories GetLastOutfit()
+        {
+            if (mShowOutfits.Length > 0)
+            {
+                return mShowOutfits[mShowOutfits.Length - 1];
+            }
+            else
+            {
+                return OutfitCategories.Career;
+            }
         }
     }
 }
