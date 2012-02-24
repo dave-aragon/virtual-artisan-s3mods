@@ -23,6 +23,8 @@ namespace Misukisu.Common
             }
             if (ex != null)
             {
+                msg.Append("\n");
+                msg.Append(ex.Message);
                 msg.Append("\nInternal info:\n");
                 msg.Append(ex.StackTrace);
             }
