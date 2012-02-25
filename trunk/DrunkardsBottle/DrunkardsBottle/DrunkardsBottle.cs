@@ -27,11 +27,11 @@ namespace Sims3.Gameplay.Objects.Misukisu
     {
         public static  string NAME="Drunkard's Bottle";
         //public enum Owner { Hangaround, CivilizedDrinker, Drunkard };
-        public enum Owner { Hangaround, Drinker };
+        public enum Owner { Hangaround, Tippler };
         private Roles.Role mCurrentRole;
         private float mStartTime = 0F;
         private float mEndTime = 0F;
-        private Owner mOwnerType = Owner.Drinker;
+        private Owner mOwnerType = Owner.Tippler;
         private Sim mSlaveOwner;
         
         

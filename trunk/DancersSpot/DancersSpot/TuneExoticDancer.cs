@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Text;
 using Sims3.Gameplay.Actors;
 using Sims3.Gameplay.Interactions;
-using Misukisu.Common;
+using Misukisu.DancerSpot;
 using Sims3.Gameplay.Autonomy;
 using Sims3.UI;
 using Sims3.SimIFace;
 using Sims3.Gameplay.Objects.Misukisu;
 using Sims3.SimIFace.CAS;
+using Sims3.Gameplay.Interfaces;
 
 namespace Misukisu.Sims3.Gameplay.Interactions
 {
 
-    public class TuneExoticDancer : Interaction<Sim, DancersStage>
+    public class TuneExoticDancer : ImmediateInteraction<IActor, DancersStage>
     {
         public static readonly InteractionDefinition Singleton = new Definition();
 
@@ -26,12 +27,12 @@ namespace Misukisu.Sims3.Gameplay.Interactions
                 OutfitCategories newFirstOutfit = ShowFirstOutfitTuningDialog(firstOutfit);
                 OutfitCategories lastOutfit = base.Target.GetLastOutfit();
                 OutfitCategories newLastOutfit = ShowLastOutfitTuningDialog(lastOutfit);
+                Message.Show("Old outfits were: " + firstOutfit + " - " + lastOutfit);
 
-
-               float showDuration=base.Target.ShowDurationMins;
-               float[] showTimes=base.Target.ShowTimes;
-               float newShowDuration;
-               float[] newShowTimes;
+                float showDuration = base.Target.ShowDurationMins;
+                float[] showTimes = base.Target.ShowTimes;
+                float newShowDuration;
+                float[] newShowTimes;
 
                 bool ok = ShowTimeTuningDialog(showDuration, showTimes, out newShowDuration, out newShowTimes);
                 if (ok || firstOutfit != newFirstOutfit || lastOutfit != newLastOutfit)
@@ -50,12 +51,12 @@ namespace Misukisu.Sims3.Gameplay.Interactions
         private static OutfitCategories ShowFirstOutfitTuningDialog(OutfitCategories outfit)
         {
             Dictionary<string, object> regTypes = new Dictionary<string, object>();
-            regTypes.Add("Career Uniform", OutfitCategories.Career);
-            regTypes.Add("Everyday Clothing", OutfitCategories.Everyday);
-            regTypes.Add("Party Clothing", OutfitCategories.Formalwear);
-            regTypes.Add("Underwear", OutfitCategories.Sleepwear);
+            regTypes.Add(OutfitCategories.Career.ToString(), OutfitCategories.Career);
+            regTypes.Add(OutfitCategories.Everyday.ToString(), OutfitCategories.Everyday);
+            regTypes.Add(OutfitCategories.Formalwear.ToString(), OutfitCategories.Formalwear);
+            regTypes.Add(OutfitCategories.Sleepwear.ToString(), OutfitCategories.Sleepwear);
 
-            object result = ComboSelectionDialog.Show("Dancer Starts In", regTypes, outfit);
+            object result = ComboSelectionDialog.Show("Dancer Starts In", regTypes, outfit.ToString());
             OutfitCategories newOutfit = outfit;
             if (result is OutfitCategories)
             {
@@ -67,13 +68,13 @@ namespace Misukisu.Sims3.Gameplay.Interactions
         private static OutfitCategories ShowLastOutfitTuningDialog(OutfitCategories outfit)
         {
             Dictionary<string, object> regTypes = new Dictionary<string, object>();
-            regTypes.Add("In Career Uniform", OutfitCategories.Career);
-            regTypes.Add("In Everyday Clothing", OutfitCategories.Everyday);
-            regTypes.Add("In Party Clothing", OutfitCategories.Formalwear);
-            regTypes.Add("In Underwear", OutfitCategories.Sleepwear);
-            regTypes.Add("Naked", OutfitCategories.Sleepwear);
+            regTypes.Add(OutfitCategories.Career.ToString(), OutfitCategories.Career);
+            regTypes.Add(OutfitCategories.Everyday.ToString(), OutfitCategories.Everyday);
+            regTypes.Add(OutfitCategories.Formalwear.ToString(), OutfitCategories.Formalwear);
+            regTypes.Add(OutfitCategories.Sleepwear.ToString(), OutfitCategories.Sleepwear);
+            regTypes.Add(OutfitCategories.Naked.ToString(), OutfitCategories.Naked);
 
-            object result = ComboSelectionDialog.Show("Dancer Ends The Show", regTypes, outfit);
+            object result = ComboSelectionDialog.Show("Outfit When Show Ends", regTypes, outfit.ToString());
             OutfitCategories newOutfit = outfit;
             if (result is OutfitCategories)
             {
@@ -87,9 +88,9 @@ namespace Misukisu.Sims3.Gameplay.Interactions
             bool changes = false;
             string showTimesString = ShowTimesToString(showTimes, ":");
             // TODO: why only numbers allowed?
-            string[] values = ThreeStringInputDialog.Show("The Dancer", 
-                new string[] { "Show Times Are (hour, 0-24, separate with ':')", "Show Lasts (minutes, 0-300)", "Spare field for future needs" }, 
-                new string[] { showTimesString, showDuration.ToString(), "" }, true);
+            string[] values = ThreeStringInputDialog.Show("The Dancer",
+                new string[] { "Show Times Are (hour, 0-24, separate with ':')", "Show Lasts (minutes, 0-300)", "Spare field for future needs" },
+                new string[] { showTimesString, showDuration.ToString(), "" }, false);
 
             if (!string.IsNullOrEmpty(values[0]))
             {
@@ -115,9 +116,9 @@ namespace Misukisu.Sims3.Gameplay.Interactions
 
         private static float[] StringToShowTimes(string value)
         {
-            string[] splitted=value.Split(':'); 
-            List<float> result= new List<float>();
-           
+            string[] splitted = value.Split(':');
+            List<float> result = new List<float>();
+
             for (int i = 0; i < splitted.Length; ++i)
             {
                 string time = splitted[i];
@@ -129,14 +130,14 @@ namespace Misukisu.Sims3.Gameplay.Interactions
             return result.ToArray();
         }
 
-        private static string ShowTimesToString(float[] showTimes,string separator)
+        private static string ShowTimesToString(float[] showTimes, string separator)
         {
             StringBuilder showTimesString = new StringBuilder();
             for (int i = 0; i < showTimes.Length; ++i)
             {
                 showTimesString.Append(showTimes[i].ToString());
 
-                if (i < showTimes.Length-1)
+                if (i < showTimes.Length - 1)
                 {
                     showTimesString.Append(separator);
                 }
@@ -146,15 +147,16 @@ namespace Misukisu.Sims3.Gameplay.Interactions
 
 
 
-        private sealed class Definition : InteractionDefinition<Sim, DancersStage, TuneExoticDancer>
+
+        private sealed class Definition : ActorlessInteractionDefinition<IActor, DancersStage, TuneExoticDancer>
         {
 
-            protected override string GetInteractionName(Sim a, DancersStage target, InteractionObjectPair interaction)
+            protected override string GetInteractionName(IActor a, DancersStage target, InteractionObjectPair interaction)
             {
-                return "Tuning...";
+                return "Dance Show Tuning...";
             }
 
-            protected override bool Test(Sim a, DancersStage target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
+            protected override bool Test(IActor actor, DancersStage target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
                 return !isAutonomous;
             }

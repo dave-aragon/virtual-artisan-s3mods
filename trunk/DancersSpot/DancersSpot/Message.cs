@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Sims3.UI;
 
-namespace Misukisu.Common
+namespace Misukisu.DancerSpot
 {
     class Message
     {
@@ -36,6 +36,21 @@ namespace Misukisu.Common
             }
 
             SimpleMessageDialog.Show("Virtual Artisan - " + projectName, fullError, ModalDialog.PauseMode.PauseSimulator);
+        }
+
+        public static string ArrayToString(object[] array, string separator)
+        {
+            StringBuilder result = new StringBuilder();
+            for (int i = 0; i < array.Length; ++i)
+            {
+                result.Append(array[i].ToString());
+
+                if (i < array.Length - 1)
+                {
+                    result.Append(separator);
+                }
+            }
+            return result.ToString();
         }
     }
 }

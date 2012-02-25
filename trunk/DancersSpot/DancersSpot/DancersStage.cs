@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using Misukisu.Common;
+using Misukisu.DancerSpot;
 using Sims3.Gameplay.Abstracts;
 using Sims3.Gameplay.Actors;
 using Sims3.Gameplay.Autonomy;
@@ -30,7 +30,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
         public static string NAME = "Dancer's Stage";
 
         private Roles.Role mCurrentRole;
-        private float mTimeToPee = 0.5F;
+        private float mTimeToPee = 0.75F;
         private float[] mShowTimes = new float[] { 19F, 23F };
         private float mShowDurationMins = 60F;
         private OutfitCategories[] mShowOutfits = new OutfitCategories[] { OutfitCategories.Career };
@@ -44,9 +44,15 @@ namespace Sims3.Gameplay.Objects.Misukisu
             base.AddInteraction(PerformShow.Singleton);
         }
 
+        protected override void AddBuildBuyInteractions(List<InteractionDefinition> buildBuyInteractions)
+        {
+            buildBuyInteractions.Add(TuneExoticDancer.Singleton);
+            base.AddBuildBuyInteractions(buildBuyInteractions);
+        }
+
         public void TuningChanged(float[] newShowTimes, float newShowDuration, OutfitCategories newFirstOutfit, OutfitCategories newLastOutfit)
         {
-            Message.Show("New tuning, role will reset");
+            //Message.Show("New tuning, role will reset");
             if (newShowTimes.Length > 0)
             {
                 mShowTimes = newShowTimes;
@@ -69,25 +75,47 @@ namespace Sims3.Gameplay.Objects.Misukisu
             {
                 mShowOutfits = new OutfitCategories[] { newFirstOutfit, OutfitCategories.Sleepwear, newLastOutfit };
             }
+            else {
+                mShowOutfits = new OutfitCategories[] { newFirstOutfit,newLastOutfit };
+            }
+
+            Message.Show("new Show outfits are: " + OutfitsToString(mShowOutfits, " - "));
 
             ResetRole();
         }
 
+        private string OutfitsToString(OutfitCategories[] array, string separator)
+        {
+            StringBuilder result = new StringBuilder();
+            for (int i = 0; i < array.Length; ++i)
+            {
+                result.Append(array[i].ToString());
+
+                if (i < array.Length - 1)
+                {
+                    result.Append(separator);
+                }
+            }
+            return result.ToString();
+        }
 
 
         private void ResetRole()
         {
-            if (CurrentRole.SimInRole != null)
+            if (CurrentRole != null)
             {
-                CurrentRole.SimInRole.InteractionQueue.CancelAllInteractions();
+                if (CurrentRole.SimInRole != null)
+                {
+                    CurrentRole.SimInRole.InteractionQueue.CancelAllInteractions();
+                }
+                EndRoleAndReplaceWithNew(CurrentRole);
             }
-            EndRoleAndReplaceWithNew(CurrentRole);
         }
 
         public void GetRoleTimes(out float startTime, out float endTime)
         {
-            startTime = mShowTimes[0] - 1F;
-            endTime = mShowTimes[mShowTimes.Length - 1] + (mShowDurationMins / 60) + 1F;
+            startTime = mShowTimes[0] - mTimeToPee - 1F;
+            endTime = mShowTimes[mShowTimes.Length - 1] + mTimeToPee + (mShowDurationMins / 60) + 1F;
 
         }
 
@@ -211,6 +239,10 @@ namespace Sims3.Gameplay.Objects.Misukisu
             {
                 Message.ShowError(DancersStage.NAME, "Sim cannot play the role", false, ex);
             }
+        }
+
+        private void TODOCheckThatShowInteractionsDontDuplicate()
+        {
         }
 
         private void pushSimToPeeBeforeShow(Sim sim)
