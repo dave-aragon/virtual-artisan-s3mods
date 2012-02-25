@@ -54,11 +54,10 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
         private static DrunkardsBottle.Owner ShowOwnerTuningDialog(DrunkardsBottle.Owner ownerType)
         {
             Dictionary<string, object> regTypes = new Dictionary<string, object>();
-            regTypes.Add("Just likes to hang around", DrunkardsBottle.Owner.Hangaround);
-            regTypes.Add("Is a tippler", DrunkardsBottle.Owner.Drinker);
-            //regTypes.Add("Is alcoholist", DrunkardsBottle.Owner.Drunkard);
+            regTypes.Add(DrunkardsBottle.Owner.Hangaround.ToString(), DrunkardsBottle.Owner.Hangaround);
+            regTypes.Add(DrunkardsBottle.Owner.Tippler.ToString(), DrunkardsBottle.Owner.Tippler);
 
-            object result = ComboSelectionDialog.Show("The owner of the bottle", regTypes, ownerType);
+            object result = ComboSelectionDialog.Show("The owner of the bottle is a", regTypes, ownerType.ToString());
             DrunkardsBottle.Owner newOwnerType = ownerType;
             if (result is DrunkardsBottle.Owner)
             {

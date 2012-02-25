@@ -8,7 +8,7 @@ using Sims3.Gameplay.Actors;
 using Sims3.Gameplay.Core;
 using Sims3.Gameplay.Interactions;
 using System.Diagnostics;
-using Misukisu.Common;
+using Misukisu.DancerSpot;
 using Sims3.Gameplay.Objects.Misukisu;
 using Sims3.Gameplay.Skills;
 using System.Collections;
