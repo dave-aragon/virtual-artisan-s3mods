@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using Misukisu.Common;
+using Misukisu.Drunkard;
 using Sims3.Gameplay.Abstracts;
 using Sims3.Gameplay.Actors;
 using Sims3.Gameplay.Autonomy;
@@ -26,7 +26,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
     public class DrunkardsBottle : GameObject, IRoleGiver, IRoleGiverExtended
     {
         public static  string NAME="Drunkard's Bottle";
-        //public enum Owner { Hangaround, CivilizedDrinker, Drunkard };
+       
         public enum Owner { Hangaround, Tippler };
         private Roles.Role mCurrentRole;
         private float mStartTime = 0F;
@@ -41,6 +41,12 @@ namespace Sims3.Gameplay.Objects.Misukisu
             base.AddInteraction(TuneDrunkard.Singleton);
             base.AddInteraction(TakeDrunkardHome.Singleton);
            
+        }
+
+        protected override void AddBuildBuyInteractions(List<InteractionDefinition> buildBuyInteractions)
+        {
+            buildBuyInteractions.Add(TuneDrunkard.Singleton);
+            base.AddBuildBuyInteractions(buildBuyInteractions);
         }
 
         public Lot GetTargetLot()
@@ -65,7 +71,10 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
         private void ResetRole()
         {
-            EndRoleAndReplaceWithNew(CurrentRole);
+            if (CurrentRole != null)
+            {
+                EndRoleAndReplaceWithNew(CurrentRole);
+            }
         }
 
         public void GetRoleTimes(out float startTime, out float endTime)
@@ -108,17 +117,6 @@ namespace Sims3.Gameplay.Objects.Misukisu
         public void AddRoleGivingInteraction(Actors.Sim sim)
         {
            
-
-
-            //try
-            //{
-
-            //    Message.Show("Adding role actions to " + (sim != null ? sim.FullName : "null"));
-            //}
-            //catch (Exception ex)
-            //{
-            //    Message.Show("Adding role actions to null " + ex.Message + " - " + new StackTrace().ToString());
-            //}
         }
 
         public Owner OwnerType {
@@ -148,13 +146,11 @@ namespace Sims3.Gameplay.Objects.Misukisu
                 Drunkard newRole = value as Drunkard;
                 if (newRole != null)
                 {
-                    //Message.Show("Custom role set! who the hack did this: " + new StackTrace().ToString());
                     this.mCurrentRole = newRole;
                 }
                 else if (value != null)
                 {
                     EndRoleAndReplaceWithNew(value);
-
                 }
                 else
                 {
@@ -182,15 +178,11 @@ namespace Sims3.Gameplay.Objects.Misukisu
                         {
                             this.mCurrentRole = aRole;
                             RoleManager.sRoleManager.AddRole(aRole);
-                            //Message.Show("Cloned pianist and swapped it to custom role");
                         }
                         else
                         {
                             Message.ShowError(DrunkardsBottle.NAME, "Cannot create custom role, clone failed", true, null);
-                           
                         }
-
-
                     }
                     else
                     {

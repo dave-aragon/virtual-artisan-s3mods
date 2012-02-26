@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using Misukisu.Common;
+using Misukisu.Sims3.Gameplay.Interactions.Paintedlady;
 using Sims3.Gameplay.Abstracts;
 using Sims3.Gameplay.Actors;
 using Sims3.Gameplay.Autonomy;
@@ -18,7 +18,7 @@ using Sims3.Gameplay.Utilities;
 using Sims3.SimIFace;
 using Sims3.UI;
 using Sims3.Gameplay.Objects.Counters;
-using Misukisu.Sims3.Gameplay.Interactions;
+using Misukisu.Sims3.Gameplay.Interactions.Paintedlady;
 
 namespace Sims3.Gameplay.Objects.Misukisu
 {
@@ -29,15 +29,32 @@ namespace Sims3.Gameplay.Objects.Misukisu
         private Roles.Role mCurrentRole;
         private float mStartTime = 0F;
         private float mEndTime = 0F;
-
-
+        private Sim mSlaveOwner;
 
         public override void OnStartup()
         {
             base.OnStartup();
             base.AddInteraction(TuneCourtesan.Singleton);
-            //base.AddInteraction(GetInfo.Singleton);
+            base.AddInteraction(TakeMistress.Singleton);
 
+        }
+
+        protected override void AddBuildBuyInteractions(List<InteractionDefinition> buildBuyInteractions)
+        {
+            buildBuyInteractions.Add(TuneCourtesan.Singleton);
+            base.AddBuildBuyInteractions(buildBuyInteractions);
+        }
+
+        public Lot GetTargetLot()
+        {
+            if (SlaveOwner != null)
+            {
+                return SlaveOwner.LotHome;
+            }
+            else
+            {
+                return LotCurrent;
+            }
         }
 
         public void TuningChanged(float startTime, float endTime)
@@ -50,7 +67,10 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
         private void ResetRole()
         {
-            EndRoleAndReplaceWithNew(CurrentRole);
+            if (CurrentRole != null)
+            {
+                EndRoleAndReplaceWithNew(CurrentRole);
+            }
         }
 
         public void GetRoleTimes(out float startTime, out float endTime)
@@ -89,21 +109,20 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
         public void AddRoleGivingInteraction(Actors.Sim sim)
         {
-
             sim.AddInteraction(BuyWooHoo.Singleton);
-
-            //try
-            //{
-
-            //    Message.Show("Adding role actions to " + (sim != null ? sim.FullName : "null"));
-            //}
-            //catch (Exception ex)
-            //{
-            //    Message.Show("Adding role actions to null " + ex.Message + " - " + new StackTrace().ToString());
-            //}
         }
 
-       
+        public Sim SlaveOwner
+        {
+            get
+            {
+                return this.mSlaveOwner;
+            }
+            set
+            {
+                this.mSlaveOwner = value;
+            }
+        }
 
         public Roles.Role CurrentRole
         {
@@ -152,10 +171,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
                         else
                         {
                             Message.ShowError(CourtesansPerfume.NAME, "Cannot create custom role, clone failed", true, null);
-
                         }
-
-
                     }
                     else
                     {
@@ -173,20 +189,20 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
         public void PushRoleStartingInteraction(Actors.Sim sim)
         {
-            try
-            {
-                //Message.Show("PushRoleStartingInteraction to " + (sim != null ? sim.FullName : "null"));
-            }
-            catch (Exception ex)
-            {
-                Message.ShowError(CourtesansPerfume.NAME, "Sim cannot play the role", false, ex);
-            }
+            //try
+            //{
+            //    //Message.Show("PushRoleStartingInteraction to " + (sim != null ? sim.FullName : "null"));
+            //}
+            //catch (Exception ex)
+            //{
+            //    Message.ShowError(CourtesansPerfume.NAME, "Sim cannot play the role", false, ex);
+            //}
         }
 
         public void RemoveRoleGivingInteraction(Actors.Sim sim)
         {
             sim.RemoveInteractionByType(BuyWooHoo.Singleton.GetType());
-            
+
         }
 
         public string RoleName(bool isFemale)
@@ -198,5 +214,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
         {
             get { return Role.RoleType.Pianist; }
         }
+
+  
     }
 }

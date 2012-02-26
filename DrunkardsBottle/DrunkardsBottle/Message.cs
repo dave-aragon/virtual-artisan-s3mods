@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Sims3.UI;
 
-namespace Misukisu.Common
+namespace Misukisu.Drunkard
 {
     class Message
     {

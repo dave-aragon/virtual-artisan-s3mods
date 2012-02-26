@@ -5,14 +5,14 @@ using Sims3.Gameplay.Interactions;
 using Sims3.Gameplay.Actors;
 using Sims3.Gameplay.Autonomy;
 using Sims3.SimIFace;
-using Misukisu.Common;
 using Sims3.UI.Controller;
 using Sims3.Gameplay.Interfaces;
 using Sims3.Gameplay.Objects.Misukisu;
 using Sims3.Gameplay.Core;
 using Sims3.Gameplay.Roles.Misukisu;
 
-namespace Misukisu.Sims3.Gameplay.Interactions
+
+namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
 {
     public class AfterWooHooCleanup : Interaction<Sim, Sim>
     {
@@ -25,7 +25,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions
             try
             {
                 Lot.MetaAutonomyType venueType =  base.Actor.LotCurrent.GetMetaAutonomyType;
-                Courtesan.SwitchToProperClothing(venueType,base.Actor);
+                Courtesan.SwitchToProperClothing(base.Actor, venueType);
             }
             catch (Exception e)
             {

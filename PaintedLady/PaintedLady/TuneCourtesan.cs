@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Text;
 using Sims3.Gameplay.Actors;
 using Sims3.Gameplay.Interactions;
-using Misukisu.Common;
+using Misukisu.Sims3.Gameplay.Interactions.Paintedlady;
 using Sims3.Gameplay.Autonomy;
 using Sims3.UI;
 using Sims3.SimIFace;
 using Sims3.Gameplay.Objects.Misukisu;
+using Sims3.Gameplay.Interfaces;
 
-namespace Misukisu.Sims3.Gameplay.Interactions
+namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
 {
 
-    public class TuneCourtesan : Interaction<Sim, CourtesansPerfume>
+    public class TuneCourtesan : ImmediateInteraction<IActor, CourtesansPerfume>
     {
         public static readonly InteractionDefinition Singleton = new Definition();
 
@@ -68,17 +69,16 @@ namespace Misukisu.Sims3.Gameplay.Interactions
             return changes;
         }
 
-       
 
-        private sealed class Definition : InteractionDefinition<Sim, CourtesansPerfume, TuneCourtesan>
+        private sealed class Definition : ActorlessInteractionDefinition<IActor, CourtesansPerfume, TuneCourtesan>
         {
 
-            protected override string GetInteractionName(Sim a, CourtesansPerfume target, InteractionObjectPair interaction)
+            protected override string GetInteractionName(IActor a, CourtesansPerfume target, InteractionObjectPair interaction)
             {
-                return "Tuning...";
+                return "Tuning Dialog...";
             }
 
-            protected override bool Test(Sim a, CourtesansPerfume target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
+            protected override bool Test(IActor actor, CourtesansPerfume target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
                 return !isAutonomous;
             }

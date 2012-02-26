@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Sims3.Gameplay.Interactions;
 using Sims3.Gameplay.Actors;
-using Misukisu.Common;
+using Misukisu.Sims3.Gameplay.Interactions.Paintedlady;
 using Sims3.Gameplay.Objects.Misukisu;
 using Sims3.Gameplay.Autonomy;
 using Sims3.SimIFace;
@@ -13,7 +13,7 @@ using Sims3.Gameplay.Socializing;
 using Sims3.UI.Controller;
 using Sims3.Gameplay.ActorSystems;
 
-namespace Misukisu.Sims3.Gameplay.Interactions
+namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
 {
     class BuyWooHoo : Interaction<Sim, Sim>
     {
@@ -44,6 +44,10 @@ namespace Misukisu.Sims3.Gameplay.Interactions
                     buyer.InteractionQueue.AddAfterCheckingForDuplicates(
                        AfterWooHooCleanup.Singleton.CreateInstance(buyer, buyer,
                        new InteractionPriority(InteractionPriorityLevel.UserDirected), false, false));
+                }
+                else
+                {
+                    Message.Show("All the beds in this lot are already in use");
                 }
             }
             catch (Exception e)

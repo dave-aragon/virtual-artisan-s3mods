@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Sims3.Gameplay.Interactions;
 using Sims3.Gameplay.Actors;
-using Misukisu.Common;
+using Misukisu.Drunkard;
 using Sims3.Gameplay.Roles.Misukisu;
 using Sims3.Gameplay.Autonomy;
 using Sims3.SimIFace;
@@ -44,7 +44,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
                 }
                 
 
-                return "Take " + bottleOwner + " Home (non-revertable, experimental)";
+                return "Ask " + bottleOwner + " to Hang Around at Your Place (non-revertable, experimental)";
             }
 
             protected override bool Test(Sim a, DrunkardsBottle target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)

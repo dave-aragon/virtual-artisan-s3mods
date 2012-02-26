@@ -9,10 +9,10 @@ using Sims3.Gameplay.Autonomy;
 using Sims3.Gameplay.Roles;
 using Sims3.SimIFace;
 using Sims3.Gameplay.Objects.Misukisu;
-using Misukisu.Drunkard;
+using Misukisu.Sims3.Gameplay.Interactions.Paintedlady;
 using Sims3.Gameplay.Situations;
 
-namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
+namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
 {
     class GoToALot : Interaction<Sim, Sim>, IRouteFromInventoryOrSelfWithoutCarrying
     {
@@ -28,7 +28,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
                 if ((assignedRole != null) && assignedRole.IsActive)
                 {
                     Lot target = null;
-                    DrunkardsBottle bottle = assignedRole.RoleGivingObject as DrunkardsBottle;
+                    CourtesansPerfume bottle = assignedRole.RoleGivingObject as CourtesansPerfume;
                     if (bottle != null)
                     {
                         target = bottle.GetTargetLot();
@@ -48,7 +48,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
                             instance = GoToLot.Singleton
                               .CreateInstance(target, base.Actor, base.GetPriority(), false, false);
                             // Greet to get inside, visitsituation to really do something inside 
-                           
+
                             if (VisitSituation.FindVisitSituationInvolvingGuest(base.Actor) == null)
                             {
                                 VisitSituation.Create(base.Actor, target);
@@ -68,7 +68,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
             }
             catch (Exception ex)
             {
-                Message.ShowError(DrunkardsBottle.NAME, "Cannot take role sims to role lot", false, ex);
+                Message.ShowError(CourtesansPerfume.NAME, "Cannot take role sims to role lot", false, ex);
             }
             return false;
         }
