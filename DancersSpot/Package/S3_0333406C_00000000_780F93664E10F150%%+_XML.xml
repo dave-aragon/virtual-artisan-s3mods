@@ -1,0 +1,23 @@
+<complate category="Leather_Fur" type="fabric" name="leatherSuedeMed01" typeConverter="Medator.ComplateConverter,Medator" surfaceMaterial="livleath">
+  <GUID>adf6fc85-e629-4944-ba38-3b81e320dec9</GUID>
+  <variables>
+    <param type="texture" name="Background Image" uiCategory="Bg Settings" default="($assetRoot)\InGame\Complates\Materials\Leather_Fur\leatherSuedeMed01_leather.tga" uiEditor="Medator.ImageFileEditor, Medator" />
+    <param type="float" name="H Bg" uiCategory="Bg Settings" uiVisible="false" default="-0.002" />
+    <param type="float" name="S Bg" uiCategory="Bg Settings" uiVisible="false" default="-0.6386" />
+    <param type="float" name="V Bg" uiCategory="Bg Settings" uiVisible="false" default="-0.2427" />
+    <param type="float" name="Base H Bg" default="0.0969697" uiVisible="false" />
+    <param type="float" name="Base S Bg" default="1" uiVisible="false" />
+    <param type="float" name="Base V Bg" default="0.8627451" uiVisible="false" />
+    <param type="string" name="HSVShift Bg" uiCategory="Bg Settings" uiEditor="Medator.HSVShiftTypeEditor, Medator" default="-0.002, -0.6386, -0.2427" />
+    <param type="texture" name="rgbmask" uiVisible="false" default="($assetRoot)\InGame\Complates\Materials\Miscellaneous\RChannelOnly_1.tga" />
+    <param type="texture" name="specmap" uiVisible="false" default="($assetRoot)\InGame\Complates\Materials\Leather_Fur\leatherSuedeMed01_s.tga" />
+  </variables>
+  <texturePart>
+    <destination>
+      <step type="ColorFill" color="0,0,0,0" />
+      <step type="ChannelSelect" texture="($rgbmask)" select="1.0000,0.0000,0.0000,0.0000" colorWrite="Alpha" />
+      <step type="HSVShift" texture="($Background Image)" hsvShift="($H Bg),($S Bg),($V Bg)" enableBlending="true" srcBlend="DestAlpha" dstBlend="InvDestAlpha" colorWrite="Color" />
+      <step type="ChannelSelect" texture="($specmap)" select="1.0,0.0,0.0,0.0" colorWrite="Alpha" />
+    </destination>
+  </texturePart>
+</complate>

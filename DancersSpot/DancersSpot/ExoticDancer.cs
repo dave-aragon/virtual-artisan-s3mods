@@ -15,10 +15,9 @@ using System.Collections;
 
 namespace Sims3.Gameplay.Roles.Misukisu
 {
-
-
     public class ExoticDancer : Pianist
     {
+        private bool mIsStoryProgressionProtected = false;
 
         public ExoticDancer()
             : base()
@@ -36,31 +35,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
 
         public static ExoticDancer clone(Role toClone, Sim simInRole)
         {
-            SimDescription actor = null;
-            List<SimDescription> townies = Household.AllTownieSimDescriptions();
-            foreach (SimDescription townie in townies)
-            {
-                if (simInRole == townie.CreatedSim)
-                {
-                    actor = townie;
-                    //Message.Show("Clone found the actor");
-                    break;
-                }
-            }
-
-            if (actor == null)
-            {
-                List<SimDescription> residents = Household.AllSimsLivingInWorld();
-                foreach (SimDescription townie in residents)
-                {
-                    if (simInRole == townie.CreatedSim)
-                    {
-                        actor = townie;
-                        //Message.Show("Clone found the actor");
-                        break;
-                    }
-                }
-            }
+            SimDescription actor = findSimInRole(toClone, simInRole);
 
             ExoticDancer newRole = null;
             if (actor != null)
@@ -85,14 +60,101 @@ namespace Sims3.Gameplay.Roles.Misukisu
 
         }
 
+        private static SimDescription findSimInRole(Role toClone, Sim simInRole)
+        {
+            SimDescription actor = null;
+            //StringBuilder s = new StringBuilder();
+            List<SimDescription> townies = Household.AllTownieSimDescriptions();
+            foreach (SimDescription townie in townies)
+            {
+
+                //if (townie.AssignedRole != null)
+                //{
+                //    s.Append("\n"+townie.FullName + " has role " + townie.AssignedRole.GetType().Name);
+                //}
+
+                if (townie.AssignedRole == toClone || simInRole == townie.CreatedSim)
+                {
+                    actor = townie;
+                    //Message.Show("Clone found the actor");
+                    break;
+                }
+            }
+
+            if (actor == null)
+            {
+                List<SimDescription> sims = Household.AllSimsLivingInWorld();
+                foreach (SimDescription townie in sims)
+                {
+                    //if (townie.AssignedRole != null)
+                    //{
+                    //    s.Append("\n" + townie.FullName + " has role " + townie.AssignedRole.GetType().Name);
+                    //}
+                    if (townie.AssignedRole == toClone || simInRole == townie.CreatedSim)
+                    {
+                        actor = townie;
+                        //Message.Show("Clone found the actor");
+                        break;
+                    }
+                }
+            }
+
+            if (actor == null)
+            {
+                List<SimDescription> sims = Household.EveryHumanSimDescription();
+                foreach (SimDescription townie in sims)
+                {
+                    //if (townie.AssignedRole != null)
+                    //{
+                    //    s.Append("\n" + townie.FullName + " has role " + townie.AssignedRole.GetType().Name);
+                    //}
+                    if (townie.AssignedRole == toClone || simInRole == townie.CreatedSim)
+                    {
+                        actor = townie;
+                        //Message.Show("Clone found the actor");
+                        break;
+                    }
+                }
+            }
+
+            //Message.Show("Roles were: "+ s.ToString());
+
+            return actor;
+        }
+
+        private void ProtectSimFromStoryProgression()
+        {
+            if ((this.SimInRole != null) && !this.mIsStoryProgressionProtected)
+            {
+                this.mSim.GetMiniSimForProtection().AddProtection(MiniSimDescription.ProtectionFlag.FullFromOccupationJob);
+                this.mIsStoryProgressionProtected = true;
+            }
+        }
+
+        private void UnprotectSimFromStoryProgression()
+        {
+            if (((this.SimInRole != null) && this.mIsStoryProgressionProtected) && !GameStates.IsGameShuttingDown)
+            {
+                this.mSim.GetMiniSimForProtection().RemoveProtection(MiniSimDescription.ProtectionFlag.FullFromOccupationJob);
+                this.mIsStoryProgressionProtected = false;
+            }
+        }
+
         protected override void EndRole()
         {
-            //Message.Show("Custom role ending " + new StackTrace().ToString());
-            base.EndRole();
-            //if (this.mSim.CreatedSim != null)
-            //{
-            //    this.mSim.CreatedSim.SwitchToPreviousOutfitWithoutSpin();
-            //}
+            bool isActive = base.IsActive;
+            base.RoleGivingObject.RemoveRoleGivingInteraction(base.mSim.CreatedSim);
+            UnprotectSimFromStoryProgression();
+            Sim createdSim = base.mSim.CreatedSim;
+            if (isActive && (createdSim != null))
+            {
+                // CreatedSim.Motives.RemoveMotive(kind);
+                createdSim.Motives.RestoreDecays();
+                createdSim.InteractionQueue.CancelAllInteractions();
+                //this.mSim.CreatedSim.SwitchToOutfitWithoutSpin(OutfitCategories.Everyday);
+                Sim.MakeSimGoHome(createdSim, false);
+
+            }
         }
 
         protected override void SwitchIntoOutfit()
@@ -103,7 +165,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
                 this.mSim.CreatedSim.InteractionQueue.CancelAllInteractions();
                 Lot.MetaAutonomyType venueType = base.RoleGivingObject.LotCurrent.GetMetaAutonomyType;
                 Sim sim = this.mSim.CreatedSim;
-                SwitchToProperClothing(venueType, sim);
+                SwitchToProperClothing(venueType, sim,false);
 
             }
             catch (Exception e)
@@ -113,7 +175,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
 
         }
 
-        public static void SwitchToProperClothing(Lot.MetaAutonomyType venueType, Sim sim)
+        public static void SwitchToProperClothing(Lot.MetaAutonomyType venueType, Sim sim, bool spin)
         {
             SimIFace.CAS.OutfitCategories outfitType = SimIFace.CAS.OutfitCategories.Everyday;
             if (venueType == Lot.MetaAutonomyType.CocktailLoungeAsian || venueType == Lot.MetaAutonomyType.CocktailLoungeCelebrity || venueType == Lot.MetaAutonomyType.CocktailLoungeVampire)
@@ -121,7 +183,14 @@ namespace Sims3.Gameplay.Roles.Misukisu
                 outfitType = SimIFace.CAS.OutfitCategories.Formalwear;
             }
 
-            sim.SwitchToOutfitWithoutSpin(Sim.ClothesChangeReason.GoingToWork, outfitType);
+            if (spin)
+            {
+                sim.SwitchToOutfitWithSpin(Sim.ClothesChangeReason.GoingToWork, outfitType);
+            }
+            else
+            {
+                sim.SwitchToOutfitWithoutSpin(Sim.ClothesChangeReason.GoingToWork, outfitType);
+            }
         }
 
         protected override void StartRole()
@@ -131,7 +200,6 @@ namespace Sims3.Gameplay.Roles.Misukisu
             {
                 if (!this.mIsActive && this.mSim.IsValidDescription)
                 {
-
                     InstantiateSim();
                     this.SwitchIntoOutfit();
                     if (this.mSim.CreatedSim != null)
@@ -143,7 +211,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
                         {
                             this.mIsActive = true;
                             MakeSimComeToRoleLot();
-
+                            ProtectSimFromStoryProgression();
                             if (base.mSim.CreatedSim != null)
                             {
                                 base.mRoleGivingObject.AddRoleGivingInteraction(base.mSim.CreatedSim);
@@ -204,8 +272,8 @@ namespace Sims3.Gameplay.Roles.Misukisu
             }
         }
 
-       
 
+        // TODO: set the career title keys
         public override string CareerTitleKey
         {
             get
