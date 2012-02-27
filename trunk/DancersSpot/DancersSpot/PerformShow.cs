@@ -182,7 +182,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions
 
             Lot.MetaAutonomyType venueType = base.Target.LotCurrent.GetMetaAutonomyType;
 
-            ExoticDancer.SwitchToProperClothing(venueType, base.Actor);
+            ExoticDancer.SwitchToProperClothing(venueType, base.Actor,true);
 
             return true;
         }
@@ -226,25 +226,20 @@ namespace Misukisu.Sims3.Gameplay.Interactions
 
             protected override bool Test(Sim sim, DancersStage target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
-
-                if (!PerformShow.ObjectHasSpaceAboveIt(target as GameObject))
-                {
-                    greyedOutTooltipCallback = new GreyedOutTooltipCallback(PerformShow.Definition.greyedOutTooltipCallbackForObjectAbove);
-                    return false;
-                }
-                if (PerformShow.DanceSpotObstructed(target))
-                {
-                    greyedOutTooltipCallback = new GreyedOutTooltipCallback(PerformShow.Definition.greyedOutTooltipCallbackForSpotObstructed);
-                    return false;
-                }
-
-
                 if (target.CurrentRole != null && target.CurrentRole.SimInRole == sim && !isAutonomous)
                 {
+                    if (!PerformShow.ObjectHasSpaceAboveIt(target as GameObject))
+                    {
+                        //greyedOutTooltipCallback = new GreyedOutTooltipCallback(PerformShow.Definition.greyedOutTooltipCallbackForObjectAbove);
+                        return false;
+                    }
+                    if (PerformShow.DanceSpotObstructed(target))
+                    {
+                        //greyedOutTooltipCallback = new GreyedOutTooltipCallback(PerformShow.Definition.greyedOutTooltipCallbackForSpotObstructed);
+                        return false;
+                    }
                     return true;
                 }
-
-
                 return false;
             }
         }

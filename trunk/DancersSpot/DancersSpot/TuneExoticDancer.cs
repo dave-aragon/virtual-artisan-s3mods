@@ -27,7 +27,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions
                 OutfitCategories newFirstOutfit = ShowFirstOutfitTuningDialog(firstOutfit);
                 OutfitCategories lastOutfit = base.Target.GetLastOutfit();
                 OutfitCategories newLastOutfit = ShowLastOutfitTuningDialog(lastOutfit);
-                Message.Show("Old outfits were: " + firstOutfit + " - " + lastOutfit);
+                //Message.Show("Old outfits were: " + firstOutfit + " - " + lastOutfit);
 
                 float showDuration = base.Target.ShowDurationMins;
                 float[] showTimes = base.Target.ShowTimes;
@@ -87,7 +87,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions
         {
             bool changes = false;
             string showTimesString = ShowTimesToString(showTimes, ":");
-            // TODO: why only numbers allowed?
+           
             string[] values = ThreeStringInputDialog.Show("The Dancer",
                 new string[] { "Show Times Are (hour, 0-24, separate with ':')", "Show Lasts (minutes, 0-300)", "Spare field for future needs" },
                 new string[] { showTimesString, showDuration.ToString(), "" }, false);
@@ -153,7 +153,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions
 
             protected override string GetInteractionName(IActor a, DancersStage target, InteractionObjectPair interaction)
             {
-                return "Dance Show Tuning...";
+                return "Tuning Dialogs...";
             }
 
             protected override bool Test(IActor actor, DancersStage target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)

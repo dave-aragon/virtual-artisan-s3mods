@@ -41,7 +41,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
         {
             base.OnStartup();
             base.AddInteraction(TuneExoticDancer.Singleton);
-            base.AddInteraction(PerformShow.Singleton);
+            //base.AddInteraction(PerformShow.Singleton);
         }
 
         protected override void AddBuildBuyInteractions(List<InteractionDefinition> buildBuyInteractions)
@@ -123,8 +123,6 @@ namespace Sims3.Gameplay.Objects.Misukisu
         {
             this.mShowIndex = 0;
             calculateNextShowTime();
-
-
         }
 
         private void calculateNextShowTime()
@@ -193,10 +191,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
                         else
                         {
                             Message.ShowError(DancersStage.NAME, "Cannot create custom role, clone failed", true, null);
-
                         }
-
-
                     }
                     else
                     {
@@ -231,8 +226,6 @@ namespace Sims3.Gameplay.Objects.Misukisu
                     InteractionInstance instance = PerformShow.Singleton.CreateInstance(this, sim,
                         new InteractionPriority(InteractionPriorityLevel.RequiredNPCBehavior), false, false);
                     sim.InteractionQueue.AddAfterCheckingForDuplicates(instance);
-
-
                 }
             }
             catch (Exception ex)
