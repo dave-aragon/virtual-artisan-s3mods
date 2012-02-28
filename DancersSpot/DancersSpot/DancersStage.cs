@@ -41,11 +41,13 @@ namespace Sims3.Gameplay.Objects.Misukisu
         {
             base.OnStartup();
             base.AddInteraction(TuneExoticDancer.Singleton);
+            base.AddInteraction(StartShowNow.Singleton);
             //base.AddInteraction(PerformShow.Singleton);
         }
 
         protected override void AddBuildBuyInteractions(List<InteractionDefinition> buildBuyInteractions)
         {
+
             buildBuyInteractions.Add(TuneExoticDancer.Singleton);
             base.AddBuildBuyInteractions(buildBuyInteractions);
         }
@@ -75,8 +77,9 @@ namespace Sims3.Gameplay.Objects.Misukisu
             {
                 mShowOutfits = new OutfitCategories[] { newFirstOutfit, OutfitCategories.Sleepwear, newLastOutfit };
             }
-            else {
-                mShowOutfits = new OutfitCategories[] { newFirstOutfit,newLastOutfit };
+            else
+            {
+                mShowOutfits = new OutfitCategories[] { newFirstOutfit, newLastOutfit };
             }
 
             Message.Show("new Show outfits are: " + OutfitsToString(mShowOutfits, " - "));
@@ -215,22 +218,31 @@ namespace Sims3.Gameplay.Objects.Misukisu
                 {
                     //Message.Show("It is SHOWTIME");
                     calculateNextShowTime();
-                    ExoticDancer currentRole = this.CurrentRole as ExoticDancer;
-                    if (currentRole != null)
-                    {
-                        currentRole.FreezeMotivesWhilePlaying();
-                    }
-
-                    pushSimToPeeBeforeShow(sim);
-
-                    InteractionInstance instance = PerformShow.Singleton.CreateInstance(this, sim,
-                        new InteractionPriority(InteractionPriorityLevel.RequiredNPCBehavior), false, false);
-                    sim.InteractionQueue.AddAfterCheckingForDuplicates(instance);
+                    PushSimToPerformShow(sim);
                 }
             }
             catch (Exception ex)
             {
                 Message.ShowError(DancersStage.NAME, "Sim cannot play the role", false, ex);
+            }
+        }
+
+        public void PushSimToPerformShow(Actors.Sim sim)
+        {
+            if (sim != null)
+            {
+                ExoticDancer currentRole = this.CurrentRole as ExoticDancer;
+                if (currentRole != null)
+                {
+                    currentRole.FreezeMotivesWhilePlaying();
+
+
+                    //pushSimToPeeBeforeShow(sim);
+
+                    InteractionInstance instance = PerformShow.Singleton.CreateInstance(this, sim,
+                        new InteractionPriority(InteractionPriorityLevel.RequiredNPCBehavior), false, false);
+                    sim.InteractionQueue.AddAfterCheckingForDuplicates(instance);
+                }
             }
         }
 

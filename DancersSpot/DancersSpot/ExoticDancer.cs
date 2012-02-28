@@ -12,6 +12,7 @@ using Misukisu.DancerSpot;
 using Sims3.Gameplay.Objects.Misukisu;
 using Sims3.Gameplay.Skills;
 using System.Collections;
+using Sims3.Gameplay.Autonomy;
 
 namespace Sims3.Gameplay.Roles.Misukisu
 {
@@ -162,7 +163,6 @@ namespace Sims3.Gameplay.Roles.Misukisu
             //Message.Show("Switching into outft");
             try
             {
-                this.mSim.CreatedSim.InteractionQueue.CancelAllInteractions();
                 Lot.MetaAutonomyType venueType = base.RoleGivingObject.LotCurrent.GetMetaAutonomyType;
                 Sim sim = this.mSim.CreatedSim;
                 SwitchToProperClothing(venueType, sim,false);
@@ -175,7 +175,26 @@ namespace Sims3.Gameplay.Roles.Misukisu
 
         }
 
-        public static void SwitchToProperClothing(Lot.MetaAutonomyType venueType, Sim sim, bool spin)
+        public new  void FreezeMotivesWhilePlaying()
+        {
+            base.FreezeMotivesWhilePlaying();
+            base.SimInRole.Motives.SetDecay(CommodityKind.Hygiene, false);
+        }
+
+        public new void UnfreezeMotivesWhileNotPlaying()
+        {
+            base.UnfreezeMotivesWhileNotPlaying();
+            base.SimInRole.Motives.SetDecay(CommodityKind.Hygiene, true);
+        }
+
+        public void AfterShowTasks()
+        {
+            SwitchIntoOutfit();
+            UnfreezeMotivesWhileNotPlaying();
+        }
+
+
+       private void SwitchToProperClothing(Lot.MetaAutonomyType venueType, Sim sim, bool spin)
         {
             SimIFace.CAS.OutfitCategories outfitType = SimIFace.CAS.OutfitCategories.Everyday;
             if (venueType == Lot.MetaAutonomyType.CocktailLoungeAsian || venueType == Lot.MetaAutonomyType.CocktailLoungeCelebrity || venueType == Lot.MetaAutonomyType.CocktailLoungeVampire)
@@ -201,9 +220,11 @@ namespace Sims3.Gameplay.Roles.Misukisu
                 if (!this.mIsActive && this.mSim.IsValidDescription)
                 {
                     InstantiateSim();
-                    this.SwitchIntoOutfit();
+                   
                     if (this.mSim.CreatedSim != null)
                     {
+                        this.mSim.CreatedSim.InteractionQueue.CancelAllInteractions();
+                        this.SwitchIntoOutfit();
                         //AddNeededMotives();
                         AddNeededSkills();
 

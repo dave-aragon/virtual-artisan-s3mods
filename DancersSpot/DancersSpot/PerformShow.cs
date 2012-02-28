@@ -182,8 +182,11 @@ namespace Misukisu.Sims3.Gameplay.Interactions
 
             Lot.MetaAutonomyType venueType = base.Target.LotCurrent.GetMetaAutonomyType;
 
-            ExoticDancer.SwitchToProperClothing(venueType, base.Actor,true);
-
+            ExoticDancer dancer = base.Target.CurrentRole as ExoticDancer;
+            if (dancer != null)
+            {
+                dancer.AfterShowTasks();
+            }
             return true;
         }
 
