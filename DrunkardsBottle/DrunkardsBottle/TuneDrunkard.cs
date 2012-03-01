@@ -9,11 +9,12 @@ using Sims3.UI;
 using Sims3.SimIFace;
 using Sims3.Gameplay.Objects.Misukisu;
 using Sims3.Gameplay.Interfaces;
+using Sims3.Gameplay.Utilities;
 
 namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
 {
-    
-    public class TuneDrunkard :  ImmediateInteraction<IActor, DrunkardsBottle>
+
+    public class TuneDrunkard : ImmediateInteraction<IActor, DrunkardsBottle>
     {
         public static readonly InteractionDefinition Singleton = new Definition();
 
@@ -21,9 +22,9 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
         {
             try
             {
-               DrunkardsBottle.Owner ownerType =base.Target.OwnerType;
-               DrunkardsBottle.Owner newOwnerType = ShowOwnerTuningDialog(ownerType);
-                
+                DrunkardsBottle.Owner ownerType = base.Target.OwnerType;
+                DrunkardsBottle.Owner newOwnerType = ShowOwnerTuningDialog(ownerType);
+
                 float startTime;
                 float endTime;
                 base.Target.GetRoleTimes(out startTime, out endTime);
@@ -38,7 +39,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
             }
             catch (Exception e)
             {
-                Message.ShowError(DrunkardsBottle.NAME, "Tuning failed, please try again",false,e);
+                Message.ShowError(DrunkardsBottle.NAME, "Tuning failed, please try again", false, e);
             }
             return true;
         }
@@ -73,14 +74,16 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
         private static DrunkardsBottle.Owner ShowOwnerTuningDialog(DrunkardsBottle.Owner ownerType)
         {
             Dictionary<string, object> regTypes = new Dictionary<string, object>();
-            regTypes.Add(DrunkardsBottle.Owner.Hangaround.ToString(), DrunkardsBottle.Owner.Hangaround);
-            regTypes.Add(DrunkardsBottle.Owner.Tippler.ToString(), DrunkardsBottle.Owner.Tippler);
-
+            regTypes.Add(DrunkardsBottle.Owner.Hangaround.ToString(), DrunkardsBottle.Owner.Hangaround.ToString());
+            regTypes.Add(DrunkardsBottle.Owner.Tippler.ToString(), DrunkardsBottle.Owner.Tippler.ToString());
+            string title = Localization.LocalizeString("Misukisu.Drunkard.Tuning.TypeDialog:Title", new object[0]);
             object result = ComboSelectionDialog.Show("The owner of the bottle is a", regTypes, ownerType.ToString());
             DrunkardsBottle.Owner newOwnerType = ownerType;
-            if (result is DrunkardsBottle.Owner)
+
+            string userSelection = result as string;
+            if (userSelection != null)
             {
-                newOwnerType = (DrunkardsBottle.Owner)result;
+                newOwnerType = (DrunkardsBottle.Owner)Enum.Parse(typeof(DrunkardsBottle.Owner), userSelection, true);
             }
             return newOwnerType;
         }
