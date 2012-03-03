@@ -18,7 +18,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions
     {
         public static readonly InteractionDefinition Singleton = new Definition();
 
-        protected override bool Run()
+        public override bool Run()
         {
             try
             {
@@ -38,12 +38,12 @@ namespace Misukisu.Sims3.Gameplay.Interactions
         private sealed class Definition : ActorlessInteractionDefinition<IActor, DancersStage, StartShowNow>
         {
 
-            protected override string GetInteractionName(IActor a, DancersStage target, InteractionObjectPair interaction)
+            public override string GetInteractionName(IActor a, DancersStage target, InteractionObjectPair interaction)
             {
                 return "Start Extra Show Now";
             }
 
-            protected override bool Test(IActor actor, DancersStage target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
+            public override bool Test(IActor actor, DancersStage target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
                 return !isAutonomous;
             }

@@ -20,7 +20,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
         public static readonly ISoloInteractionDefinition Singleton = new Definition();
 
         // Methods
-        protected override bool Run()
+        public override bool Run()
         {
             try
             {
@@ -77,7 +77,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
         private sealed class Definition : SoloSimInteractionDefinition<GoToALot>
         {
             // Methods
-            protected override bool Test(Sim a, Sim target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
+            public override bool Test(Sim a, Sim target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
                 if (a.SimDescription.HasActiveRole)
                 {

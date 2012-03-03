@@ -42,27 +42,27 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="ScriptCore">
-      <HintPath>..\..\..\..\..\..\Documents\Visual Studio 2010\References\ScriptCore.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Temp\References\ScriptCore.dll</HintPath>
     </Reference>
     <Reference Include="SimIFace">
-      <HintPath>..\..\..\..\..\..\Documents\Visual Studio 2010\References\SimIFace.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Temp\References\SimIFace.dll</HintPath>
     </Reference>
     <Reference Include="Sims3GameplayObjects">
-      <HintPath>..\..\..\..\..\..\Documents\Visual Studio 2010\References\Sims3GameplayObjects.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Temp\References\Sims3GameplayObjects.dll</HintPath>
     </Reference>
     <Reference Include="Sims3GameplaySystems">
-      <HintPath>..\..\..\..\..\..\Documents\Visual Studio 2010\References\Sims3GameplaySystems.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Temp\References\Sims3GameplaySystems.dll</HintPath>
     </Reference>
     <Reference Include="Sims3Metadata">
-      <HintPath>..\..\..\..\..\..\Documents\Visual Studio 2010\References\Sims3Metadata.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Temp\References\Sims3Metadata.dll</HintPath>
     </Reference>
     <Reference Include="Sims3StoreObjects">
-      <HintPath>..\..\..\..\..\..\Documents\Visual Studio 2010\References\Sims3StoreObjects.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\Temp\References\Sims3StoreObjects.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
-    <Reference Include="UI">
-      <HintPath>..\..\..\..\..\..\Documents\Visual Studio 2010\References\UI.dll</HintPath>
+    <Reference Include="ui">
+      <HintPath>..\..\..\..\..\..\..\..\Temp\References\ui.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

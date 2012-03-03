@@ -18,9 +18,9 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
     {
         // Fields
         public static readonly Definition Singleton = new Definition();
-        
-       
-        protected override bool Run()
+
+
+        public override bool Run()
         {
             try
             {
@@ -37,12 +37,12 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
         public sealed class Definition : SoloSimInteractionDefinition<AfterWooHooCleanup>
         {
             
-            protected override string GetInteractionName(Sim actor, Sim target, InteractionObjectPair iop)
+            public override string GetInteractionName(Sim actor, Sim target, InteractionObjectPair iop)
             {
                 return "Finish the deal";
             }            
 
-            protected override bool Test(Sim a, Sim target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
+            public override bool Test(Sim a, Sim target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
                 
                 if (a.OccultManager.DisallowClothesChange())

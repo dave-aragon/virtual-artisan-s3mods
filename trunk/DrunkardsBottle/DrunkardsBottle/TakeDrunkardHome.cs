@@ -17,7 +17,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
     {
         public static readonly InteractionDefinition Singleton = new Definition();
 
-        protected override bool Run()
+        public override bool Run()
         {
                 if (base.Target.CurrentRole != null)
                 {
@@ -31,7 +31,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
         private sealed class Definition : InteractionDefinition<Sim, DrunkardsBottle, TakeDrunkardHome>
         {
 
-            protected override string GetInteractionName(Sim a, DrunkardsBottle target, InteractionObjectPair interaction)
+            public override string GetInteractionName(Sim a, DrunkardsBottle target, InteractionObjectPair interaction)
             {
                 string bottleOwner = "Bottle Owner";
                 if (target.CurrentRole != null)
@@ -47,7 +47,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
                 return "Ask " + bottleOwner + " to Hang Around at Your Place (non-revertable, experimental)";
             }
 
-            protected override bool Test(Sim a, DrunkardsBottle target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
+            public override bool Test(Sim a, DrunkardsBottle target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
                 if (!isAutonomous && target.CurrentRole != null && target.CurrentRole.SimInRole != null)
                 {

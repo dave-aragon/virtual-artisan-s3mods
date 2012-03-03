@@ -17,8 +17,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
 
     public class Courtesan : Pianist
     {
-        private bool mIsStoryProgressionProtected = false;
-
+        
         public Courtesan()
             : base()
         { }
@@ -54,7 +53,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             // base.SimulateRole(minPassed);
         }
 
-        protected override void EndRole()
+        public override void EndRole()
         {
             bool isActive = base.IsActive;
             base.RoleGivingObject.RemoveRoleGivingInteraction(base.mSim.CreatedSim);
@@ -71,7 +70,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             }
         }
 
-        protected override void SwitchIntoOutfit()
+        public override void SwitchIntoOutfit()
         {
             //Message.Show("Switching into outft");
             try
@@ -104,7 +103,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             sim.SwitchToOutfitWithoutSpin(Sim.ClothesChangeReason.GoingToWork, outfitType);
         }
 
-        protected override void StartRole()
+        public override void StartRole()
         {
             //Message.Show("starting new custom role ");
             try
@@ -232,23 +231,9 @@ namespace Sims3.Gameplay.Roles.Misukisu
             return actor;
         }
 
-        private void ProtectSimFromStoryProgression()
-        {
-            if ((this.SimInRole != null) && !this.mIsStoryProgressionProtected)
-            {
-                this.mSim.GetMiniSimForProtection().AddProtection(MiniSimDescription.ProtectionFlag.FullFromOccupationJob);
-                this.mIsStoryProgressionProtected = true;
-            }
-        }
+       
 
-        private void UnprotectSimFromStoryProgression()
-        {
-            if (((this.SimInRole != null) && this.mIsStoryProgressionProtected) && !GameStates.IsGameShuttingDown)
-            {
-                this.mSim.GetMiniSimForProtection().RemoveProtection(MiniSimDescription.ProtectionFlag.FullFromOccupationJob);
-                this.mIsStoryProgressionProtected = false;
-            }
-        }
+       
     }
 
 }

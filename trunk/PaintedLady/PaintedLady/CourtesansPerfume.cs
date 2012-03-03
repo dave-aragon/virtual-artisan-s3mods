@@ -18,7 +18,6 @@ using Sims3.Gameplay.Utilities;
 using Sims3.SimIFace;
 using Sims3.UI;
 using Sims3.Gameplay.Objects.Counters;
-using Misukisu.Sims3.Gameplay.Interactions.Paintedlady;
 
 namespace Sims3.Gameplay.Objects.Misukisu
 {
@@ -39,7 +38,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
         }
 
-        protected override void AddBuildBuyInteractions(List<InteractionDefinition> buildBuyInteractions)
+        public override void AddBuildBuyInteractions(List<InteractionDefinition> buildBuyInteractions)
         {
             buildBuyInteractions.Add(TuneCourtesan.Singleton);
             base.AddBuildBuyInteractions(buildBuyInteractions);

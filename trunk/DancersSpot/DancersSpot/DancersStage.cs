@@ -45,7 +45,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
             //base.AddInteraction(PerformShow.Singleton);
         }
 
-        protected override void AddBuildBuyInteractions(List<InteractionDefinition> buildBuyInteractions)
+        public override void AddBuildBuyInteractions(List<InteractionDefinition> buildBuyInteractions)
         {
 
             buildBuyInteractions.Add(TuneExoticDancer.Singleton);
