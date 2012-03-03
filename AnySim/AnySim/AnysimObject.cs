@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using Misukisu.Anysim;
+using Misukisu.Common;
 using Sims3.Gameplay.Abstracts;
 using Sims3.Gameplay.Actors;
 using Sims3.Gameplay.Autonomy;
@@ -38,7 +38,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
         }
 
-        protected override void AddBuildBuyInteractions(List<InteractionDefinition> buildBuyInteractions)
+        public override void AddBuildBuyInteractions(List<InteractionDefinition> buildBuyInteractions)
         {
             buildBuyInteractions.Add(TuneAnysim.Singleton);
             base.AddBuildBuyInteractions(buildBuyInteractions);
@@ -70,7 +70,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
             startTime = mStartTime;
             endTime = mEndTime;
 
-            //Message.Show("Someone is asking role times " + new StackTrace().ToString());
+            //Message.Send.Show("Someone is asking role times " + new StackTrace().ToString());
             if (startTime == 0)
             {
                 if (base.LotCurrent != null)
@@ -79,11 +79,11 @@ namespace Sims3.Gameplay.Objects.Misukisu
                     {
                         mStartTime = startTime;
                         mEndTime = endTime;
-                        //Message.Show("Setting relative role times from " + startTime + " to " + endTime);
+                        //Message.Send.Show("Setting relative role times from " + startTime + " to " + endTime);
                     }
                     else
                     {
-                        //Message.Show("Setting fixed role times");
+                        //Message.Send.Show("Setting fixed role times");
                         startTime = 12;
                         mStartTime = startTime;
                         endTime = 11.5F;
@@ -94,7 +94,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
             }
             else
             {
-                //Message.Show("Role time is from " + startTime + " to " + endTime);
+                //Message.Send.Show("Role time is from " + startTime + " to " + endTime);
             }
 
         }
@@ -127,7 +127,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
                 }
                 else
                 {
-                    //Message.Show("Null role was set " + new StackTrace().ToString());
+                    //Message.Send.Show("Null role was set " + new StackTrace().ToString());
                     this.mCurrentRole = value;
                 }
 
@@ -154,18 +154,18 @@ namespace Sims3.Gameplay.Objects.Misukisu
                         }
                         else
                         {
-                            Message.ShowError(Texts.NAME, "Cannot create custom role, clone failed", true, null);
+                            Message.Sender.ShowError(Texts.NAME, "Cannot create custom role, clone failed", true, null);
                         }
                     }
                     else
                     {
-                        Message.ShowError(Texts.NAME, "Cannot create custom role, Pianist sim not instantiated", true, null);
+                        Message.Sender.ShowError(Texts.NAME, "Cannot create custom role, Pianist sim not instantiated", true, null);
                     }
 
                 }
                 catch (Exception ex)
                 {
-                    Message.ShowError(Texts.NAME, "Cannot create custom role", true, ex);
+                    Message.Sender.ShowError(Texts.NAME, "Cannot create custom role", true, ex);
                     this.mCurrentRole = value;
                 }
             }
