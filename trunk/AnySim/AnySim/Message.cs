@@ -3,22 +3,29 @@ using System.Collections.Generic;
 using System.Text;
 using Sims3.UI;
 
-namespace Misukisu.Anysim
+namespace Misukisu.Common
 {
-    class Message
+    class Message : IDebuggable
     {
-        public static void Show(string msg)
+
+        public static readonly Message Sender = new Message();
+        private IDebugger mDebugger;
+
+        private Message() : base() { }
+
+        public void Show(string msg)
         {
             StyledNotification.Format format = new StyledNotification.Format(msg, StyledNotification.NotificationStyle.kSystemMessage);
             StyledNotification.Show(format);
         }
 
-        public static void ShowError(string projectName, string error,bool isCritical, Exception ex) {
+        public void ShowError(string projectName, string error, bool isCritical, Exception ex)
+        {
             StringBuilder msg = new StringBuilder();
             msg.Append(error);
             if (isCritical)
             {
-                msg.Append("\nPlease exit the game without saving, this error cannot be recovered from"); 
+                msg.Append("\nPlease exit the game without saving, this error cannot be recovered from");
             }
             if (ex != null)
             {
@@ -34,5 +41,32 @@ namespace Misukisu.Anysim
 
             SimpleMessageDialog.Show("Virtual Artisan - " + projectName, fullError, ModalDialog.PauseMode.PauseSimulator);
         }
+
+        public void setDebugger(IDebugger debugger)
+        {
+            this.mDebugger = debugger;
+        }
+
+        public void Debug(object sender, string msg)
+        {
+            if (mDebugger != null)
+            {
+                mDebugger.Debug(sender, msg);
+            }
+        }
+
+        public bool IsDebugging()
+        {
+            if (mDebugger == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+
     }
 }

@@ -4,7 +4,7 @@ using System.Text;
 using Sims3.Gameplay.CAS;
 using Sims3.Gameplay.Interfaces;
 using Sims3.Gameplay.Actors;
-using Misukisu.Anysim;
+using Misukisu.Common;
 using Sims3.Gameplay.Core;
 using Sims3.Gameplay.Interactions;
 using System.Diagnostics;
@@ -15,7 +15,6 @@ namespace Sims3.Gameplay.Roles.Misukisu
 {
     public class Anysim : Sims3.Gameplay.Skills.Bartending.Bartender
     {
-        private bool mIsStoryProgressionProtected = false;
 
         public override string CareerTitleKey
         {
@@ -26,30 +25,28 @@ namespace Sims3.Gameplay.Roles.Misukisu
         }
         public Anysim(RoleData data, SimDescription s, IRoleGiver roleGiver)
             : base(data, s, roleGiver)
-        { }
+        {
+            base.mIsStoryProgressionProtected = false;
+        }
 
         public new void RemoveSimFromRole()
         {
-            //Message.Show("Sim is removed from role " + new StackTrace().ToString());
+            //Message.Send.Show("Sim is removed from role " + new StackTrace().ToString());
             base.RemoveSimFromRole();
         }
 
         public static Anysim clone(Role toClone, Sim simInRole)
         {
-            SimDescription actor = findSimInRole(toClone, simInRole);
+            SimDescription actor = toClone.mSim;
+            Anysim newRole = new Anysim(toClone.Data, actor, toClone.RoleGivingObject);
+            newRole.StartRole();
 
-            Anysim newRole = null;
-            if (actor != null)
-            {
-                newRole = new Anysim(toClone.Data, actor, toClone.RoleGivingObject);
-                newRole.StartRole();
-            }
             return newRole;
         }
 
         public override void SimulateRole(float minPassed)
         {
-            //Message.Show("Custom role in simulation " + new StackTrace().ToString());
+            //Message.Send.Show("Custom role in simulation " + new StackTrace().ToString());
             base.SimulateRole(minPassed);
         }
 
@@ -69,7 +66,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
                 if (townie.AssignedRole == toClone || simInRole == townie.CreatedSim)
                 {
                     actor = townie;
-                    //Message.Show("Clone found the actor");
+                    //Message.Send.Show("Clone found the actor");
                     break;
                 }
             }
@@ -86,7 +83,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
                     if (townie.AssignedRole == toClone || simInRole == townie.CreatedSim)
                     {
                         actor = townie;
-                        //Message.Show("Clone found the actor");
+                        //Message.Send.Show("Clone found the actor");
                         break;
                     }
                 }
@@ -104,36 +101,19 @@ namespace Sims3.Gameplay.Roles.Misukisu
                     if (townie.AssignedRole == toClone || simInRole == townie.CreatedSim)
                     {
                         actor = townie;
-                        //Message.Show("Clone found the actor");
+                        //Message.Send.Show("Clone found the actor");
                         break;
                     }
                 }
             }
 
-            //Message.Show("Roles were: "+ s.ToString());
+            //Message.Send.Show("Roles were: "+ s.ToString());
 
             return actor;
         }
 
-        private void ProtectSimFromStoryProgression()
-        {
-            if ((this.SimInRole != null) && !this.mIsStoryProgressionProtected)
-            {
-                this.mSim.GetMiniSimForProtection().AddProtection(MiniSimDescription.ProtectionFlag.FullFromOccupationJob);
-                this.mIsStoryProgressionProtected = true;
-            }
-        }
 
-        private void UnprotectSimFromStoryProgression()
-        {
-            if (((this.SimInRole != null) && this.mIsStoryProgressionProtected) && !GameStates.IsGameShuttingDown)
-            {
-                this.mSim.GetMiniSimForProtection().RemoveProtection(MiniSimDescription.ProtectionFlag.FullFromOccupationJob);
-                this.mIsStoryProgressionProtected = false;
-            }
-        }
-
-        protected override void EndRole()
+        public override void EndRole()
         {
             bool isActive = base.IsActive;
             base.RoleGivingObject.RemoveRoleGivingInteraction(base.mSim.CreatedSim);
@@ -150,9 +130,9 @@ namespace Sims3.Gameplay.Roles.Misukisu
             }
         }
 
-        protected override void SwitchIntoOutfit()
+        public override void SwitchIntoOutfit()
         {
-            //Message.Show("Switching into outft");
+            //Message.Send.Show("Switching into outft");
             try
             {
                 Lot roleLot = (base.RoleGivingObject as AnysimObject).GetTargetLot();
@@ -173,14 +153,14 @@ namespace Sims3.Gameplay.Roles.Misukisu
             }
             catch (Exception e)
             {
-                Message.ShowError(Texts.NAME, "Cannot change anysim clothes: ", false, e);
+                Message.Sender.ShowError(Texts.NAME, "Cannot change anysim clothes: ", false, e);
             }
 
         }
 
-        protected override void StartRole()
+        public override void StartRole()
         {
-            //Message.Show("starting new custom role ");
+            //Message.Send.Show("starting new custom role ");
             try
             {
                 if (!this.mIsActive && this.mSim.IsValidDescription)
@@ -206,7 +186,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             }
             catch (Exception e)
             {
-                Message.ShowError(Texts.NAME, "Cannot start the role", false, e);
+                Message.Sender.ShowError(Texts.NAME, "Cannot start the role", false, e);
             }
         }
 
@@ -230,7 +210,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             {
                 Lot lot = LotManager.SelectRandomLotForNPCMoveIn(null);
                 this.mSim.CreatedSim = this.mSim.Instantiate(lot);
-                //Message.Show("Sim instantiated: " + SimInRole);
+                //Message.Send.Show("Sim instantiated: " + SimInRole);
             }
 
         }

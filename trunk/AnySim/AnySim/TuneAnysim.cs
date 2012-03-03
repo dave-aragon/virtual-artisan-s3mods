@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Sims3.Gameplay.Actors;
 using Sims3.Gameplay.Interactions;
-using Misukisu.Anysim;
+using Misukisu.Common;
 using Sims3.Gameplay.Autonomy;
 using Sims3.UI;
 using Sims3.SimIFace;
@@ -18,7 +18,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Anysim
     {
         public static readonly InteractionDefinition Singleton = new Definition();
 
-        protected override bool Run()
+        public override bool Run()
         {
             try
             {
@@ -37,7 +37,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Anysim
             }
             catch (Exception e)
             {
-                Message.ShowError(Texts.NAME, "Tuning failed, please try again", false, e);
+                Message.Sender.ShowError(Texts.NAME, "Tuning failed, please try again", false, e);
             }
             return true;
         }
@@ -54,7 +54,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Anysim
             };
 
             string[] values = ThreeStringInputDialog.Show(dialogTitle, fieldNames, 
-                new string[] { startTime.ToString(), endTime.ToString(), roleTitle }, true);
+                new string[] { startTime.ToString(), endTime.ToString(), roleTitle }, false);
 
             if (!string.IsNullOrEmpty(values[0]))
             {
@@ -92,12 +92,12 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Anysim
         private sealed class Definition : ActorlessInteractionDefinition<IActor, AnysimObject, TuneAnysim>
         {
 
-            protected override string GetInteractionName(IActor a, AnysimObject target, InteractionObjectPair interaction)
+            public override string GetInteractionName(IActor a, AnysimObject target, InteractionObjectPair interaction)
             {
                 return Localization.LocalizeString(Texts.TUNING_DIALOG_INTERACTION, new string[0]); ;
             }
 
-            protected override bool Test(IActor actor, AnysimObject target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
+            public override bool Test(IActor actor, AnysimObject target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
                 return !isAutonomous;
             }
