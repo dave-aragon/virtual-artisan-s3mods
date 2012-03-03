@@ -103,7 +103,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions
             return true;
         }
 
-        protected override bool Run()
+        public override bool Run()
         {
             OutfitCategories[] outfits = base.Target.ShowOutfits;
             OutfitCategories startOutfit = base.Target.GetFirstOutfit();
@@ -212,12 +212,12 @@ namespace Misukisu.Sims3.Gameplay.Interactions
         private sealed class Definition : InteractionDefinition<Sim, DancersStage, PerformShow>
         {
 
-            protected override string GetInteractionName(Sim a, DancersStage target, InteractionObjectPair interaction)
+            public override string GetInteractionName(Sim a, DancersStage target, InteractionObjectPair interaction)
             {
                 return target.GetDanceOnObjectInteractionLocalizedString();
             }
 
-            private static string greyedOutTooltipCallbackForObjectAbove()
+            public static string greyedOutTooltipCallbackForObjectAbove()
             {
                 return Localization.LocalizeString("Gameplay/Objects/DanceOnCounterOrTable:ObjectAbove", new object[0]);
             }
@@ -227,7 +227,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions
                 return Localization.LocalizeString("Gameplay/Objects/DanceOnCounterOrTable:Blocked", new object[0]);
             }
 
-            protected override bool Test(Sim sim, DancersStage target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
+            public override bool Test(Sim sim, DancersStage target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
                 if (target.CurrentRole != null && target.CurrentRole.SimInRole == sim && !isAutonomous)
                 {

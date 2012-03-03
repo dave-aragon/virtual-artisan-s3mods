@@ -43,7 +43,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
            
         }
 
-        protected override void AddBuildBuyInteractions(List<InteractionDefinition> buildBuyInteractions)
+        public override void AddBuildBuyInteractions(List<InteractionDefinition> buildBuyInteractions)
         {
             buildBuyInteractions.Add(TuneDrunkard.Singleton);
             base.AddBuildBuyInteractions(buildBuyInteractions);

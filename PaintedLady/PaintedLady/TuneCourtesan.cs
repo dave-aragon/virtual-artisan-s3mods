@@ -17,7 +17,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
     {
         public static readonly InteractionDefinition Singleton = new Definition();
 
-        protected override bool Run()
+        public override bool Run()
         {
             try
             {
@@ -73,12 +73,12 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
         private sealed class Definition : ActorlessInteractionDefinition<IActor, CourtesansPerfume, TuneCourtesan>
         {
 
-            protected override string GetInteractionName(IActor a, CourtesansPerfume target, InteractionObjectPair interaction)
+            public override string GetInteractionName(IActor a, CourtesansPerfume target, InteractionObjectPair interaction)
             {
                 return "Tuning Dialog...";
             }
 
-            protected override bool Test(IActor actor, CourtesansPerfume target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
+            public override bool Test(IActor actor, CourtesansPerfume target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
                 return !isAutonomous;
             }

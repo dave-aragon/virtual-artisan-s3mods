@@ -19,7 +19,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
     {
         public static readonly InteractionDefinition Singleton = new Definition();
 
-        protected override bool Run()
+        public override bool Run()
         {
             Courtesan role = base.Target.CurrentRole as Courtesan;
             if (role != null)
@@ -36,7 +36,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
         private sealed class Definition : InteractionDefinition<Sim, CourtesansPerfume, TakeMistress>
         {
 
-            protected override string GetInteractionName(Sim a, CourtesansPerfume target, InteractionObjectPair interaction)
+            public override string GetInteractionName(Sim a, CourtesansPerfume target, InteractionObjectPair interaction)
             {
                 string bottleOwner = "Courtesan/Courter";
                 if (target.CurrentRole != null)
@@ -52,7 +52,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
                 return "Ask " + bottleOwner + " to Your House (non-revertable, experimental)";
             }
 
-            protected override bool Test(Sim a, CourtesansPerfume target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
+            public override bool Test(Sim a, CourtesansPerfume target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
                 if (!isAutonomous && target.CurrentRole != null && target.CurrentRole.SimInRole != null)
                 {

@@ -18,7 +18,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
     {
         public static readonly InteractionDefinition Singleton = new Definition();
 
-        protected override bool Run()
+        public override bool Run()
         {
             try
             {
@@ -91,12 +91,12 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
         private sealed class Definition : ActorlessInteractionDefinition<IActor, DrunkardsBottle, TuneDrunkard>
         {
 
-            protected override string GetInteractionName(IActor a, DrunkardsBottle target, InteractionObjectPair interaction)
+            public override string GetInteractionName(IActor a, DrunkardsBottle target, InteractionObjectPair interaction)
             {
                 return "Tuning Dialogs...";
             }
 
-            protected override bool Test(IActor actor, DrunkardsBottle target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
+            public override bool Test(IActor actor, DrunkardsBottle target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
                 return !isAutonomous;
             }

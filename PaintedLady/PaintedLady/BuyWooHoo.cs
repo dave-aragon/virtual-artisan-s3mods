@@ -21,7 +21,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
         public static readonly InteractionDefinition Singleton = new Definition();
         private LongTermRelationshipTypes relationshipBeforeWooHoo;
 
-        protected override bool Run()
+        public override bool Run()
         {
             try
             {
@@ -106,12 +106,12 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
         private sealed class Definition : InteractionDefinition<Sim, Sim, BuyWooHoo>
         {
 
-            protected override string GetInteractionName(Sim a, Sim target, InteractionObjectPair interaction)
+            public override string GetInteractionName(Sim a, Sim target, InteractionObjectPair interaction)
             {
                 return "Ask to WooHoo for Money (§100)";
             }
 
-            protected override bool Test(Sim actor, Sim target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
+            public override bool Test(Sim actor, Sim target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
                 if (isAutonomous)
                 {
