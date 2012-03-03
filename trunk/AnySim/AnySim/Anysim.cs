@@ -23,6 +23,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
                 return Texts.CAREERTITLE;
             }
         }
+
         public Anysim(RoleData data, SimDescription s, IRoleGiver roleGiver)
             : base(data, s, roleGiver)
         {
@@ -46,6 +47,11 @@ namespace Sims3.Gameplay.Roles.Misukisu
 
         public override void SimulateRole(float minPassed)
         {
+            if (Message.Sender.IsDebugging())
+            {
+                Message.Sender.Debug(this, mSim.FullName + " role push after " + minPassed);
+            }
+            
             //Message.Send.Show("Custom role in simulation " + new StackTrace().ToString());
             base.SimulateRole(minPassed);
         }
@@ -160,7 +166,11 @@ namespace Sims3.Gameplay.Roles.Misukisu
 
         public override void StartRole()
         {
-            //Message.Send.Show("starting new custom role ");
+            if (Message.Sender.IsDebugging())
+            {
+                Message.Sender.Debug(this, mSim.FullName + " role starting...");
+            }
+
             try
             {
                 if (!this.mIsActive && this.mSim.IsValidDescription)

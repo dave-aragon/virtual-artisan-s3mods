@@ -1,6 +1,5 @@
 ﻿
-
-namespace Misukisu.Debug
+namespace Misukisu.Common
 {
     public interface IDebuggable
     {
@@ -12,5 +11,6 @@ namespace Misukisu.Debug
     public interface IDebugger
     {
         void Debug(object sender, string msg);
+        void AttachDebuggerTo(IDebuggable debuggable);
     }
 }
