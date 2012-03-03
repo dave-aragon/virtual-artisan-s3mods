@@ -8,6 +8,7 @@ using System.Reflection;
 
 namespace Misukisu.Common
 {
+
     class Debugger
     {
         private CustomXmlWriter mLogXmlWriter;
@@ -19,24 +20,20 @@ namespace Misukisu.Common
 
         private void NotifyUserOfDebugging(string filename)
         {
-            try
-            {
+            
                 string msg = "Debugging makes the game slower" + Message.NewLine +
                     "Log File: " + filename;
                 SimpleMessageDialog.Show("Virtual Artisan Debugger Started", msg, ModalDialog.PauseMode.NoPause);
-            }
-            catch (Exception ex)
-            {
-                Message.Sender.Show("Debugger started to " + filename);
-            }
+            
         }
 
         public void StartDebugLog(string target)
         {
+            string result = "";
             try
             {
                 uint num = 0u;
-                string result = Simulator.CreateScriptErrorFile(ref num);
+                result = Simulator.CreateScriptErrorFile(ref num);
                 if (num != 0u)
                 {
                     mLogXmlWriter = new CustomXmlWriter(num);
@@ -77,14 +74,16 @@ namespace Misukisu.Common
                     mLogXmlWriter.WriteEndElement();
 
                     mLogXmlWriter.FlushBufferToFile();
-                    NotifyUserOfDebugging(result);
+                   
                 }
             }
             catch (Exception ex)
             {
                 EndDebugLog();
                 Message.Sender.ShowError("Virtual Artisan Debugger CANNOT be started", "Cannot create debug log", false, ex);
+                return;
             }
+            NotifyUserOfDebugging(result);
         }
 
         public void EndDebugLog()

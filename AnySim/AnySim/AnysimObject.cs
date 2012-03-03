@@ -28,7 +28,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
         private Roles.Role mCurrentRole;
         private float mStartTime = 0F;
         private float mEndTime = 0F;
-        private string mRoleTitle="";
+        private string mRoleTitle = "";
 
 
         public override void OnStartup()
@@ -56,6 +56,11 @@ namespace Sims3.Gameplay.Objects.Misukisu
             mEndTime = endTime;
             mRoleTitle = roleTitle;
             ResetRole();
+            if (Message.Sender.IsDebugging())
+            {
+                Message.Sender.Debug(this, "Role tuning changed - startTime="
+                    + startTime + " endTime=" + endTime + " roleTitle=" + roleTitle);
+            }
         }
 
         private void ResetRole()
@@ -71,7 +76,6 @@ namespace Sims3.Gameplay.Objects.Misukisu
             startTime = mStartTime;
             endTime = mEndTime;
 
-            //Message.Send.Show("Someone is asking role times " + new StackTrace().ToString());
             if (startTime == 0)
             {
                 if (base.LotCurrent != null)
@@ -80,22 +84,26 @@ namespace Sims3.Gameplay.Objects.Misukisu
                     {
                         mStartTime = startTime;
                         mEndTime = endTime;
-                        //Message.Send.Show("Setting relative role times from " + startTime + " to " + endTime);
+                        if (Message.Sender.IsDebugging())
+                        {
+                            Message.Sender.Debug(this, "Role times set automatically - startTime="
+                                + startTime + " endTime=" + endTime);
+                        }
                     }
                     else
                     {
-                        //Message.Send.Show("Setting fixed role times");
                         startTime = 12;
                         mStartTime = startTime;
                         endTime = 11.5F;
                         mEndTime = endTime;
+                        if (Message.Sender.IsDebugging())
+                        {
+                            Message.Sender.Debug(this, "Role times set fixed - startTime="
+                                + startTime + " endTime=" + endTime);
+                        }
                     }
 
                 }
-            }
-            else
-            {
-                //Message.Send.Show("Role time is from " + startTime + " to " + endTime);
             }
 
         }
@@ -128,7 +136,6 @@ namespace Sims3.Gameplay.Objects.Misukisu
                 }
                 else
                 {
-                    //Message.Send.Show("Null role was set " + new StackTrace().ToString());
                     this.mCurrentRole = value;
                 }
 
@@ -142,27 +149,18 @@ namespace Sims3.Gameplay.Objects.Misukisu
             {
                 try
                 {
-                    Sim currentActor = value.SimInRole;
-                    if (currentActor != null)
-                    {
-                        value.RemoveSimFromRole();
-                        Anysim aRole = Anysim.clone(value, currentActor);
+                    SimDescription currentActor = value.mSim;
 
-                        if (aRole != null)
-                        {
-                            this.mCurrentRole = aRole;
-                            RoleManager.sRoleManager.AddRole(aRole);
-                        }
-                        else
-                        {
-                            Message.Sender.ShowError(Texts.NAME, "Cannot create custom role, clone failed", true, null);
-                        }
-                    }
-                    else
-                    {
-                        Message.Sender.ShowError(Texts.NAME, "Cannot create custom role, Pianist sim not instantiated", true, null);
-                    }
+                    value.RemoveSimFromRole();
+                    Anysim aRole = Anysim.clone(value, currentActor);
 
+                    this.mCurrentRole = aRole;
+                    RoleManager.sRoleManager.AddRole(aRole);
+                    if (Message.Sender.IsDebugging())
+                    {
+                        Message.Sender.Debug(this, "Role cloning succeeded, new AnySim created: " + currentActor.FullName);
+                    }
+                    
                 }
                 catch (Exception ex)
                 {

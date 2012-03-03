@@ -42,35 +42,35 @@
     <Compile Include="TuneAnysim.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="ScriptCore">
-      <HintPath>..\..\..\..\..\..\..\Temp\References\ScriptCore.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="ScriptCore, Version=1.0.4344.28276, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\Temp\References\ScriptCore.dll</HintPath>
     </Reference>
-    <Reference Include="SimIFace">
-      <HintPath>..\..\..\..\..\..\..\Temp\References\SimIFace.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="SimIFace, Version=1.0.0.50, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\Temp\References\SimIFace.dll</HintPath>
     </Reference>
-    <Reference Include="Sims3GameplayObjects">
-      <HintPath>..\..\..\..\..\..\..\Temp\References\Sims3GameplayObjects.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Sims3GameplayObjects, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\Temp\References\Sims3GameplayObjects.dll</HintPath>
     </Reference>
-    <Reference Include="Sims3GameplaySystems">
-      <HintPath>..\..\..\..\..\..\..\Temp\References\Sims3GameplaySystems.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Sims3GameplaySystems, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\Temp\References\Sims3GameplaySystems.dll</HintPath>
     </Reference>
-    <Reference Include="Sims3Metadata">
-      <HintPath>..\..\..\..\..\..\..\Temp\References\Sims3Metadata.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Sims3Metadata, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\Temp\References\Sims3Metadata.dll</HintPath>
     </Reference>
-    <Reference Include="Sims3StoreObjects">
-      <HintPath>..\..\..\..\..\..\..\Temp\References\Sims3StoreObjects.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Sims3StoreObjects, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\Temp\References\Sims3StoreObjects.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
-    <Reference Include="ui">
-      <HintPath>..\..\..\..\..\..\..\Temp\References\ui.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="ui, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\Temp\References\ui.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
