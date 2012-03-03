@@ -34,10 +34,11 @@
   <ItemGroup>
     <Compile Include="Anysim.cs" />
     <Compile Include="AnysimObject.cs" />
-    <Compile Include="IDebug.cs" />
+    <Compile Include="Debugger.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Texts.cs" />
+    <Compile Include="ToggleDebugger.cs" />
     <Compile Include="TuneAnysim.cs" />
   </ItemGroup>
   <ItemGroup>

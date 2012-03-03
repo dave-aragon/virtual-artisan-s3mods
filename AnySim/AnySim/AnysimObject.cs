@@ -35,12 +35,13 @@ namespace Sims3.Gameplay.Objects.Misukisu
         {
             base.OnStartup();
             base.AddInteraction(TuneAnysim.Singleton);
-
+            base.AddInteraction(ToggleDebugger.Singleton);
         }
 
         public override void AddBuildBuyInteractions(List<InteractionDefinition> buildBuyInteractions)
         {
             buildBuyInteractions.Add(TuneAnysim.Singleton);
+            buildBuyInteractions.Add(ToggleDebugger.Singleton);
             base.AddBuildBuyInteractions(buildBuyInteractions);
         }
 

@@ -2,16 +2,20 @@
 using System.Collections.Generic;
 using System.Text;
 using Sims3.UI;
+using Sims3.Gameplay;
 
 namespace Misukisu.Common
 {
-    class Message : IDebuggable
+    class Message 
     {
-
+        public static readonly string NewLine = Environment.NewLine;
         public static readonly Message Sender = new Message();
-        private IDebugger mDebugger;
+        private Debugger mDebugger = null;
 
-        private Message() : base() { }
+        private Message()
+            : base()
+        {
+        }
 
         public void Show(string msg)
         {
@@ -32,9 +36,10 @@ namespace Misukisu.Common
                 msg.Append("\nInternal info:\n");
                 msg.Append(ex.StackTrace);
             }
-
+           
             string fullError = msg.ToString();
-            if (fullError.Length > 600)
+            Debug(this, fullError);
+            if (fullError.Length > 1000)
             {
                 fullError = fullError.Substring(0, 600);
             }
@@ -42,7 +47,7 @@ namespace Misukisu.Common
             SimpleMessageDialog.Show("Virtual Artisan - " + projectName, fullError, ModalDialog.PauseMode.PauseSimulator);
         }
 
-        public void setDebugger(IDebugger debugger)
+        public void setDebugger(Debugger debugger)
         {
             this.mDebugger = debugger;
         }
@@ -68,5 +73,10 @@ namespace Misukisu.Common
         }
 
 
+
+        internal Debugger getDebugger()
+        {
+            return mDebugger;
+        }
     }
 }
