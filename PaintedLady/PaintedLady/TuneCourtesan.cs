@@ -9,6 +9,7 @@ using Sims3.UI;
 using Sims3.SimIFace;
 using Sims3.Gameplay.Objects.Misukisu;
 using Sims3.Gameplay.Interfaces;
+using Misukisu.Common;
 
 namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
 {
@@ -36,7 +37,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
             }
             catch (Exception e)
             {
-                Message.ShowError(CourtesansPerfume.NAME, "Tuning failed, please try again", false, e);
+                Message.Sender.ShowError(CourtesansPerfume.NAME, "Tuning failed, please try again", false, e);
 
             }
             return true;

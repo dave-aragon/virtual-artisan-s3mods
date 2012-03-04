@@ -12,6 +12,7 @@ using Sims3.Gameplay;
 using Sims3.Gameplay.Socializing;
 using Sims3.UI.Controller;
 using Sims3.Gameplay.ActorSystems;
+using Misukisu.Common;
 
 namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
 {
@@ -27,7 +28,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
             {
                 Sim buyer = base.Actor;
                 Sim seller = base.Target;
-                //Message.Show("Ok, Let's Woo and Hoo then.");
+                //Message.Sender.Show("Ok, Let's Woo and Hoo then.");
                 CreateRelationship(buyer, seller);
 
                 Bed place = findNearestBed(seller);
@@ -47,12 +48,12 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
                 }
                 else
                 {
-                    Message.Show("All the beds in this lot are already in use");
+                    Message.Sender.Show("All the beds in this lot are already in use");
                 }
             }
             catch (Exception e)
             {
-                Message.ShowError(CourtesansPerfume.NAME, "Buy WooHoo failed", false, e);
+                Message.Sender.ShowError(CourtesansPerfume.NAME, "Buy WooHoo failed", false, e);
 
             }
             return true;
@@ -70,7 +71,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
 
                 Relationship relationToTarget = base.Actor.GetRelationship(base.Target, true);
                 relationToTarget.LTR.ForceChangeState(relationshipBeforeWooHoo);
-                //Message.Show("Relations restored: " + relationToTarget.LTR.CurrentLTR + " - " + base.Target.GetRelationship(base.Actor, true).LTR.CurrentLTR);
+                //Message.Sender.Show("Relations restored: " + relationToTarget.LTR.CurrentLTR + " - " + base.Target.GetRelationship(base.Actor, true).LTR.CurrentLTR);
 
                 if (base.Actor.BuffManager.HasElement(BuffNames.StrideOfPride))
                 {
@@ -83,7 +84,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
             }
             catch (Exception e)
             {
-                Message.ShowError(CourtesansPerfume.NAME, "Restoring original relationships failed", false, e);
+                Message.Sender.ShowError(CourtesansPerfume.NAME, "Restoring original relationships failed", false, e);
 
             }
         }

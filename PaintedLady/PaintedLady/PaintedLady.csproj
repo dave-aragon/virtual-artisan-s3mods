@@ -34,12 +34,15 @@
   <ItemGroup>
     <Compile Include="BuyWooHoo.cs" />
     <Compile Include="CourtesansPerfume.cs" />
+    <Compile Include="Debugger.cs" />
     <Compile Include="GoToALot.cs" />
+    <Compile Include="I18n.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="Courtesan.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AfterWooHooCleanup.cs" />
     <Compile Include="TakeMistress.cs" />
+    <Compile Include="ToggleDebugger.cs" />
     <Compile Include="TuneCourtesan.cs" />
   </ItemGroup>
   <ItemGroup>

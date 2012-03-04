@@ -11,6 +11,7 @@ using Sims3.SimIFace;
 using Sims3.Gameplay.Objects.Misukisu;
 using Misukisu.Sims3.Gameplay.Interactions.Paintedlady;
 using Sims3.Gameplay.Situations;
+using Misukisu.Common;
 
 namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
 {
@@ -68,7 +69,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
             }
             catch (Exception ex)
             {
-                Message.ShowError(CourtesansPerfume.NAME, "Cannot take role sims to role lot", false, ex);
+                Message.Sender.ShowError(CourtesansPerfume.NAME, "Cannot take role sims to role lot", false, ex);
             }
             return false;
         }

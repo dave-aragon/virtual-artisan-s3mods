@@ -10,6 +10,7 @@ using Sims3.Gameplay.Interactions;
 using System.Diagnostics;
 using Sims3.Gameplay.Objects.Misukisu;
 using Misukisu.Sims3.Gameplay.Interactions.Drunkard;
+using Misukisu.Common;
 
 namespace Sims3.Gameplay.Roles.Misukisu
 {
@@ -26,7 +27,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
 
         public new void RemoveSimFromRole()
         {
-            //Message.Show("Sim is removed from role " + new StackTrace().ToString());
+            //Message.Sender.Show("Sim is removed from role " + new StackTrace().ToString());
             base.RemoveSimFromRole();
         }
 
@@ -45,7 +46,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
 
         public override void SimulateRole(float minPassed)
         {
-            //Message.Show("Custom role in simulation " + new StackTrace().ToString());
+            //Message.Sender.Show("Custom role in simulation " + new StackTrace().ToString());
             base.SimulateRole(minPassed);
         }
 
@@ -65,7 +66,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
                 if (townie.AssignedRole == toClone || simInRole == townie.CreatedSim)
                 {
                     actor = townie;
-                    //Message.Show("Clone found the actor");
+                    //Message.Sender.Show("Clone found the actor");
                     break;
                 }
             }
@@ -82,7 +83,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
                     if (townie.AssignedRole == toClone || simInRole == townie.CreatedSim)
                     {
                         actor = townie;
-                        //Message.Show("Clone found the actor");
+                        //Message.Sender.Show("Clone found the actor");
                         break;
                     }
                 }
@@ -100,13 +101,13 @@ namespace Sims3.Gameplay.Roles.Misukisu
                     if (townie.AssignedRole == toClone || simInRole == townie.CreatedSim)
                     {
                         actor = townie;
-                        //Message.Show("Clone found the actor");
+                        //Message.Sender.Show("Clone found the actor");
                         break;
                     }
                 }
             }
 
-            //Message.Show("Roles were: "+ s.ToString());
+            //Message.Sender.Show("Roles were: "+ s.ToString());
 
             return actor;
         }
@@ -131,7 +132,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
 
         public override void SwitchIntoOutfit()
         {
-            //Message.Show("Switching into outft");
+            //Message.Sender.Show("Switching into outft");
             try
             {
                 Lot roleLot = (base.RoleGivingObject as DrunkardsBottle).GetTargetLot();
@@ -152,14 +153,14 @@ namespace Sims3.Gameplay.Roles.Misukisu
             }
             catch (Exception e)
             {
-                Message.ShowError(DrunkardsBottle.NAME, "Cannot change tippler's clothes: ", false, e);
+                Message.Sender.ShowError(DrunkardsBottle.NAME, "Cannot change tippler's clothes: ", false, e);
             }
 
         }
 
         public override void StartRole()
         {
-            //Message.Show("starting new custom role ");
+            //Message.Sender.Show("starting new custom role ");
             try
             {
                 if (!this.mIsActive && this.mSim.IsValidDescription)
@@ -194,7 +195,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             }
             catch (Exception e)
             {
-                Message.ShowError(DrunkardsBottle.NAME, "Cannot start the role", false, e);
+                Message.Sender.ShowError(DrunkardsBottle.NAME, "Cannot start the role", false, e);
             }
         }
 
@@ -213,7 +214,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
                         if (targetLot.IsCommunityLot)
                         {
                             sim.Motives.CreateMotive(Autonomy.CommodityKind.BeInDiveBar);
-                            //Message.Show("Added motives to drink");
+                            //Message.Sender.Show("Added motives to drink");
                         }
                     }
                 }
@@ -228,7 +229,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             {
                 this.mSim.CreatedSim.InteractionQueue.Add(GoToALot.Singleton.CreateInstance(this.mSim.CreatedSim, this.mSim.CreatedSim,
                     new InteractionPriority(InteractionPriorityLevel.High), true, true));
-                //Message.Show("Called sim to arrive");
+                //Message.Sender.Show("Called sim to arrive");
             }
         }
 
@@ -240,7 +241,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             {
                 Lot lot = LotManager.SelectRandomLotForNPCMoveIn(null);
                 this.mSim.CreatedSim = this.mSim.Instantiate(lot);
-                //Message.Show("Sim instantiated: " + SimInRole);
+                //Message.Sender.Show("Sim instantiated: " + SimInRole);
             }
 
         }

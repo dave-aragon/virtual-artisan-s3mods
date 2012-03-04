@@ -15,7 +15,6 @@ using System;
 using Sims3.Gameplay.Objects;
 using Sims3.Gameplay.Interfaces;
 using Sims3.Gameplay.Objects.Misukisu;
-using Misukisu.DancerSpot;
 using Sims3.SimIFace.CAS;
 using Sims3.Gameplay.Core;
 using Sims3.Gameplay.Roles.Misukisu;

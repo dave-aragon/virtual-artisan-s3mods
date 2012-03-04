@@ -10,6 +10,7 @@ using Sims3.Gameplay.Interfaces;
 using Sims3.Gameplay.Objects.Misukisu;
 using Sims3.Gameplay.Core;
 using Sims3.Gameplay.Roles.Misukisu;
+using Misukisu.Common;
 
 
 namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
@@ -29,7 +30,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
             }
             catch (Exception e)
             {
-                Message.ShowError(CourtesansPerfume.NAME, "Cannot restore clothes", false, e);
+                Message.Sender.ShowError(CourtesansPerfume.NAME, "Cannot restore clothes", false, e);
             }
             return true;
         }
