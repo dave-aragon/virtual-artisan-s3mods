@@ -16,19 +16,20 @@ using Misukisu.Common;
 namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
 {
 
-    public class TakeMistress : Interaction<Sim, CourtesansPerfume>
+    public class TakeMistress : Interaction<Sim, Sim>
     {
         public static readonly InteractionDefinition Singleton = new Definition();
 
         public override bool Run()
         {
-            Courtesan role = base.Target.CurrentRole as Courtesan;
+            Courtesan role = Courtesan.AssignedRole(base.Target);
             if (role != null)
             {
-                base.Target.SlaveOwner = this.Actor;
-                Message.Sender.Show("Sure, I'll go right away to your place");
-                //role.SimInRole.ShowTNSIfSelectable("Sure, I'll go right away to your place", StyledNotification.NotificationStyle.kGameMessagePositive);
-                (base.Target.CurrentRole as Courtesan).MakeSimComeToRoleLot();
+                CourtesansPerfume perfume = role.GetPerfume();
+
+                perfume.SlaveOwner = this.Actor;
+                Message.Sender.Show(base.Target, "Sure, I'll go right away to your place");
+                role.MakeSimComeToRoleLot();
             }
 
             return true;
@@ -50,7 +51,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
                 }
 
 
-                return "Ask " + bottleOwner + " to Your House (non-revertable, experimental)";
+                return "Ask " + bottleOwner + " to Your House (non-revertable, experimental, §500)";
             }
 
             public override bool Test(Sim a, CourtesansPerfume target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)

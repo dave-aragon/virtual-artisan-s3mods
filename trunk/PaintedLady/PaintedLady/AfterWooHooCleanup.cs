@@ -11,6 +11,7 @@ using Sims3.Gameplay.Objects.Misukisu;
 using Sims3.Gameplay.Core;
 using Sims3.Gameplay.Roles.Misukisu;
 using Misukisu.Common;
+using Sims3.Gameplay.Roles;
 
 
 namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
@@ -25,8 +26,12 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
         {
             try
             {
-                Lot.MetaAutonomyType venueType =  base.Actor.LotCurrent.GetMetaAutonomyType;
-                Courtesan.SwitchToProperClothing(base.Actor, venueType);
+                Lot.MetaAutonomyType venueType = base.Actor.LotCurrent.GetMetaAutonomyType;
+                Courtesan courtesan = Courtesan.AssignedRole(base.Actor);
+                if (courtesan != null)
+                {
+                    courtesan.SwitchToProperClothing(base.Actor, venueType);
+                }
             }
             catch (Exception e)
             {
@@ -37,15 +42,15 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
 
         public sealed class Definition : SoloSimInteractionDefinition<AfterWooHooCleanup>
         {
-            
+
             public override string GetInteractionName(Sim actor, Sim target, InteractionObjectPair iop)
             {
                 return "Finish the deal";
-            }            
+            }
 
             public override bool Test(Sim a, Sim target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
-                
+
                 if (a.OccultManager.DisallowClothesChange())
                 {
                     return false;

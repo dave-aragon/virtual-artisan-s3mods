@@ -35,7 +35,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
         {
             if (Message.Sender.IsDebugging())
             {
-                Message.Sender.Debug(this, "Sim " + mSim.FullName + " will be removed from AnySim role");
+                Message.Sender.Debug(this, "Sim " + mSim.FullName + " will be removed from role");
             }
             base.RemoveSimFromRole();
         }
@@ -106,7 +106,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
                     this.mSim.CreatedSim.SwitchToOutfitWithoutSpin(Sim.ClothesChangeReason.GoingToWork, outfitType);
                     if (Message.Sender.IsDebugging())
                     {
-                        Message.Sender.Debug(this, "AnySim role clothing change request for "
+                        Message.Sender.Debug(this, "Role clothing change request for "
                             + mSim.FullName + " " + outfitType.ToString());
                     }
                 }
@@ -159,8 +159,6 @@ namespace Sims3.Gameplay.Roles.Misukisu
 
         public void MakeSimComeToRoleLot()
         {
-
-
             if (this.mSim.CreatedSim.LotCurrent == null || this.mSim.CreatedSim.LotCurrent != RoleGivingObject.LotCurrent)
             {
                 this.mSim.CreatedSim.InteractionQueue.Add(

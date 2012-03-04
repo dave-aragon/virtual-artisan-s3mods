@@ -19,6 +19,8 @@ using Sims3.SimIFace;
 using Sims3.UI;
 using Sims3.Gameplay.Objects.Counters;
 using Misukisu.Common;
+using Sims3.UI.Controller;
+using Sims3.Gameplay.Socializing;
 
 namespace Sims3.Gameplay.Objects.Misukisu
 {
@@ -29,19 +31,45 @@ namespace Sims3.Gameplay.Objects.Misukisu
         private Roles.Role mCurrentRole;
         private float mStartTime = 0F;
         private float mEndTime = 0F;
+        private int mPayPerWoohoo = 100;
+        private int mPayPerDay = 500;
+
+        private Dictionary<SimDescription, LongTermRelationshipTypes> mRelationsToRestore =
+            new Dictionary<SimDescription, LongTermRelationshipTypes>();
+
         private Sim mSlaveOwner;
 
         public override void OnStartup()
         {
             base.OnStartup();
             base.AddInteraction(TuneCourtesan.Singleton);
-            base.AddInteraction(TakeMistress.Singleton);
+            base.AddInteraction(ToggleDebugger.Singleton);
 
+        }
+
+        public void storeOldRelationship(SimDescription target, LongTermRelationshipTypes relation)
+        {
+            mRelationsToRestore.Add(target, relation);
+        }
+
+        public void restoreOldRelationship(SimDescription buyer, Sim seller)
+        {
+            if (mRelationsToRestore.ContainsKey(buyer))
+            {
+                LongTermRelationshipTypes relationshipBefore = mRelationsToRestore[buyer];
+                Relationship relationToTarget = seller.GetRelationship(buyer.CreatedSim, true);
+                relationToTarget.LTR.ForceChangeState(relationshipBefore);
+                if (Message.Sender.IsDebugging())
+                {
+                    Message.Sender.Debug(this, "Relationship to " + buyer.FullName + " restored to " + relationshipBefore.ToString());
+                }
+            }
         }
 
         public override void AddBuildBuyInteractions(List<InteractionDefinition> buildBuyInteractions)
         {
             buildBuyInteractions.Add(TuneCourtesan.Singleton);
+            buildBuyInteractions.Add(ToggleDebugger.Singleton);
             base.AddBuildBuyInteractions(buildBuyInteractions);
         }
 
@@ -59,7 +87,11 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
         public void TuningChanged(float startTime, float endTime)
         {
-
+            if (Message.Sender.IsDebugging())
+            {
+                Message.Sender.Debug(this, "Role tuning changed - startTime="
+                    + startTime + " endTime=" + endTime);
+            }
             mStartTime = startTime;
             mEndTime = endTime;
             ResetRole();
@@ -78,7 +110,6 @@ namespace Sims3.Gameplay.Objects.Misukisu
             startTime = mStartTime;
             endTime = mEndTime;
 
-            //Message.Sender.Show("Someone is asking role times " + new StackTrace().ToString());
             if (startTime == 0)
             {
                 if (base.LotCurrent != null)
@@ -87,29 +118,32 @@ namespace Sims3.Gameplay.Objects.Misukisu
                     {
                         mStartTime = startTime;
                         mEndTime = endTime;
-                        //Message.Sender.Show("Setting relative role times from " + startTime + " to " + endTime);
+                        if (Message.Sender.IsDebugging())
+                        {
+                            Message.Sender.Debug(this, "Role times set automatically - startTime="
+                                + startTime + " endTime=" + endTime);
+                        }
                     }
                     else
                     {
-                        //Message.Sender.Show("Setting fixed role times");
                         startTime = 18F;
                         mStartTime = startTime;
                         endTime = 24F;
                         mEndTime = endTime;
+                        if (Message.Sender.IsDebugging())
+                        {
+                            Message.Sender.Debug(this, "Role times set fixed - startTime="
+                                + startTime + " endTime=" + endTime);
+                        }
                     }
-
                 }
             }
-            else
-            {
-                //Message.Sender.Show("Role time is from " + startTime + " to " + endTime);
-            }
-
         }
 
         public void AddRoleGivingInteraction(Actors.Sim sim)
         {
             sim.AddInteraction(BuyWooHoo.Singleton);
+            sim.AddInteraction(TakeMistress.Singleton);
         }
 
         public Sim SlaveOwner
@@ -121,6 +155,10 @@ namespace Sims3.Gameplay.Objects.Misukisu
             set
             {
                 this.mSlaveOwner = value;
+                if (Message.Sender.IsDebugging())
+                {
+                    Message.Sender.Debug(this, "Courtesan/Courter now owned by: " + mSlaveOwner.FullName);
+                }
             }
         }
 
@@ -143,7 +181,6 @@ namespace Sims3.Gameplay.Objects.Misukisu
                 }
                 else
                 {
-                    //Message.Sender.Show("Null role was set " + new StackTrace().ToString());
                     this.mCurrentRole = value;
                 }
 
@@ -157,27 +194,15 @@ namespace Sims3.Gameplay.Objects.Misukisu
             {
                 try
                 {
-                    Sim currentActor = value.SimInRole;
-                    if (currentActor != null)
+                    SimDescription currentActor = value.mSim;
+                    value.RemoveSimFromRole();
+                    Courtesan aRole = Courtesan.clone(value, currentActor);
+                    this.mCurrentRole = aRole;
+                    RoleManager.sRoleManager.AddRole(aRole);
+                    if (Message.Sender.IsDebugging())
                     {
-                        value.RemoveSimFromRole();
-                        Courtesan aRole = Courtesan.clone(value, currentActor);
-
-                        if (aRole != null)
-                        {
-                            this.mCurrentRole = aRole;
-                            RoleManager.sRoleManager.AddRole(aRole);
-                        }
-                        else
-                        {
-                            Message.Sender.ShowError(CourtesansPerfume.NAME, "Cannot create custom role, clone failed", true, null);
-                        }
+                        Message.Sender.Debug(this, "Role cloning succeeded: " + currentActor.FullName);
                     }
-                    else
-                    {
-                        Message.Sender.ShowError(CourtesansPerfume.NAME, "Cannot create custom role, Pianist sim not instantiated", true, null);
-                    }
-
                 }
                 catch (Exception ex)
                 {
@@ -189,19 +214,13 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
         public void PushRoleStartingInteraction(Actors.Sim sim)
         {
-            //try
-            //{
-            //    //Message.Sender.Show("PushRoleStartingInteraction to " + (sim != null ? sim.FullName : "null"));
-            //}
-            //catch (Exception ex)
-            //{
-            //    Message.Sender.ShowError(CourtesansPerfume.NAME, "Sim cannot play the role", false, ex);
-            //}
+            // Nothing needed, works on her own
         }
 
         public void RemoveRoleGivingInteraction(Actors.Sim sim)
         {
             sim.RemoveInteractionByType(BuyWooHoo.Singleton.GetType());
+            sim.RemoveInteractionByType(TakeMistress.Singleton.GetType());
 
         }
 
@@ -213,6 +232,16 @@ namespace Sims3.Gameplay.Objects.Misukisu
         public Roles.Role.RoleType RoleType
         {
             get { return Role.RoleType.Pianist; }
+        }
+
+        public int PayPerDay
+        {
+            get { return mPayPerDay; }
+        }
+
+        public int PayPerWoohoo
+        {
+            get { return mPayPerWoohoo; }
         }
 
         public ResourceKey GetRoleUniformKey(Sim Sim, Lot.MetaAutonomyType venueType)
