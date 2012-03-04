@@ -14,9 +14,9 @@ using Misukisu.Common;
 
 namespace Sims3.Gameplay.Roles.Misukisu
 {
-    public class Drunkard : Pianist
+    public class Drunkard : Sims3.Gameplay.Skills.Bartending.Bartender
     {
-       
+
         public Drunkard()
             : base()
         { }
@@ -27,89 +27,35 @@ namespace Sims3.Gameplay.Roles.Misukisu
 
         public new void RemoveSimFromRole()
         {
-            //Message.Sender.Show("Sim is removed from role " + new StackTrace().ToString());
+            if (Message.Sender.IsDebugging())
+            {
+                Message.Sender.Debug(this, "Sim " + mSim.FullName + " will be removed from Tippler role");
+            }
             base.RemoveSimFromRole();
         }
 
-        public static Drunkard clone(Role toClone, Sim simInRole)
+        public static Drunkard clone(Role toClone, SimDescription actor)
         {
-            SimDescription actor = findSimInRole(toClone, simInRole);
-
-            Drunkard newRole = null;
-            if (actor != null)
-            {
-                newRole = new Drunkard(toClone.Data, actor, toClone.RoleGivingObject);
-                newRole.StartRole();
-            }
+            Drunkard newRole = new Drunkard(toClone.Data, actor, toClone.RoleGivingObject);
+            newRole.StartRole();
             return newRole;
         }
 
         public override void SimulateRole(float minPassed)
         {
-            //Message.Sender.Show("Custom role in simulation " + new StackTrace().ToString());
+            if (Message.Sender.IsDebugging())
+            {
+                Message.Sender.Debug(this, mSim.FullName + " Tippler role push, minPassed=" + minPassed);
+            }
             base.SimulateRole(minPassed);
         }
 
-        private static SimDescription findSimInRole(Role toClone, Sim simInRole)
+        public override bool IsStoryProgressionProtected
         {
-            SimDescription actor = null;
-            //StringBuilder s = new StringBuilder();
-            List<SimDescription> townies = Household.AllTownieSimDescriptions();
-            foreach (SimDescription townie in townies)
+            get
             {
-
-                //if (townie.AssignedRole != null)
-                //{
-                //    s.Append("\n"+townie.FullName + " has role " + townie.AssignedRole.GetType().Name);
-                //}
-
-                if (townie.AssignedRole == toClone || simInRole == townie.CreatedSim)
-                {
-                    actor = townie;
-                    //Message.Sender.Show("Clone found the actor");
-                    break;
-                }
+                return true;
             }
-
-            if (actor == null)
-            {
-                List<SimDescription> sims = Household.AllSimsLivingInWorld();
-                foreach (SimDescription townie in sims)
-                {
-                    //if (townie.AssignedRole != null)
-                    //{
-                    //    s.Append("\n" + townie.FullName + " has role " + townie.AssignedRole.GetType().Name);
-                    //}
-                    if (townie.AssignedRole == toClone || simInRole == townie.CreatedSim)
-                    {
-                        actor = townie;
-                        //Message.Sender.Show("Clone found the actor");
-                        break;
-                    }
-                }
-            }
-
-            if (actor == null)
-            {
-                List<SimDescription> sims = Household.EveryHumanSimDescription();
-                foreach (SimDescription townie in sims)
-                {
-                    //if (townie.AssignedRole != null)
-                    //{
-                    //    s.Append("\n" + townie.FullName + " has role " + townie.AssignedRole.GetType().Name);
-                    //}
-                    if (townie.AssignedRole == toClone || simInRole == townie.CreatedSim)
-                    {
-                        actor = townie;
-                        //Message.Sender.Show("Clone found the actor");
-                        break;
-                    }
-                }
-            }
-
-            //Message.Sender.Show("Roles were: "+ s.ToString());
-
-            return actor;
         }
 
 
@@ -126,7 +72,10 @@ namespace Sims3.Gameplay.Roles.Misukisu
                 createdSim.InteractionQueue.CancelAllInteractions();
                 //this.mSim.CreatedSim.SwitchToOutfitWithoutSpin(OutfitCategories.Everyday);
                 Sim.MakeSimGoHome(createdSim, false);
-
+                if (Message.Sender.IsDebugging())
+                {
+                    Message.Sender.Debug(this, "Sim " + mSim.FullName + " was sent home");
+                }
             }
         }
 
@@ -148,6 +97,11 @@ namespace Sims3.Gameplay.Roles.Misukisu
                     }
 
                     this.mSim.CreatedSim.SwitchToOutfitWithoutSpin(Sim.ClothesChangeReason.GoingToWork, outfitType);
+                    if (Message.Sender.IsDebugging())
+                    {
+                        Message.Sender.Debug(this, "Role clothing change request for "
+                            + mSim.FullName + " " + outfitType.ToString());
+                    }
                 }
 
             }
@@ -160,7 +114,10 @@ namespace Sims3.Gameplay.Roles.Misukisu
 
         public override void StartRole()
         {
-            //Message.Sender.Show("starting new custom role ");
+            if (Message.Sender.IsDebugging())
+            {
+                Message.Sender.Debug(this, mSim.FullName + " role starting...");
+            }
             try
             {
                 if (!this.mIsActive && this.mSim.IsValidDescription)
@@ -208,32 +165,61 @@ namespace Sims3.Gameplay.Roles.Misukisu
             {
                 if (sim != null)
                 {
-                    if (bottle.OwnerType != DrunkardsBottle.Owner.Hangaround)
+                    Lot targetLot = bottle.GetTargetLot();
+                    if (targetLot.IsCommunityLot)
                     {
-                        Lot targetLot = bottle.GetTargetLot();
-                        if (targetLot.IsCommunityLot)
+                        Lot.MetaAutonomyType venueType = targetLot.GetMetaAutonomyType;
+                        if (venueType == Lot.MetaAutonomyType.CocktailLoungeAsian ||
+                            venueType == Lot.MetaAutonomyType.CocktailLoungeCelebrity ||
+                            venueType == Lot.MetaAutonomyType.CocktailLoungeVampire)
+                        {
+                            sim.Motives.CreateMotive(Autonomy.CommodityKind.BeInCocktailLounge);
+                            if (Message.Sender.IsDebugging())
+                            {
+                                Message.Sender.Debug(this, mSim.FullName + " has motive to be in CocktailLounge");
+                            }
+
+                        }
+                        else if (venueType == Lot.MetaAutonomyType.DanceClubLiveMusic ||
+                           venueType == Lot.MetaAutonomyType.DanceClubPool ||
+                           venueType == Lot.MetaAutonomyType.DanceClubRave)
+                        {
+                            sim.Motives.CreateMotive(Autonomy.CommodityKind.BeInDanceClub);
+                            if (Message.Sender.IsDebugging())
+                            {
+                                Message.Sender.Debug(this, mSim.FullName + " has motive to be in DanceClub");
+                            }
+                        }
+                        else if (venueType == Lot.MetaAutonomyType.DiveBarCriminal ||
+                           venueType == Lot.MetaAutonomyType.DiveBarIrish || venueType == Lot.MetaAutonomyType.DiveBarSports)
                         {
                             sim.Motives.CreateMotive(Autonomy.CommodityKind.BeInDiveBar);
-                            //Message.Sender.Show("Added motives to drink");
+                            if (Message.Sender.IsDebugging())
+                            {
+                                Message.Sender.Debug(this, mSim.FullName + " has motive to be in DiveBar");
+                            }
                         }
+
                     }
+
                 }
             }
         }
 
         public void MakeSimComeToRoleLot()
         {
-            Lot roleLot = (base.RoleGivingObject as DrunkardsBottle).GetTargetLot();
-
-            if ((this.mSim.CreatedSim.LotCurrent == null) || !(this.mSim.CreatedSim.LotCurrent == roleLot))
+            if (this.mSim.CreatedSim.LotCurrent == null || this.mSim.CreatedSim.LotCurrent != RoleGivingObject.LotCurrent)
             {
-                this.mSim.CreatedSim.InteractionQueue.Add(GoToALot.Singleton.CreateInstance(this.mSim.CreatedSim, this.mSim.CreatedSim,
+                this.mSim.CreatedSim.InteractionQueue.Add(
+                    Sim.GoToLotThatSatisfiesMyRole.Singleton.CreateInstance(this.mSim.CreatedSim, this.mSim.CreatedSim,
                     new InteractionPriority(InteractionPriorityLevel.High), true, true));
-                //Message.Sender.Show("Called sim to arrive");
+                if (Message.Sender.IsDebugging())
+                {
+                    Message.Sender.Debug(this, "Sim " + mSim + " called from "
+                        + this.mSim.CreatedSim.LotCurrent.Name + " to " + RoleGivingObject.LotCurrent.Name);
+                }
             }
         }
-
-
 
         public void InstantiateSim()
         {
@@ -241,7 +227,10 @@ namespace Sims3.Gameplay.Roles.Misukisu
             {
                 Lot lot = LotManager.SelectRandomLotForNPCMoveIn(null);
                 this.mSim.CreatedSim = this.mSim.Instantiate(lot);
-                //Message.Sender.Show("Sim instantiated: " + SimInRole);
+                if (Message.Sender.IsDebugging())
+                {
+                    Message.Sender.Debug(this, "Sim instantiated: " + mSim.FullName);
+                }
             }
 
         }

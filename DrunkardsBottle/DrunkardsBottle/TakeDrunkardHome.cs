@@ -22,7 +22,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
         {
                 if (base.Target.CurrentRole != null)
                 {
-                    base.Target.SlaveOwner = this.Actor;
+                    //base.Target.SlaveOwner = this.Actor;
                     Message.Sender.Show("Thanks for taking care of me. Tomorrow I'll come to your place instead");
                 }
           

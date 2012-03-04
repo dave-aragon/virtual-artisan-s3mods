@@ -14,11 +14,9 @@ using Misukisu.Common;
 
 namespace Sims3.Gameplay.Roles.Misukisu
 {
-
-
     public class Courtesan : Pianist
     {
-        
+
         public Courtesan()
             : base()
         { }
@@ -29,20 +27,27 @@ namespace Sims3.Gameplay.Roles.Misukisu
 
         public new void RemoveSimFromRole()
         {
-            //Message.Sender.Show("Sim is removed from role " + new StackTrace().ToString());
+            if (Message.Sender.IsDebugging())
+            {
+                Message.Sender.Debug(this, "Sim " + mSim.FullName + " will be removed from role");
+            }
             base.RemoveSimFromRole();
         }
 
-        public static Courtesan clone(Role toClone, Sim simInRole)
-        {
-            SimDescription actor = findSimInRole(toClone, simInRole);
 
-            Courtesan newRole = null;
-            if (actor != null)
-            {
-                newRole = new Courtesan(toClone.Data, actor, toClone.RoleGivingObject);
-                newRole.StartRole();
-            }
+
+        public static Courtesan AssignedRole(Sim sim)
+        {
+            Role role = sim.SimDescription.AssignedRole;
+            Courtesan courtesan = role as Courtesan;
+            return courtesan;
+        }
+
+        public static Courtesan clone(Role toClone, SimDescription actor)
+        {
+            Courtesan newRole = new Courtesan(toClone.Data, actor, toClone.RoleGivingObject);
+            newRole.StartRole();
+
             return newRole;
         }
 
@@ -50,8 +55,14 @@ namespace Sims3.Gameplay.Roles.Misukisu
         public override void SimulateRole(float minPassed)
         {
             // No Push needed, sim will work on its on
-            //Message.Sender.Show("Custom role in simulation " + new StackTrace().ToString());
-            // base.SimulateRole(minPassed);
+        }
+
+        public override bool IsStoryProgressionProtected
+        {
+            get
+            {
+                return true;
+            }
         }
 
         public override void EndRole()
@@ -67,13 +78,16 @@ namespace Sims3.Gameplay.Roles.Misukisu
                 createdSim.InteractionQueue.CancelAllInteractions();
                 //this.mSim.CreatedSim.SwitchToOutfitWithoutSpin(OutfitCategories.Everyday);
                 Sim.MakeSimGoHome(createdSim, false);
-
+                if (Message.Sender.IsDebugging())
+                {
+                    Message.Sender.Debug(this, "Sim " + mSim.FullName + " was sent home");
+                }
             }
         }
 
+
         public override void SwitchIntoOutfit()
         {
-            //Message.Sender.Show("Switching into outft");
             try
             {
                 Lot roleLot = (base.RoleGivingObject as CourtesansPerfume).GetTargetLot();
@@ -85,7 +99,6 @@ namespace Sims3.Gameplay.Roles.Misukisu
                     Lot.MetaAutonomyType venueType = roleLot.GetMetaAutonomyType;
                     SwitchToProperClothing(sim, venueType);
                 }
-
             }
             catch (Exception e)
             {
@@ -93,7 +106,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             }
         }
 
-        public static void SwitchToProperClothing(Sim sim, Lot.MetaAutonomyType venueType)
+        public void SwitchToProperClothing(Sim sim, Lot.MetaAutonomyType venueType)
         {
             SimIFace.CAS.OutfitCategories outfitType = SimIFace.CAS.OutfitCategories.Everyday;
             if (venueType == Lot.MetaAutonomyType.CocktailLoungeAsian || venueType == Lot.MetaAutonomyType.CocktailLoungeCelebrity || venueType == Lot.MetaAutonomyType.CocktailLoungeVampire)
@@ -102,11 +115,19 @@ namespace Sims3.Gameplay.Roles.Misukisu
             }
 
             sim.SwitchToOutfitWithoutSpin(Sim.ClothesChangeReason.GoingToWork, outfitType);
+            if (Message.Sender.IsDebugging())
+            {
+                Message.Sender.Debug(this, "Role clothing change request for "
+                    + mSim.FullName + " " + outfitType.ToString());
+            }
         }
 
         public override void StartRole()
         {
-            //Message.Sender.Show("starting new custom role ");
+            if (Message.Sender.IsDebugging())
+            {
+                Message.Sender.Debug(this, mSim.FullName + " role starting...");
+            }
             try
             {
                 if (!this.mIsActive && this.mSim.IsValidDescription)
@@ -155,7 +176,11 @@ namespace Sims3.Gameplay.Roles.Misukisu
             {
                 this.mSim.CreatedSim.InteractionQueue.Add(GoToALot.Singleton.CreateInstance(this.mSim.CreatedSim, this.mSim.CreatedSim,
                     new InteractionPriority(InteractionPriorityLevel.High), true, true));
-                //Message.Sender.Show("Called sim to arrive");
+                if (Message.Sender.IsDebugging())
+                {
+                    Message.Sender.Debug(this, "Sim " + mSim + " called from "
+                        + this.mSim.CreatedSim.LotCurrent.Name + " to " + RoleGivingObject.LotCurrent.Name);
+                }
             }
         }
 
@@ -165,76 +190,29 @@ namespace Sims3.Gameplay.Roles.Misukisu
             {
                 Lot lot = LotManager.SelectRandomLotForNPCMoveIn(null);
                 this.mSim.CreatedSim = this.mSim.Instantiate(lot);
-                //Message.Sender.Show("Sim instantiated: " + SimInRole);
+                if (Message.Sender.IsDebugging())
+                {
+                    Message.Sender.Debug(this, "Sim instantiated: " + mSim.FullName);
+                }
             }
 
         }
 
-        private static SimDescription findSimInRole(Role toClone, Sim simInRole)
+        public CourtesansPerfume GetPerfume()
         {
-            SimDescription actor = null;
-            //StringBuilder s = new StringBuilder();
-            List<SimDescription> townies = Household.AllTownieSimDescriptions();
-            foreach (SimDescription townie in townies)
-            {
-
-                //if (townie.AssignedRole != null)
-                //{
-                //    s.Append("\n"+townie.FullName + " has role " + townie.AssignedRole.GetType().Name);
-                //}
-
-                if (townie.AssignedRole == toClone || simInRole == townie.CreatedSim)
-                {
-                    actor = townie;
-                    //Message.Sender.Show("Clone found the actor");
-                    break;
-                }
-            }
-
-            if (actor == null)
-            {
-                List<SimDescription> sims = Household.AllSimsLivingInWorld();
-                foreach (SimDescription townie in sims)
-                {
-                    //if (townie.AssignedRole != null)
-                    //{
-                    //    s.Append("\n" + townie.FullName + " has role " + townie.AssignedRole.GetType().Name);
-                    //}
-                    if (townie.AssignedRole == toClone || simInRole == townie.CreatedSim)
-                    {
-                        actor = townie;
-                        //Message.Sender.Show("Clone found the actor");
-                        break;
-                    }
-                }
-            }
-
-            if (actor == null)
-            {
-                List<SimDescription> sims = Household.EveryHumanSimDescription();
-                foreach (SimDescription townie in sims)
-                {
-                    //if (townie.AssignedRole != null)
-                    //{
-                    //    s.Append("\n" + townie.FullName + " has role " + townie.AssignedRole.GetType().Name);
-                    //}
-                    if (townie.AssignedRole == toClone || simInRole == townie.CreatedSim)
-                    {
-                        actor = townie;
-                        //Message.Sender.Show("Clone found the actor");
-                        break;
-                    }
-                }
-            }
-
-            //Message.Sender.Show("Roles were: "+ s.ToString());
-
-            return actor;
+            return (RoleGivingObject as CourtesansPerfume);
         }
 
-       
-
-       
+        public static CourtesansPerfume GetPerfume(Sim sim)
+        {
+            CourtesansPerfume perfume = null;
+            Courtesan role = Courtesan.AssignedRole(sim);
+            if (role != null)
+            {
+                perfume = role.GetPerfume();
+            }
+            return perfume;
+        }
     }
 
 }

@@ -23,8 +23,8 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
         {
             try
             {
-                DrunkardsBottle.Owner ownerType = base.Target.OwnerType;
-                DrunkardsBottle.Owner newOwnerType = ShowOwnerTuningDialog(ownerType);
+                //DrunkardsBottle.Owner ownerType = base.Target.OwnerType;
+                //DrunkardsBottle.Owner newOwnerType = ShowOwnerTuningDialog(ownerType);
 
                 float startTime;
                 float endTime;
@@ -33,9 +33,9 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
                 float start;
                 float end;
                 bool ok = ShowTimeTuningDialog(startTime, endTime, out start, out end);
-                if (ownerType != newOwnerType && ok)
+                if ( ok)
                 {
-                    base.Target.TuningChanged(newOwnerType, start, end);
+                    base.Target.TuningChanged( start, end);
                 }
             }
             catch (Exception e)
@@ -72,29 +72,29 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
             return changes;
         }
 
-        private static DrunkardsBottle.Owner ShowOwnerTuningDialog(DrunkardsBottle.Owner ownerType)
-        {
-            Dictionary<string, object> regTypes = new Dictionary<string, object>();
-            regTypes.Add(DrunkardsBottle.Owner.Hangaround.ToString(), DrunkardsBottle.Owner.Hangaround.ToString());
-            regTypes.Add(DrunkardsBottle.Owner.Tippler.ToString(), DrunkardsBottle.Owner.Tippler.ToString());
-            string title = Localization.LocalizeString("Misukisu.Drunkard.Tuning.TypeDialog:Title", new object[0]);
-            object result = ComboSelectionDialog.Show("The owner of the bottle is a", regTypes, ownerType.ToString());
-            DrunkardsBottle.Owner newOwnerType = ownerType;
+        //private static DrunkardsBottle.Owner ShowOwnerTuningDialog(DrunkardsBottle.Owner ownerType)
+        //{
+        //    Dictionary<string, object> regTypes = new Dictionary<string, object>();
+        //    regTypes.Add(DrunkardsBottle.Owner.Hangaround.ToString(), DrunkardsBottle.Owner.Hangaround.ToString());
+        //    regTypes.Add(DrunkardsBottle.Owner.Tippler.ToString(), DrunkardsBottle.Owner.Tippler.ToString());
+        //    string title = Localization.LocalizeString("Misukisu.Drunkard.Tuning.TypeDialog:Title", new object[0]);
+        //    object result = ComboSelectionDialog.Show("The owner of the bottle is a", regTypes, ownerType.ToString());
+        //    DrunkardsBottle.Owner newOwnerType = ownerType;
 
-            string userSelection = result as string;
-            if (userSelection != null)
-            {
-                newOwnerType = (DrunkardsBottle.Owner)Enum.Parse(typeof(DrunkardsBottle.Owner), userSelection, true);
-            }
-            return newOwnerType;
-        }
+        //    string userSelection = result as string;
+        //    if (userSelection != null)
+        //    {
+        //        newOwnerType = (DrunkardsBottle.Owner)Enum.Parse(typeof(DrunkardsBottle.Owner), userSelection, true);
+        //    }
+        //    return newOwnerType;
+        //}
 
         private sealed class Definition : ActorlessInteractionDefinition<IActor, DrunkardsBottle, TuneDrunkard>
         {
 
             public override string GetInteractionName(IActor a, DrunkardsBottle target, InteractionObjectPair interaction)
             {
-                return "Tuning Dialogs...";
+                return "Tuning Dialog...";
             }
 
             public override bool Test(IActor actor, DrunkardsBottle target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)

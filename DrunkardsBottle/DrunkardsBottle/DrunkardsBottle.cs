@@ -26,45 +26,41 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
     public class DrunkardsBottle : GameObject, IRoleGiver, IRoleGiverExtended
     {
-        public static  string NAME="Drunkard's Bottle";
-       
-        public enum Owner { Hangaround, Tippler };
+        public static string NAME = "Drunkard's Bottle";
+
         private Roles.Role mCurrentRole;
         private float mStartTime = 0F;
         private float mEndTime = 0F;
-        private Owner mOwnerType = Owner.Tippler;
-        private Sim mSlaveOwner;
-        
-        
+        private string mRoleTitle = "regular";//Localization.LocalizeString(Texts.CAREERTITLE, new string[0]);
+
+
         public override void OnStartup()
         {
             base.OnStartup();
             base.AddInteraction(TuneDrunkard.Singleton);
-            base.AddInteraction(TakeDrunkardHome.Singleton);
-           
+            base.AddInteraction(ToggleDebugger.Singleton);
+
         }
 
         public override void AddBuildBuyInteractions(List<InteractionDefinition> buildBuyInteractions)
         {
             buildBuyInteractions.Add(TuneDrunkard.Singleton);
+            buildBuyInteractions.Add(ToggleDebugger.Singleton);
             base.AddBuildBuyInteractions(buildBuyInteractions);
         }
 
         public Lot GetTargetLot()
         {
-            if (SlaveOwner != null)
-            {
-                return SlaveOwner.LotHome;
-            }
-            else
-            {
-                return LotCurrent;
-            }
+            return LotCurrent;
         }
 
-        public void TuningChanged(Owner ownerType,float startTime, float endTime)
+        public void TuningChanged(float startTime, float endTime)
         {
-            mOwnerType = ownerType;
+            if (Message.Sender.IsDebugging())
+            {
+                Message.Sender.Debug(this, "Role tuning changed - startTime="
+                    + startTime + " endTime=" + endTime);
+            }
             mStartTime = startTime;
             mEndTime = endTime;
             ResetRole();
@@ -83,7 +79,6 @@ namespace Sims3.Gameplay.Objects.Misukisu
             startTime = mStartTime;
             endTime = mEndTime;
 
-            //Message.Sender.Show("Someone is asking role times " + new StackTrace().ToString());
             if (startTime == 0)
             {
                 if (base.LotCurrent != null)
@@ -95,45 +90,32 @@ namespace Sims3.Gameplay.Objects.Misukisu
                         mStartTime = startTime;
                         endTime -= 1;
                         mEndTime = endTime;
-                        //Message.Sender.Show("Setting relative role times from " + startTime + " to " + endTime);
+                        if (Message.Sender.IsDebugging())
+                        {
+                            Message.Sender.Debug(this, "Role times set automatically - startTime="
+                                + startTime + " endTime=" + endTime);
+                        }
                     }
                     else
                     {
-                        //Message.Sender.Show("Setting fixed role times");
                         startTime = 12;
                         mStartTime = startTime;
                         endTime = 11.5F;
                         mEndTime = endTime;
+                        if (Message.Sender.IsDebugging())
+                        {
+                            Message.Sender.Debug(this, "Role times set fixed - startTime="
+                                + startTime + " endTime=" + endTime);
+                        }
                     }
 
                 }
             }
-            else
-            {
-                //Message.Sender.Show("Role time is from " + startTime + " to " + endTime);
-            }
-
         }
 
         public void AddRoleGivingInteraction(Actors.Sim sim)
         {
-           
-        }
 
-        public Owner OwnerType {
-            get { return mOwnerType; }
-        }
-
-        public Sim SlaveOwner
-        {
-            get
-            {
-                return this.mSlaveOwner;
-            }
-            set
-            {
-                this.mSlaveOwner = value;
-            }
         }
 
         public Roles.Role CurrentRole
@@ -155,7 +137,6 @@ namespace Sims3.Gameplay.Objects.Misukisu
                 }
                 else
                 {
-                    //Message.Sender.Show("Null role was set " + new StackTrace().ToString());
                     this.mCurrentRole = value;
                 }
 
@@ -169,27 +150,17 @@ namespace Sims3.Gameplay.Objects.Misukisu
             {
                 try
                 {
-                    Sim currentActor = value.SimInRole;
-                    if (currentActor != null)
-                    {
-                        value.RemoveSimFromRole();
-                        Drunkard aRole = Drunkard.clone(value, currentActor);
+                    SimDescription currentActor = value.mSim;
 
-                        if (aRole != null)
-                        {
-                            this.mCurrentRole = aRole;
-                            RoleManager.sRoleManager.AddRole(aRole);
-                        }
-                        else
-                        {
-                            Message.Sender.ShowError(DrunkardsBottle.NAME, "Cannot create custom role, clone failed", true, null);
-                        }
+                    value.RemoveSimFromRole();
+                    Drunkard aRole = Drunkard.clone(value, currentActor);
+
+                    this.mCurrentRole = aRole;
+                    RoleManager.sRoleManager.AddRole(aRole);
+                    if (Message.Sender.IsDebugging())
+                    {
+                        Message.Sender.Debug(this, "Role cloning succeeded: " + currentActor.FullName);
                     }
-                    else
-                    {
-                        Message.Sender.ShowError(DrunkardsBottle.NAME, "Cannot create custom role, Pianist sim not instantiated", true, null);
-                           }
-
                 }
                 catch (Exception ex)
                 {
@@ -203,40 +174,40 @@ namespace Sims3.Gameplay.Objects.Misukisu
         {
             try
             {
-                if (mOwnerType != Owner.Hangaround)
-                {
-                    //Message.Sender.Show("PushRoleStartingInteraction to " + (sim != null ? sim.FullName : "null"));
-                    if (sim != null && GetTargetLot().IsCommunityLot)
-                    {
-                        IBarProfessional bar = findNearestBar(sim);
-                        if (bar != null && bar.InUse)
-                        {
-                            Bartending.DrinkDescription bestDrink = Bartending.GetBestDrinkFor(sim, base.LotCurrent.GetMetaAutonomyType);
-                            String bestDrinkName = null;
-                            if (bestDrink != null)
-                            {
-                                bestDrinkName = bestDrink.GetLocalizedName();
-                            }
 
-                            if (bestDrinkName != null)
-                            {
-                                PushSimToDrink(sim, bar, bestDrinkName);
-                                //Message.Sender.Show("Sim was pushed to drink");
-                            }
+                //Message.Sender.Show("PushRoleStartingInteraction to " + (sim != null ? sim.FullName : "null"));
+                if (sim != null && GetTargetLot().IsCommunityLot)
+                {
+                    IBarProfessional bar = findNearestBar(sim);
+                    if (bar != null && bar.InUse)
+                    {
+                        Bartending.DrinkDescription bestDrink = Bartending.GetBestDrinkFor(sim, base.LotCurrent.GetMetaAutonomyType);
+                        String bestDrinkName = null;
+                        if (bestDrink != null)
+                        {
+                            bestDrinkName = bestDrink.GetLocalizedName();
+                        }
+
+                        if (bestDrinkName != null)
+                        {
+                            PushSimToDrink(sim, bar, bestDrinkName);
+                           
                         }
                     }
-                  
                 }
             }
             catch (Exception ex)
             {
-                Message.Sender.ShowError(DrunkardsBottle.NAME,"Cannot order drink from bar ",false,ex);
+                Message.Sender.ShowError(DrunkardsBottle.NAME, "Cannot order drink from bar ", false, ex);
             }
         }
 
-        private static void PushSimToDrink(Actors.Sim sim, IBarProfessional bar, String bestDrinkName)
+        private void PushSimToDrink(Actors.Sim sim, IBarProfessional bar, String bestDrinkName)
         {
-            //Message.Sender.Show("Best drink for me would be " + bestDrinkName);
+            if (Message.Sender.IsDebugging())
+            {
+                Message.Sender.Debug(this, "Best drink for " + sim.FullName + " is: " + bestDrinkName);
+            }
             List<InteractionObjectPair> interactions = bar.GetAllInteractionsForActor(sim);
             InteractionDefinition drinkingDefinition = null;
             foreach (InteractionObjectPair interaction in interactions)
@@ -253,7 +224,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
             if (drinkingDefinition != null)
             {
-               
+
                 IEnumerable<InteractionInstance> actions = sim.InteractionQueue.InteractionList;
                 List<InteractionInstance> toCancel = new List<InteractionInstance>();
                 bool alreadyDrinking = false;
@@ -261,33 +232,37 @@ namespace Sims3.Gameplay.Objects.Misukisu
                 {
                     if (!(action is BarProfessional.BarInteraction))
                     {
-                        //Message.Sender.Show("Canceling " + action.GetInteractionName());
+                        if (Message.Sender.IsDebugging())
+                        {
+                            Message.Sender.Debug(this, "Canceling " + action.GetInteractionName());
+                        }
                         toCancel.Add(action);
                     }
                     else
                     {
-
-                        //Message.Sender.Show("Sim is already drinking");
+                        if (Message.Sender.IsDebugging())
+                        {
+                            Message.Sender.Debug(this, "Sim is already drinking, no push added");
+                        }
                         alreadyDrinking = true;
                         break;
                     }
-                   
+
                 }
 
                 foreach (InteractionInstance action in toCancel)
                 {
                     sim.InteractionQueue.CancelInteraction(action, false);
                 }
-                //Message.Sender.Show("Heading for a " + bestDrinkName + " after I have done: " + s.ToString());
                 if (!alreadyDrinking)
                 {
                     sim.InteractionQueue.AddAfterCheckingForDuplicates(drinkingDefinition.CreateInstance(bar, sim, new InteractionPriority(InteractionPriorityLevel.RequiredNPCBehavior), true, false));
+                    if (Message.Sender.IsDebugging())
+                    {
+                        Message.Sender.Debug(this, "Sim was pushed to drink: " + sim.FullName);
+                    }
                 }
             }
-            //else
-            //{
-            //    Message.Sender.Show("I wanted " + bestDrinkName + " but it was not in the list");
-            //}
         }
 
         private IBarProfessional findNearestBar(Actors.Sim sim)
@@ -298,17 +273,17 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
         public void RemoveRoleGivingInteraction(Actors.Sim sim)
         {
-           
+
         }
 
         public string RoleName(bool isFemale)
         {
-            return "";
+            return mRoleTitle;
         }
 
         public Roles.Role.RoleType RoleType
         {
-            get { return Role.RoleType.Pianist; }
+            get { return Role.RoleType.Bartender; }
         }
 
         public ResourceKey GetRoleUniformKey(Sim Sim, Lot.MetaAutonomyType venueType)

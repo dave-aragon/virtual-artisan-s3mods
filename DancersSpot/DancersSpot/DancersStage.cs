@@ -30,7 +30,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
         public static string NAME = "Dancer's Stage";
 
         private Roles.Role mCurrentRole;
-        private float mTimeToPee = 0.75F;
+
         private float[] mShowTimes = new float[] { 19F, 23F };
         private float mShowDurationMins = 60F;
         private OutfitCategories[] mShowOutfits = new OutfitCategories[] { OutfitCategories.Career };
@@ -42,19 +42,19 @@ namespace Sims3.Gameplay.Objects.Misukisu
             base.OnStartup();
             base.AddInteraction(TuneExoticDancer.Singleton);
             base.AddInteraction(StartShowNow.Singleton);
-            //base.AddInteraction(PerformShow.Singleton);
+            base.AddInteraction(ToggleDebugger.Singleton);
         }
 
         public override void AddBuildBuyInteractions(List<InteractionDefinition> buildBuyInteractions)
         {
-
+            buildBuyInteractions.Add(ToggleDebugger.Singleton);
             buildBuyInteractions.Add(TuneExoticDancer.Singleton);
             base.AddBuildBuyInteractions(buildBuyInteractions);
         }
 
         public void TuningChanged(float[] newShowTimes, float newShowDuration, OutfitCategories newFirstOutfit, OutfitCategories newLastOutfit)
         {
-            //Message.Sender.Show("New tuning, role will reset");
+
             if (newShowTimes.Length > 0)
             {
                 mShowTimes = newShowTimes;
@@ -83,7 +83,13 @@ namespace Sims3.Gameplay.Objects.Misukisu
             }
 
             Message.Sender.Show("new Show outfits are: " + OutfitsToString(mShowOutfits, " - "));
-
+            if (Message.Sender.IsDebugging())
+            {
+                //Message.Sender.Debug(this, "Role tuning changed - startTime="
+                //    + startTime + " endTime=" + endTime + " roleTitle=" + roleTitle);
+                Message.Sender.Show(this, "new Show outfits are: " + OutfitsToString(mShowOutfits, " - "));
+                Message.Sender.Debug(this, "new Show outfits are: " + OutfitsToString(mShowOutfits, " - "));
+            }
             ResetRole();
         }
 
@@ -117,9 +123,13 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
         public void GetRoleTimes(out float startTime, out float endTime)
         {
-            startTime = mShowTimes[0] - mTimeToPee - 1F;
-            endTime = mShowTimes[mShowTimes.Length - 1] + mTimeToPee + (mShowDurationMins / 60) + 1F;
-
+            startTime = mShowTimes[0] - 1F;
+            endTime = mShowTimes[mShowTimes.Length - 1] + (mShowDurationMins / 60) + 1F;
+            if (Message.Sender.IsDebugging())
+            {
+                Message.Sender.Debug(this, "Role times are - startTime="
+                    + startTime + " endTime=" + endTime);
+            }
         }
 
         public void AddRoleGivingInteraction(Actors.Sim sim)
@@ -132,11 +142,14 @@ namespace Sims3.Gameplay.Objects.Misukisu
         {
             if (mShowIndex < ShowTimes.Length)
             {
-                float timeUntilShow = SimClock.HoursUntil(ShowTimes[mShowIndex] - mTimeToPee);
+                float timeUntilShow = SimClock.HoursUntil(ShowTimes[mShowIndex]);
 
                 long timeAsLong = SimClock.ConvertToTicks(timeUntilShow, TimeUnit.Hours);
                 this.mNextShowTime = SimClock.CurrentTicks + timeAsLong;
-                //Message.Sender.Show("Show " + mShowIndex + " is in " + timeUntilShow.ToString() + " hours");
+                if (Message.Sender.IsDebugging())
+                {
+                    Message.Sender.Debug(this, "Show " + mShowIndex + " is in " + timeUntilShow.ToString() + " hours");
+                }
                 mShowIndex++;
             }
             else
@@ -166,7 +179,6 @@ namespace Sims3.Gameplay.Objects.Misukisu
                 }
                 else
                 {
-                    //Message.Sender.Show("Null role was set " + new StackTrace().ToString());
                     this.mCurrentRole = value;
                 }
 
@@ -180,27 +192,15 @@ namespace Sims3.Gameplay.Objects.Misukisu
             {
                 try
                 {
-                    Sim currentActor = value.SimInRole;
-                    if (currentActor != null)
+                    SimDescription currentActor = value.mSim;
+                    value.RemoveSimFromRole();
+                    ExoticDancer aRole = ExoticDancer.clone(value, currentActor);
+                    this.mCurrentRole = aRole;
+                    RoleManager.sRoleManager.AddRole(aRole);
+                    if (Message.Sender.IsDebugging())
                     {
-                        value.RemoveSimFromRole();
-                        ExoticDancer aRole = ExoticDancer.clone(value, currentActor);
-
-                        if (aRole != null)
-                        {
-                            this.mCurrentRole = aRole;
-                            RoleManager.sRoleManager.AddRole(aRole);
-                        }
-                        else
-                        {
-                            Message.Sender.ShowError(DancersStage.NAME, "Cannot create custom role, clone failed", true, null);
-                        }
+                        Message.Sender.Debug(this, "Role cloning succeeded: " + currentActor.FullName);
                     }
-                    else
-                    {
-                        Message.Sender.ShowError(DancersStage.NAME, "Cannot create custom role, Pianist sim not instantiated", true, null);
-                    }
-
                 }
                 catch (Exception ex)
                 {
@@ -216,7 +216,10 @@ namespace Sims3.Gameplay.Objects.Misukisu
             {
                 if (sim != null && this.mNextShowTime <= SimClock.CurrentTicks)
                 {
-                    //Message.Sender.Show("It is SHOWTIME");
+                    if (Message.Sender.IsDebugging())
+                    {
+                        Message.Sender.Debug(this, "It is SHOWTIME" );
+                    }
                     calculateNextShowTime();
                     PushSimToPerformShow(sim);
                 }
@@ -235,13 +238,15 @@ namespace Sims3.Gameplay.Objects.Misukisu
                 if (currentRole != null)
                 {
                     currentRole.FreezeMotivesWhilePlaying();
-
-
                     //pushSimToPeeBeforeShow(sim);
 
                     InteractionInstance instance = PerformShow.Singleton.CreateInstance(this, sim,
                         new InteractionPriority(InteractionPriorityLevel.RequiredNPCBehavior), false, false);
                     sim.InteractionQueue.AddAfterCheckingForDuplicates(instance);
+                    if (Message.Sender.IsDebugging())
+                    {
+                        Message.Sender.Debug(this, sim.FullName + " pushed to dance");
+                    }
                 }
             }
         }

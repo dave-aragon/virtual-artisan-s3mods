@@ -13,6 +13,7 @@ using Sims3.Gameplay.Socializing;
 using Sims3.UI.Controller;
 using Sims3.Gameplay.ActorSystems;
 using Misukisu.Common;
+using Sims3.Gameplay.Roles.Misukisu;
 
 namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
 {
@@ -20,7 +21,6 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
     {
 
         public static readonly InteractionDefinition Singleton = new Definition();
-        private LongTermRelationshipTypes relationshipBeforeWooHoo;
 
         public override bool Run()
         {
@@ -68,19 +68,20 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
         {
             try
             {
-
-                Relationship relationToTarget = base.Actor.GetRelationship(base.Target, true);
-                relationToTarget.LTR.ForceChangeState(relationshipBeforeWooHoo);
-                //Message.Sender.Show("Relations restored: " + relationToTarget.LTR.CurrentLTR + " - " + base.Target.GetRelationship(base.Actor, true).LTR.CurrentLTR);
-
-                if (base.Actor.BuffManager.HasElement(BuffNames.StrideOfPride))
-                {
-                    int amount = 100;
-                    if (amount < base.Actor.FamilyFunds)
-                    {
-                        base.Actor.ModifyFunds(-amount);
-                    }
-                }
+                 CourtesansPerfume perfume = Courtesan.GetPerfume(base.Target);
+                 if (perfume != null)
+                 {
+                     perfume.restoreOldRelationship(s.SimDescription, base.Target);
+                     if (base.Actor.BuffManager.HasElement(BuffNames.StrideOfPride))
+                     {
+                         int amount = 100;
+                         if (amount < base.Actor.FamilyFunds)
+                         {
+                             base.Actor.ModifyFunds(-amount);
+                         }
+                     }
+                     base.Target.BuffManager.RemoveElement(BuffNames.StrideOfPride);
+                 }
             }
             catch (Exception e)
             {
@@ -89,11 +90,15 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
             }
         }
 
-        private void CreateRelationship(Sim actor, Sim target)
+        private void CreateRelationship(Sim buyer, Sim seller)
         {
-            Relationship relationToTarget = actor.GetRelationship(target, true);
-            this.relationshipBeforeWooHoo = relationToTarget.LTR.CurrentLTR;
-            relationToTarget.LTR.ForceChangeState(LongTermRelationshipTypes.Partner);
+            Relationship relationToTarget = buyer.GetRelationship(seller, true);
+            CourtesansPerfume perfume = Courtesan.GetPerfume(seller);
+            if (perfume != null)
+            {
+                perfume.storeOldRelationship(buyer.SimDescription, relationToTarget.LTR.CurrentLTR);
+                relationToTarget.LTR.ForceChangeState(LongTermRelationshipTypes.Partner);
+            }
         }
 
 
@@ -109,7 +114,14 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
 
             public override string GetInteractionName(Sim a, Sim target, InteractionObjectPair interaction)
             {
-                return "Ask to WooHoo for Money (§100)";
+                string price = "0";
+                Courtesan role=Courtesan.AssignedRole(target);
+                if (role != null)
+                {
+                   price= role.GetPerfume().PayPerWoohoo.ToString();
+                }
+
+                return "Ask to WooHoo for Money (§"+price+")";
             }
 
             public override bool Test(Sim actor, Sim target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
@@ -123,7 +135,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
                 if (social != null)
                 {
                     Conversation conversation = social.Conversation;
-                    if (conversation != null && conversation.ContainsSim(target))
+                    if (conversation != null && conversation.ContainsSim(actor))
                     {
                         return true;
                     }

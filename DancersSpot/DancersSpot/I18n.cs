@@ -11,8 +11,8 @@ namespace Misukisu.Common
         public static string DEBUG_STARTING_TITLE = "Misukisu.Common.Debug:StartingTitle";
         public static string DEBUG_CANNOT_START_LOGGER= "Misukisu.Common.Debug:CannotStartLogger";
         public static string DEBUG_CANNOT_CREATE_LOG_FILE= "Misukisu.Common.Debug:CannotCreateLogFile";
-        public static string DEBUG_STOP= "Misukisu.Common.Debug:Start";
-        public static string DEBUG_START= "Misukisu.Common.Debug:Stop";
+        public static string DEBUG_STOP= "Misukisu.Common.Debug:Stop";
+        public static string DEBUG_START= "Misukisu.Common.Debug:Start";
         public static string MESSAGE_CRITICAL_ERROR= "Misukisu.Common.Message:CriticalError";
 
     }

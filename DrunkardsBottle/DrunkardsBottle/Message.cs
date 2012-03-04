@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using Sims3.UI;
 using Sims3.Gameplay;
+using Sims3.SimIFace;
+using Sims3.Gameplay.Abstracts;
 
 namespace Misukisu.Common
 {
@@ -15,6 +17,13 @@ namespace Misukisu.Common
         private Message()
             : base()
         {
+        }
+
+        public void Show(GameObject owner, string msg)
+        {
+            StyledNotification.Format format = new StyledNotification.Format(msg, 
+                ObjectGuid.InvalidObjectGuid, owner.ObjectId, StyledNotification.NotificationStyle.kGameMessagePositive);
+            StyledNotification.Show(format, "tns_icon_bulb");
         }
 
         public void Show(string msg)

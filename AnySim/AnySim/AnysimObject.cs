@@ -29,7 +29,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
         private Roles.Role mCurrentRole;
         private float mStartTime = 0F;
         private float mEndTime = 0F;
-        private string mRoleTitle = "";
+        private string mRoleTitle = Localization.LocalizeString(Texts.CAREERTITLE, new string[0]);
 
 
         public override void OnStartup()
@@ -53,15 +53,16 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
         public void TuningChanged(float startTime, float endTime, string roleTitle)
         {
-            mStartTime = startTime;
-            mEndTime = endTime;
-            mRoleTitle = roleTitle;
-            ResetRole();
             if (Message.Sender.IsDebugging())
             {
                 Message.Sender.Debug(this, "Role tuning changed - startTime="
                     + startTime + " endTime=" + endTime + " roleTitle=" + roleTitle);
             }
+            mStartTime = startTime;
+            mEndTime = endTime;
+            mRoleTitle = roleTitle;
+            ResetRole();
+           
         }
 
         private void ResetRole()
@@ -114,10 +115,6 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
         }
 
-
-
-
-
         public Roles.Role CurrentRole
         {
             get
@@ -159,7 +156,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
                     RoleManager.sRoleManager.AddRole(aRole);
                     if (Message.Sender.IsDebugging())
                     {
-                        Message.Sender.Debug(this, "Role cloning succeeded, new AnySim created: " + currentActor.FullName);
+                        Message.Sender.Debug(this, "Role cloning succeeded: " + currentActor.FullName);
                     }
                     
                 }
