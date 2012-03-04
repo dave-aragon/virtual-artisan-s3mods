@@ -10,6 +10,7 @@ using Sims3.SimIFace;
 using Sims3.Gameplay.Objects.Misukisu;
 using Sims3.Gameplay.Interfaces;
 using Sims3.Gameplay.Utilities;
+using Misukisu.Anysim;
 
 namespace Misukisu.Sims3.Gameplay.Interactions.Anysim
 {

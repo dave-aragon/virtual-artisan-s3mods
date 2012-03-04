@@ -1,5 +1,5 @@
 ﻿
-namespace Misukisu.Common
+namespace Misukisu.Anysim
 {
     static class Texts
     {

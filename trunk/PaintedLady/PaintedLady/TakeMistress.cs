@@ -10,6 +10,7 @@ using Sims3.SimIFace;
 using Sims3.Gameplay.Objects.Misukisu;
 using Misukisu.Sims3.Gameplay.Interactions.Paintedlady;
 using Sims3.UI;
+using Misukisu.Common;
 
 
 namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
@@ -25,7 +26,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
             if (role != null)
             {
                 base.Target.SlaveOwner = this.Actor;
-                Message.Show("Sure, I'll go right away to your place");
+                Message.Sender.Show("Sure, I'll go right away to your place");
                 //role.SimInRole.ShowTNSIfSelectable("Sure, I'll go right away to your place", StyledNotification.NotificationStyle.kGameMessagePositive);
                 (base.Target.CurrentRole as Courtesan).MakeSimComeToRoleLot();
             }

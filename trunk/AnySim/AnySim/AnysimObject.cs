@@ -19,6 +19,7 @@ using Sims3.SimIFace;
 using Sims3.UI;
 using Sims3.Gameplay.Objects.Counters;
 using Misukisu.Sims3.Gameplay.Interactions.Anysim;
+using Misukisu.Anysim;
 
 namespace Sims3.Gameplay.Objects.Misukisu
 {
@@ -188,6 +189,12 @@ namespace Sims3.Gameplay.Objects.Misukisu
         public Roles.Role.RoleType RoleType
         {
             get { return Role.RoleType.Bartender; }
+        }
+
+
+        public ResourceKey GetRoleUniformKey(Sim Sim, Lot.MetaAutonomyType venueType)
+        {
+            return ResourceKey.kInvalidResourceKey;
         }
     }
 }

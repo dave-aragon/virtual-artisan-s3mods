@@ -10,6 +10,7 @@ using Sims3.Gameplay.Interactions;
 using System.Diagnostics;
 using Misukisu.Sims3.Gameplay.Interactions.Paintedlady;
 using Sims3.Gameplay.Objects.Misukisu;
+using Misukisu.Common;
 
 namespace Sims3.Gameplay.Roles.Misukisu
 {
@@ -28,7 +29,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
 
         public new void RemoveSimFromRole()
         {
-            //Message.Show("Sim is removed from role " + new StackTrace().ToString());
+            //Message.Sender.Show("Sim is removed from role " + new StackTrace().ToString());
             base.RemoveSimFromRole();
         }
 
@@ -49,7 +50,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
         public override void SimulateRole(float minPassed)
         {
             // No Push needed, sim will work on its on
-            //Message.Show("Custom role in simulation " + new StackTrace().ToString());
+            //Message.Sender.Show("Custom role in simulation " + new StackTrace().ToString());
             // base.SimulateRole(minPassed);
         }
 
@@ -72,7 +73,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
 
         public override void SwitchIntoOutfit()
         {
-            //Message.Show("Switching into outft");
+            //Message.Sender.Show("Switching into outft");
             try
             {
                 Lot roleLot = (base.RoleGivingObject as CourtesansPerfume).GetTargetLot();
@@ -88,7 +89,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             }
             catch (Exception e)
             {
-                Message.ShowError(CourtesansPerfume.NAME, "Cannot change courtesan's clothes: ", false, e);
+                Message.Sender.ShowError(CourtesansPerfume.NAME, "Cannot change courtesan's clothes: ", false, e);
             }
         }
 
@@ -105,7 +106,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
 
         public override void StartRole()
         {
-            //Message.Show("starting new custom role ");
+            //Message.Sender.Show("starting new custom role ");
             try
             {
                 if (!this.mIsActive && this.mSim.IsValidDescription)
@@ -137,7 +138,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             }
             catch (Exception e)
             {
-                Message.ShowError(CourtesansPerfume.NAME, "Cannot start the role", false, e);
+                Message.Sender.ShowError(CourtesansPerfume.NAME, "Cannot start the role", false, e);
             }
         }
 
@@ -154,7 +155,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             {
                 this.mSim.CreatedSim.InteractionQueue.Add(GoToALot.Singleton.CreateInstance(this.mSim.CreatedSim, this.mSim.CreatedSim,
                     new InteractionPriority(InteractionPriorityLevel.High), true, true));
-                //Message.Show("Called sim to arrive");
+                //Message.Sender.Show("Called sim to arrive");
             }
         }
 
@@ -164,7 +165,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             {
                 Lot lot = LotManager.SelectRandomLotForNPCMoveIn(null);
                 this.mSim.CreatedSim = this.mSim.Instantiate(lot);
-                //Message.Show("Sim instantiated: " + SimInRole);
+                //Message.Sender.Show("Sim instantiated: " + SimInRole);
             }
 
         }
@@ -185,7 +186,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
                 if (townie.AssignedRole == toClone || simInRole == townie.CreatedSim)
                 {
                     actor = townie;
-                    //Message.Show("Clone found the actor");
+                    //Message.Sender.Show("Clone found the actor");
                     break;
                 }
             }
@@ -202,7 +203,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
                     if (townie.AssignedRole == toClone || simInRole == townie.CreatedSim)
                     {
                         actor = townie;
-                        //Message.Show("Clone found the actor");
+                        //Message.Sender.Show("Clone found the actor");
                         break;
                     }
                 }
@@ -220,13 +221,13 @@ namespace Sims3.Gameplay.Roles.Misukisu
                     if (townie.AssignedRole == toClone || simInRole == townie.CreatedSim)
                     {
                         actor = townie;
-                        //Message.Show("Clone found the actor");
+                        //Message.Sender.Show("Clone found the actor");
                         break;
                     }
                 }
             }
 
-            //Message.Show("Roles were: "+ s.ToString());
+            //Message.Sender.Show("Roles were: "+ s.ToString());
 
             return actor;
         }

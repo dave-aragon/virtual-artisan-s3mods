@@ -10,6 +10,7 @@ using Sims3.SimIFace;
 using Sims3.Gameplay.Objects.Misukisu;
 using Sims3.Gameplay.Interfaces;
 using Sims3.Gameplay.Utilities;
+using Misukisu.Common;
 
 namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
 {
@@ -39,7 +40,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
             }
             catch (Exception e)
             {
-                Message.ShowError(DrunkardsBottle.NAME, "Tuning failed, please try again", false, e);
+                Message.Sender.ShowError(DrunkardsBottle.NAME, "Tuning failed, please try again", false, e);
             }
             return true;
         }

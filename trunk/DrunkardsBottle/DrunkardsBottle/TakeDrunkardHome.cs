@@ -8,6 +8,7 @@ using Sims3.Gameplay.Roles.Misukisu;
 using Sims3.Gameplay.Autonomy;
 using Sims3.SimIFace;
 using Sims3.Gameplay.Objects.Misukisu;
+using Misukisu.Common;
 
 
 namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
@@ -22,7 +23,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
                 if (base.Target.CurrentRole != null)
                 {
                     base.Target.SlaveOwner = this.Actor;
-                    Message.Show("Thanks for taking care of me. Tomorrow I'll come to your place instead");
+                    Message.Sender.Show("Thanks for taking care of me. Tomorrow I'll come to your place instead");
                 }
           
             return true;

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using Misukisu.DancerSpot;
 using Sims3.Gameplay.Abstracts;
 using Sims3.Gameplay.Actors;
 using Sims3.Gameplay.Autonomy;
@@ -22,6 +21,7 @@ using Misukisu.Sims3.Gameplay.Interactions;
 using Sims3.Gameplay.Objects.Tables.Mimics;
 using Sims3.SimIFace.CAS;
 using Sims3.Gameplay.ActorSystems;
+using Misukisu.Common;
 
 namespace Sims3.Gameplay.Objects.Misukisu
 {
@@ -54,7 +54,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
         public void TuningChanged(float[] newShowTimes, float newShowDuration, OutfitCategories newFirstOutfit, OutfitCategories newLastOutfit)
         {
-            //Message.Show("New tuning, role will reset");
+            //Message.Sender.Show("New tuning, role will reset");
             if (newShowTimes.Length > 0)
             {
                 mShowTimes = newShowTimes;
@@ -82,7 +82,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
                 mShowOutfits = new OutfitCategories[] { newFirstOutfit, newLastOutfit };
             }
 
-            Message.Show("new Show outfits are: " + OutfitsToString(mShowOutfits, " - "));
+            Message.Sender.Show("new Show outfits are: " + OutfitsToString(mShowOutfits, " - "));
 
             ResetRole();
         }
@@ -136,7 +136,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
                 long timeAsLong = SimClock.ConvertToTicks(timeUntilShow, TimeUnit.Hours);
                 this.mNextShowTime = SimClock.CurrentTicks + timeAsLong;
-                //Message.Show("Show " + mShowIndex + " is in " + timeUntilShow.ToString() + " hours");
+                //Message.Sender.Show("Show " + mShowIndex + " is in " + timeUntilShow.ToString() + " hours");
                 mShowIndex++;
             }
             else
@@ -166,7 +166,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
                 }
                 else
                 {
-                    //Message.Show("Null role was set " + new StackTrace().ToString());
+                    //Message.Sender.Show("Null role was set " + new StackTrace().ToString());
                     this.mCurrentRole = value;
                 }
 
@@ -193,18 +193,18 @@ namespace Sims3.Gameplay.Objects.Misukisu
                         }
                         else
                         {
-                            Message.ShowError(DancersStage.NAME, "Cannot create custom role, clone failed", true, null);
+                            Message.Sender.ShowError(DancersStage.NAME, "Cannot create custom role, clone failed", true, null);
                         }
                     }
                     else
                     {
-                        Message.ShowError(DancersStage.NAME, "Cannot create custom role, Pianist sim not instantiated", true, null);
+                        Message.Sender.ShowError(DancersStage.NAME, "Cannot create custom role, Pianist sim not instantiated", true, null);
                     }
 
                 }
                 catch (Exception ex)
                 {
-                    Message.ShowError(DancersStage.NAME, "Cannot create custom role", true, ex);
+                    Message.Sender.ShowError(DancersStage.NAME, "Cannot create custom role", true, ex);
                     this.mCurrentRole = value;
                 }
             }
@@ -216,14 +216,14 @@ namespace Sims3.Gameplay.Objects.Misukisu
             {
                 if (sim != null && this.mNextShowTime <= SimClock.CurrentTicks)
                 {
-                    //Message.Show("It is SHOWTIME");
+                    //Message.Sender.Show("It is SHOWTIME");
                     calculateNextShowTime();
                     PushSimToPerformShow(sim);
                 }
             }
             catch (Exception ex)
             {
-                Message.ShowError(DancersStage.NAME, "Sim cannot play the role", false, ex);
+                Message.Sender.ShowError(DancersStage.NAME, "Sim cannot play the role", false, ex);
             }
         }
 
@@ -284,7 +284,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
             }
             catch (Exception ex)
             {
-                Message.ShowError(DancersStage.NAME, "Sim cannot pee before show", false, ex);
+                Message.Sender.ShowError(DancersStage.NAME, "Sim cannot pee before show", false, ex);
             }
         }
 
@@ -348,6 +348,11 @@ namespace Sims3.Gameplay.Objects.Misukisu
             {
                 return OutfitCategories.Career;
             }
+        }
+
+        public ResourceKey GetRoleUniformKey(Sim Sim, Lot.MetaAutonomyType venueType)
+        {
+            return ResourceKey.kInvalidResourceKey;
         }
     }
 }

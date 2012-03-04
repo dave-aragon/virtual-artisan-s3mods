@@ -18,6 +18,7 @@ using Sims3.Gameplay.Utilities;
 using Sims3.SimIFace;
 using Sims3.UI;
 using Sims3.Gameplay.Objects.Counters;
+using Misukisu.Common;
 
 namespace Sims3.Gameplay.Objects.Misukisu
 {
@@ -77,7 +78,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
             startTime = mStartTime;
             endTime = mEndTime;
 
-            //Message.Show("Someone is asking role times " + new StackTrace().ToString());
+            //Message.Sender.Show("Someone is asking role times " + new StackTrace().ToString());
             if (startTime == 0)
             {
                 if (base.LotCurrent != null)
@@ -86,11 +87,11 @@ namespace Sims3.Gameplay.Objects.Misukisu
                     {
                         mStartTime = startTime;
                         mEndTime = endTime;
-                        //Message.Show("Setting relative role times from " + startTime + " to " + endTime);
+                        //Message.Sender.Show("Setting relative role times from " + startTime + " to " + endTime);
                     }
                     else
                     {
-                        //Message.Show("Setting fixed role times");
+                        //Message.Sender.Show("Setting fixed role times");
                         startTime = 18F;
                         mStartTime = startTime;
                         endTime = 24F;
@@ -101,7 +102,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
             }
             else
             {
-                //Message.Show("Role time is from " + startTime + " to " + endTime);
+                //Message.Sender.Show("Role time is from " + startTime + " to " + endTime);
             }
 
         }
@@ -142,7 +143,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
                 }
                 else
                 {
-                    //Message.Show("Null role was set " + new StackTrace().ToString());
+                    //Message.Sender.Show("Null role was set " + new StackTrace().ToString());
                     this.mCurrentRole = value;
                 }
 
@@ -169,18 +170,18 @@ namespace Sims3.Gameplay.Objects.Misukisu
                         }
                         else
                         {
-                            Message.ShowError(CourtesansPerfume.NAME, "Cannot create custom role, clone failed", true, null);
+                            Message.Sender.ShowError(CourtesansPerfume.NAME, "Cannot create custom role, clone failed", true, null);
                         }
                     }
                     else
                     {
-                        Message.ShowError(CourtesansPerfume.NAME, "Cannot create custom role, Pianist sim not instantiated", true, null);
+                        Message.Sender.ShowError(CourtesansPerfume.NAME, "Cannot create custom role, Pianist sim not instantiated", true, null);
                     }
 
                 }
                 catch (Exception ex)
                 {
-                    Message.ShowError(CourtesansPerfume.NAME, "Cannot create custom role", true, ex);
+                    Message.Sender.ShowError(CourtesansPerfume.NAME, "Cannot create custom role", true, ex);
                     this.mCurrentRole = value;
                 }
             }
@@ -190,11 +191,11 @@ namespace Sims3.Gameplay.Objects.Misukisu
         {
             //try
             //{
-            //    //Message.Show("PushRoleStartingInteraction to " + (sim != null ? sim.FullName : "null"));
+            //    //Message.Sender.Show("PushRoleStartingInteraction to " + (sim != null ? sim.FullName : "null"));
             //}
             //catch (Exception ex)
             //{
-            //    Message.ShowError(CourtesansPerfume.NAME, "Sim cannot play the role", false, ex);
+            //    Message.Sender.ShowError(CourtesansPerfume.NAME, "Sim cannot play the role", false, ex);
             //}
         }
 
@@ -214,6 +215,9 @@ namespace Sims3.Gameplay.Objects.Misukisu
             get { return Role.RoleType.Pianist; }
         }
 
-  
+        public ResourceKey GetRoleUniformKey(Sim Sim, Lot.MetaAutonomyType venueType)
+        {
+            return ResourceKey.kInvalidResourceKey;
+        }
     }
 }

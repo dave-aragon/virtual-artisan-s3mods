@@ -10,6 +10,7 @@ using Sims3.Gameplay.Interactions;
 using System.Diagnostics;
 using Sims3.Gameplay.Objects.Misukisu;
 using Misukisu.Sims3.Gameplay.Interactions.Anysim;
+using Misukisu.Anysim;
 
 namespace Sims3.Gameplay.Roles.Misukisu
 {

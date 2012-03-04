@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using Sims3.Gameplay.Actors;
 using Sims3.Gameplay.Interactions;
-using Misukisu.DancerSpot;
 using Sims3.Gameplay.Autonomy;
 using Sims3.UI;
 using Sims3.SimIFace;
 using Sims3.Gameplay.Objects.Misukisu;
 using Sims3.SimIFace.CAS;
 using Sims3.Gameplay.Interfaces;
+using Misukisu.Common;
 
 namespace Misukisu.Sims3.Gameplay.Interactions
 {
@@ -29,7 +29,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions
             }
             catch (Exception e)
             {
-                Message.ShowError(DancersStage.NAME, "Cannot start show now", false, e);
+                Message.Sender.ShowError(DancersStage.NAME, "Cannot start show now", false, e);
 
             }
             return true;
