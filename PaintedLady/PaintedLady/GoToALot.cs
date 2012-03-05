@@ -11,7 +11,7 @@ using Sims3.SimIFace;
 using Sims3.Gameplay.Objects.Misukisu;
 using Misukisu.Sims3.Gameplay.Interactions.Paintedlady;
 using Sims3.Gameplay.Situations;
-using Misukisu.Common;
+using Misukisu.Paintedlady;
 
 namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
 {
@@ -60,16 +60,28 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
                         if (base.TryPushAsContinuation(instance))
                         {
                             assignedRole.UpdateFulfillingLot(target.LotId);
+
+                            if (Message.Sender.IsDebugging())
+                            {
+                                Message.Sender.Debug(this, "Sim called to lot " + target.Name);
+                            }
                             return true;
                         }
                     }
                     assignedRole.UpdateFulfillingLot(0L);
 
                 }
+                else
+                {
+                    if (Message.Sender.IsDebugging())
+                    {
+                        Message.Sender.Debug(this, "Role was not active " + base.Actor);
+                    }
+                }
             }
             catch (Exception ex)
             {
-                Message.Sender.ShowError(CourtesansPerfume.NAME, "Cannot take role sims to role lot", false, ex);
+                Message.Sender.ShowError(base.Actor, "Cannot take role sims to role lot", false, ex);
             }
             return false;
         }

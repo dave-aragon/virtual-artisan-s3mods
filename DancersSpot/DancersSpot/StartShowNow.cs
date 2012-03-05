@@ -9,7 +9,7 @@ using Sims3.SimIFace;
 using Sims3.Gameplay.Objects.Misukisu;
 using Sims3.SimIFace.CAS;
 using Sims3.Gameplay.Interfaces;
-using Misukisu.Common;
+using Misukisu.Dancer;
 
 namespace Misukisu.Sims3.Gameplay.Interactions
 {
@@ -29,7 +29,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions
             }
             catch (Exception e)
             {
-                Message.Sender.ShowError(DancersStage.NAME, "Cannot start show now", false, e);
+                Message.Sender.ShowError(base.Target, "Cannot start show now", false, e);
 
             }
             return true;

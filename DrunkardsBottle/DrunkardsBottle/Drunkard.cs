@@ -10,7 +10,6 @@ using Sims3.Gameplay.Interactions;
 using System.Diagnostics;
 using Sims3.Gameplay.Objects.Misukisu;
 using Misukisu.Sims3.Gameplay.Interactions.Drunkard;
-using Misukisu.Common;
 
 namespace Sims3.Gameplay.Roles.Misukisu
 {
@@ -67,6 +66,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             Sim createdSim = base.mSim.CreatedSim;
             if (isActive && (createdSim != null))
             {
+                mIsActive = false;
                 // CreatedSim.Motives.RemoveMotive(kind);
                 createdSim.Motives.RestoreDecays();
                 createdSim.InteractionQueue.CancelAllInteractions();
@@ -107,7 +107,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             }
             catch (Exception e)
             {
-                Message.Sender.ShowError(DrunkardsBottle.NAME, "Cannot change tippler's clothes: ", false, e);
+                Message.Sender.ShowError(this, "Cannot change tippler's clothes: ", false, e);
             }
 
         }
@@ -152,7 +152,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             }
             catch (Exception e)
             {
-                Message.Sender.ShowError(DrunkardsBottle.NAME, "Cannot start the role", false, e);
+                Message.Sender.ShowError(this, "Cannot start the role", false, e);
             }
         }
 

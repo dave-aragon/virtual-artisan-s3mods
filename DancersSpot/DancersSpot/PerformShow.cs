@@ -54,54 +54,6 @@ namespace Misukisu.Sims3.Gameplay.Interactions
             return num.CompareTo(num2);
         }
 
-
-
-        private static bool DanceSpotObstructed(IDanceOnCounterOrTableObject danceObject)
-        {
-            if (danceObject is TableBar)
-            {
-                if (danceObject.UseCount > 0)
-                {
-                    return true;
-                }
-            }
-            else if (danceObject.InUse)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        private static bool ObjectHasSpaceAboveIt(GameObject gameObj)
-        {
-            LotLocation location = new LotLocation();
-            if (World.GetLotLocation(gameObj.Position, ref location) == 0L)
-            {
-                return false;
-            }
-            foreach (ObjectGuid guid in World.GetObjects(gameObj.LotCurrent.LotId, location))
-            {
-                IScriptProxy proxy = Simulator.GetProxy(guid);
-                if (proxy != null)
-                {
-                    GameObject target = proxy.Target as GameObject;
-                    if (target != null)
-                    {
-                        if (target is Sim)
-                        {
-                            return false;
-                        }
-                        if ((target.CheckObjectPlacement(UserToolUtils.BuildBuyProductType.Ceiling) || target.CheckObjectPlacement(UserToolUtils.BuildBuyProductType.Wall)) && (!(target is IPainting) && !(target is Windows)))
-                        {
-                            return false;
-                        }
-                    }
-                }
-            }
-            return true;
-        }
-
         public override bool Run()
         {
             OutfitCategories[] outfits = base.Target.ShowOutfits;
@@ -126,11 +78,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions
             {
                 return false;
             }
-            if (DanceSpotObstructed(base.Target))
-            {
-                return false;
-            }
-
+           
             Vector3 slotPosition = base.Target.GetSlotPosition(this.mEnterSlot);
             Vector3 forwardOfSlot = base.Target.GetForwardOfSlot(this.mEnterSlot);
             this.mReservedTile = GlobalFunctions.CreateObject("DynamicFootprintPlacement", slotPosition, 0, forwardOfSlot) as GameObject;
@@ -228,18 +176,8 @@ namespace Misukisu.Sims3.Gameplay.Interactions
 
             public override bool Test(Sim sim, DancersStage target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
-                if (target.CurrentRole != null && target.CurrentRole.SimInRole == sim && !isAutonomous)
+                if (target.CurrentRole != null && target.CurrentRole.SimInRole == sim)
                 {
-                    if (!PerformShow.ObjectHasSpaceAboveIt(target as GameObject))
-                    {
-                        //greyedOutTooltipCallback = new GreyedOutTooltipCallback(PerformShow.Definition.greyedOutTooltipCallbackForObjectAbove);
-                        return false;
-                    }
-                    if (PerformShow.DanceSpotObstructed(target))
-                    {
-                        //greyedOutTooltipCallback = new GreyedOutTooltipCallback(PerformShow.Definition.greyedOutTooltipCallbackForSpotObstructed);
-                        return false;
-                    }
                     return true;
                 }
                 return false;

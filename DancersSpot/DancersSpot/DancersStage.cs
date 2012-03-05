@@ -21,14 +21,12 @@ using Misukisu.Sims3.Gameplay.Interactions;
 using Sims3.Gameplay.Objects.Tables.Mimics;
 using Sims3.SimIFace.CAS;
 using Sims3.Gameplay.ActorSystems;
-using Misukisu.Common;
+using Misukisu.Dancer;
 
 namespace Sims3.Gameplay.Objects.Misukisu
 {
     public class DancersStage : TableBarPubRound, IRoleGiverExtended, IRoleGiver
     {
-        public static string NAME = "Dancer's Stage";
-
         private Roles.Role mCurrentRole;
 
         private float[] mShowTimes = new float[] { 19F, 23F };
@@ -36,12 +34,14 @@ namespace Sims3.Gameplay.Objects.Misukisu
         private OutfitCategories[] mShowOutfits = new OutfitCategories[] { OutfitCategories.Career };
         private int mShowIndex = 0;
         private long mNextShowTime = 0;
+        private float mStartRoleAt = 18F;
+        private float mEndRoleAt = 1F;
 
         public override void OnStartup()
         {
             base.OnStartup();
             base.AddInteraction(TuneExoticDancer.Singleton);
-            base.AddInteraction(StartShowNow.Singleton);
+           
             base.AddInteraction(ToggleDebugger.Singleton);
         }
 
@@ -82,7 +82,9 @@ namespace Sims3.Gameplay.Objects.Misukisu
                 mShowOutfits = new OutfitCategories[] { newFirstOutfit, newLastOutfit };
             }
 
-            Message.Sender.Show("new Show outfits are: " + OutfitsToString(mShowOutfits, " - "));
+            CalculateRoleTimes();
+
+            Message.Sender.Show(this, "new Show outfits are: " + OutfitsToString(mShowOutfits, " - "));
             if (Message.Sender.IsDebugging())
             {
                 //Message.Sender.Debug(this, "Role tuning changed - startTime="
@@ -123,12 +125,31 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
         public void GetRoleTimes(out float startTime, out float endTime)
         {
-            startTime = mShowTimes[0] - 1F;
-            endTime = mShowTimes[mShowTimes.Length - 1] + (mShowDurationMins / 60) + 1F;
+            startTime = mStartRoleAt;
+            endTime = mEndRoleAt;
+        }
+
+        private void CalculateRoleTimes()
+        {
+            float startTime = mShowTimes[0] - 1F;
+            float endTime = mShowTimes[mShowTimes.Length - 1] + (mShowDurationMins / 60) + 1F;
+            if (startTime != 0)
+            {
+                startTime = (startTime % 24);
+            }
+
+            if (endTime != 0)
+            {
+                endTime = (endTime % 24);
+            }
+
+            mStartRoleAt = startTime;
+            mEndRoleAt = endTime;
+
             if (Message.Sender.IsDebugging())
             {
                 Message.Sender.Debug(this, "Role times are - startTime="
-                    + startTime + " endTime=" + endTime);
+                    + mStartRoleAt + " endTime=" + mEndRoleAt);
             }
         }
 
@@ -136,6 +157,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
         {
             this.mShowIndex = 0;
             calculateNextShowTime();
+            base.AddInteraction(StartShowNow.Singleton);
         }
 
         private void calculateNextShowTime()
@@ -168,6 +190,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
             }
             set
             {
+                CalculateRoleTimes();
                 ExoticDancer newRole = value as ExoticDancer;
                 if (newRole != null)
                 {
@@ -192,6 +215,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
             {
                 try
                 {
+
                     SimDescription currentActor = value.mSim;
                     value.RemoveSimFromRole();
                     ExoticDancer aRole = ExoticDancer.clone(value, currentActor);
@@ -204,7 +228,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
                 }
                 catch (Exception ex)
                 {
-                    Message.Sender.ShowError(DancersStage.NAME, "Cannot create custom role", true, ex);
+                    Message.Sender.ShowError(this, "Cannot create custom role", true, ex);
                     this.mCurrentRole = value;
                 }
             }
@@ -218,7 +242,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
                 {
                     if (Message.Sender.IsDebugging())
                     {
-                        Message.Sender.Debug(this, "It is SHOWTIME" );
+                        Message.Sender.Debug(this, "It is SHOWTIME");
                     }
                     calculateNextShowTime();
                     PushSimToPerformShow(sim);
@@ -226,7 +250,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
             }
             catch (Exception ex)
             {
-                Message.Sender.ShowError(DancersStage.NAME, "Sim cannot play the role", false, ex);
+                Message.Sender.ShowError(this, "Sim cannot play the role", false, ex);
             }
         }
 
@@ -289,7 +313,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
             }
             catch (Exception ex)
             {
-                Message.Sender.ShowError(DancersStage.NAME, "Sim cannot pee before show", false, ex);
+                Message.Sender.ShowError(this, "Sim cannot pee before show", false, ex);
             }
         }
 
@@ -301,7 +325,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
         public void RemoveRoleGivingInteraction(Actors.Sim sim)
         {
-
+            base.RemoveInteractionByType(StartShowNow.Singleton.GetType());
         }
 
         public string RoleName(bool isFemale)
@@ -358,6 +382,20 @@ namespace Sims3.Gameplay.Objects.Misukisu
         public ResourceKey GetRoleUniformKey(Sim Sim, Lot.MetaAutonomyType venueType)
         {
             return ResourceKey.kInvalidResourceKey;
+        }
+
+        internal bool IsExoticShow()
+        {
+            bool exotic = false;
+
+            foreach (OutfitCategories outfit in mShowOutfits) {
+                if (outfit == OutfitCategories.Naked)
+                {
+                    exotic = true;
+                    break;
+                }
+            }
+            return exotic;
         }
     }
 }

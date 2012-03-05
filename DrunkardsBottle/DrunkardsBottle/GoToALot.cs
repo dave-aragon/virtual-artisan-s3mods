@@ -11,7 +11,6 @@ using Sims3.SimIFace;
 using Sims3.Gameplay.Objects.Misukisu;
 using Misukisu.Drunkard;
 using Sims3.Gameplay.Situations;
-using Misukisu.Common;
 
 namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
 {
@@ -69,7 +68,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
             }
             catch (Exception ex)
             {
-                Message.Sender.ShowError(DrunkardsBottle.NAME, "Cannot take role sims to role lot", false, ex);
+                Message.Sender.ShowError(base.Actor, "Cannot take role sims to role lot", false, ex);
             }
             return false;
         }

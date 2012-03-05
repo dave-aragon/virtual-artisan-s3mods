@@ -4,13 +4,12 @@ using System.Text;
 using Sims3.Gameplay.CAS;
 using Sims3.Gameplay.Interfaces;
 using Sims3.Gameplay.Actors;
-using Misukisu.Common;
+using Misukisu.Anysim;
 using Sims3.Gameplay.Core;
 using Sims3.Gameplay.Interactions;
 using System.Diagnostics;
 using Sims3.Gameplay.Objects.Misukisu;
 using Misukisu.Sims3.Gameplay.Interactions.Anysim;
-using Misukisu.Anysim;
 
 namespace Sims3.Gameplay.Roles.Misukisu
 {
@@ -50,11 +49,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
 
         public override void SimulateRole(float minPassed)
         {
-            if (Message.Sender.IsDebugging())
-            {
-                Message.Sender.Debug(this, mSim.FullName + " AnySim role push, minPassed=" + minPassed);
-            }
-            base.SimulateRole(minPassed);
+           // this role works without active interference
         }
 
 
@@ -69,12 +64,12 @@ namespace Sims3.Gameplay.Roles.Misukisu
 
         public override void EndRole()
         {
-            bool isActive = base.IsActive;
             base.RoleGivingObject.RemoveRoleGivingInteraction(base.mSim.CreatedSim);
             UnprotectSimFromStoryProgression();
             Sim createdSim = base.mSim.CreatedSim;
-            if (isActive && (createdSim != null))
+            if (IsActive && (createdSim != null))
             {
+                mIsActive = false;
                 // CreatedSim.Motives.RemoveMotive(kind);
                 //        createdSim.Motives.RestoreDecays();
                 createdSim.InteractionQueue.CancelAllInteractions();
@@ -114,7 +109,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             }
             catch (Exception e)
             {
-                Message.Sender.ShowError(Texts.NAME, "Cannot change anysim clothes: ", false, e);
+                Message.Sender.ShowError(this, "Cannot change anysim clothes: ", false, e);
             }
 
         }
@@ -151,7 +146,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             }
             catch (Exception e)
             {
-                Message.Sender.ShowError(Texts.NAME, "Cannot start the role", false, e);
+                Message.Sender.ShowError(this, "Cannot start the role", false, e);
             }
         }
 

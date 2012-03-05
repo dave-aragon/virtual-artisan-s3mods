@@ -6,7 +6,7 @@ using Sims3.Gameplay;
 using Sims3.SimIFace;
 using Sims3.Gameplay.Abstracts;
 
-namespace Misukisu.Common
+namespace Misukisu.Paintedlady
 {
     class Message
     {
@@ -23,16 +23,21 @@ namespace Misukisu.Common
         {
             StyledNotification.Format format = new StyledNotification.Format(msg, 
                 ObjectGuid.InvalidObjectGuid, owner.ObjectId, StyledNotification.NotificationStyle.kGameMessagePositive);
-            StyledNotification.Show(format, "tns_icon_bulb");
+            //StyledNotification.Show(format, "tns_icon_bulb");
+            format.mConnectionType = StyledNotification.ConnectionType.kSpeech;
+            format.mTNSCategory = NotificationManager.TNSCategory.Lessons;
+            StyledNotification.Show(format, null, null, ProductVersion.BaseGame, ProductVersion.BaseGame);
         }
 
         public void Show(string msg)
         {
             StyledNotification.Format format = new StyledNotification.Format(msg, StyledNotification.NotificationStyle.kSystemMessage);
+            format.mConnectionType = StyledNotification.ConnectionType.kSpeech;
+            format.mTNSCategory = NotificationManager.TNSCategory.Lessons;
             StyledNotification.Show(format);
         }
 
-        public void ShowError(string projectName, string error, bool isCritical, Exception ex)
+        public void ShowError(object sender, string error, bool isCritical, Exception ex)
         {
             StringBuilder msg = new StringBuilder();
             msg.Append(error);
@@ -50,8 +55,8 @@ namespace Misukisu.Common
                     "Please exit the game without saving, this error cannot be recovered from"));
             }
             string fullError = msg.ToString();
-            DebugError(this, fullError, ex);
-            SimpleMessageDialog.Show("Virtual Artisan - " + projectName, fullError, ModalDialog.PauseMode.PauseSimulator);
+            DebugError(sender, fullError, ex);
+            SimpleMessageDialog.Show("Virtual Artisan - " + sender.GetType().Name, fullError, ModalDialog.PauseMode.PauseSimulator);
         }
 
         public void setDebugger(Debugger debugger)

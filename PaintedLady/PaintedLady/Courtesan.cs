@@ -10,7 +10,8 @@ using Sims3.Gameplay.Interactions;
 using System.Diagnostics;
 using Misukisu.Sims3.Gameplay.Interactions.Paintedlady;
 using Sims3.Gameplay.Objects.Misukisu;
-using Misukisu.Common;
+using Misukisu.Paintedlady;
+using Sims3.Gameplay.Socializing;
 
 namespace Sims3.Gameplay.Roles.Misukisu
 {
@@ -34,7 +35,19 @@ namespace Sims3.Gameplay.Roles.Misukisu
             base.RemoveSimFromRole();
         }
 
-
+        public static bool IsTalkingTo(Sim actor, Sim target, bool result)
+        {
+            SocialComponent social = target.SocialComponent;
+            if (social != null)
+            {
+                Conversation conversation = social.Conversation;
+                if (conversation != null && conversation.ContainsSim(actor))
+                {
+                    result = true;
+                }
+            }
+            return result;
+        }
 
         public static Courtesan AssignedRole(Sim sim)
         {
@@ -73,6 +86,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             Sim createdSim = base.mSim.CreatedSim;
             if (isActive && (createdSim != null))
             {
+                mIsActive = false;
                 // CreatedSim.Motives.RemoveMotive(kind);
                 createdSim.Motives.RestoreDecays();
                 createdSim.InteractionQueue.CancelAllInteractions();
@@ -98,15 +112,20 @@ namespace Sims3.Gameplay.Roles.Misukisu
 
                     Lot.MetaAutonomyType venueType = roleLot.GetMetaAutonomyType;
                     SwitchToProperClothing(sim, venueType);
+                    if (Message.Sender.IsDebugging())
+                    {
+                        Message.Sender.Debug(this, "Role clothing change request made "
+                            + mSim.FullName + " " + venueType.ToString());
+                    }
                 }
             }
             catch (Exception e)
             {
-                Message.Sender.ShowError(CourtesansPerfume.NAME, "Cannot change courtesan's clothes: ", false, e);
+                Message.Sender.ShowError(this, "Cannot change courtesan's clothes: ", false, e);
             }
         }
 
-        public void SwitchToProperClothing(Sim sim, Lot.MetaAutonomyType venueType)
+        public static void SwitchToProperClothing(Sim sim, Lot.MetaAutonomyType venueType)
         {
             SimIFace.CAS.OutfitCategories outfitType = SimIFace.CAS.OutfitCategories.Everyday;
             if (venueType == Lot.MetaAutonomyType.CocktailLoungeAsian || venueType == Lot.MetaAutonomyType.CocktailLoungeCelebrity || venueType == Lot.MetaAutonomyType.CocktailLoungeVampire)
@@ -115,11 +134,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             }
 
             sim.SwitchToOutfitWithoutSpin(Sim.ClothesChangeReason.GoingToWork, outfitType);
-            if (Message.Sender.IsDebugging())
-            {
-                Message.Sender.Debug(this, "Role clothing change request for "
-                    + mSim.FullName + " " + outfitType.ToString());
-            }
+            
         }
 
         public override void StartRole()
@@ -159,7 +174,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             }
             catch (Exception e)
             {
-                Message.Sender.ShowError(CourtesansPerfume.NAME, "Cannot start the role", false, e);
+                Message.Sender.ShowError(this, "Cannot start the role", false, e);
             }
         }
 
@@ -172,14 +187,14 @@ namespace Sims3.Gameplay.Roles.Misukisu
         {
             Lot roleLot = (base.RoleGivingObject as CourtesansPerfume).GetTargetLot();
 
-            if ((this.mSim.CreatedSim.LotCurrent == null) || !(this.mSim.CreatedSim.LotCurrent == roleLot))
+            if (roleLot != null)
             {
                 this.mSim.CreatedSim.InteractionQueue.Add(GoToALot.Singleton.CreateInstance(this.mSim.CreatedSim, this.mSim.CreatedSim,
                     new InteractionPriority(InteractionPriorityLevel.High), true, true));
                 if (Message.Sender.IsDebugging())
                 {
-                    Message.Sender.Debug(this, "Sim " + mSim + " called from "
-                        + this.mSim.CreatedSim.LotCurrent.Name + " to " + RoleGivingObject.LotCurrent.Name);
+                    Message.Sender.Debug(this, "Sim called from "
+                        + this.mSim.CreatedSim.LotCurrent.Name + " to " + roleLot.Name);
                 }
             }
         }
