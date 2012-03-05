@@ -18,7 +18,7 @@ using Sims3.Gameplay.Utilities;
 using Sims3.SimIFace;
 using Sims3.UI;
 using Sims3.Gameplay.Objects.Counters;
-using Misukisu.Common;
+using Misukisu.Paintedlady;
 using Sims3.UI.Controller;
 using Sims3.Gameplay.Socializing;
 
@@ -26,16 +26,14 @@ namespace Sims3.Gameplay.Objects.Misukisu
 {
     public class CourtesansPerfume : GameObject, IRoleGiver, IRoleGiverExtended
     {
-        public static string NAME = "Courtesan's Perfume";
-
         private Roles.Role mCurrentRole;
         private float mStartTime = 0F;
         private float mEndTime = 0F;
         private int mPayPerWoohoo = 100;
         private int mPayPerDay = 500;
 
-        private Dictionary<SimDescription, LongTermRelationshipTypes> mRelationsToRestore =
-            new Dictionary<SimDescription, LongTermRelationshipTypes>();
+        private Dictionary<Sim, LongTermRelationshipTypes> mRelationsToRestore =
+            new Dictionary<Sim, LongTermRelationshipTypes>();
 
         private Sim mSlaveOwner;
 
@@ -47,18 +45,38 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
         }
 
-        public void storeOldRelationship(SimDescription target, LongTermRelationshipTypes relation)
+        private void RestoreAllOldRelationships()
         {
-            mRelationsToRestore.Add(target, relation);
+            if (CurrentRole != null)
+            {
+                Sim rolesim = CurrentRole.SimInRole;
+                if (rolesim != null)
+                {
+                    List<Sim> sims = new List<Sim>(mRelationsToRestore.Keys);
+                    foreach (Sim customer in sims)
+                    {
+                        restoreOldRelationship(customer, rolesim);
+                    }
+                }
+            }
         }
 
-        public void restoreOldRelationship(SimDescription buyer, Sim seller)
+        public void storeOldRelationship(Sim target, LongTermRelationshipTypes relation)
+        {
+            if (!mRelationsToRestore.ContainsKey(target))
+            {
+                mRelationsToRestore.Add(target, relation);
+            }
+        }
+
+        public void restoreOldRelationship(Sim buyer, Sim seller)
         {
             if (mRelationsToRestore.ContainsKey(buyer))
             {
                 LongTermRelationshipTypes relationshipBefore = mRelationsToRestore[buyer];
-                Relationship relationToTarget = seller.GetRelationship(buyer.CreatedSim, true);
+                Relationship relationToTarget = seller.GetRelationship(buyer, true);
                 relationToTarget.LTR.ForceChangeState(relationshipBefore);
+                mRelationsToRestore.Remove(buyer);
                 if (Message.Sender.IsDebugging())
                 {
                     Message.Sender.Debug(this, "Relationship to " + buyer.FullName + " restored to " + relationshipBefore.ToString());
@@ -143,7 +161,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
         public void AddRoleGivingInteraction(Actors.Sim sim)
         {
             sim.AddInteraction(BuyWooHoo.Singleton);
-            sim.AddInteraction(TakeMistress.Singleton);
+            sim.AddInteraction(ToggleTakeMistress.Singleton);
         }
 
         public Sim SlaveOwner
@@ -194,6 +212,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
             {
                 try
                 {
+                    RestoreAllOldRelationships();
                     SimDescription currentActor = value.mSim;
                     value.RemoveSimFromRole();
                     Courtesan aRole = Courtesan.clone(value, currentActor);
@@ -206,7 +225,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
                 }
                 catch (Exception ex)
                 {
-                    Message.Sender.ShowError(CourtesansPerfume.NAME, "Cannot create custom role", true, ex);
+                    Message.Sender.ShowError(this, "Cannot create custom role", true, ex);
                     this.mCurrentRole = value;
                 }
             }
@@ -220,13 +239,15 @@ namespace Sims3.Gameplay.Objects.Misukisu
         public void RemoveRoleGivingInteraction(Actors.Sim sim)
         {
             sim.RemoveInteractionByType(BuyWooHoo.Singleton.GetType());
-            sim.RemoveInteractionByType(TakeMistress.Singleton.GetType());
-
+            sim.RemoveInteractionByType(ToggleTakeMistress.Singleton.GetType());
+            RestoreAllOldRelationships();
         }
+
+
 
         public string RoleName(bool isFemale)
         {
-            return "";
+            return "Courtesan";
         }
 
         public Roles.Role.RoleType RoleType

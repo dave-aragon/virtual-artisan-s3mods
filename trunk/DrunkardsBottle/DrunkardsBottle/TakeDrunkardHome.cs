@@ -8,8 +8,6 @@ using Sims3.Gameplay.Roles.Misukisu;
 using Sims3.Gameplay.Autonomy;
 using Sims3.SimIFace;
 using Sims3.Gameplay.Objects.Misukisu;
-using Misukisu.Common;
-
 
 namespace Misukisu.Sims3.Gameplay.Interactions.Drunkard
 {

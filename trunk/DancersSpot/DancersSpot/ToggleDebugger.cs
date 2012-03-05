@@ -6,7 +6,7 @@ using Sims3.Gameplay.Interfaces;
 using Sims3.Gameplay.Autonomy;
 using Sims3.SimIFace;
 
-namespace Misukisu.Common
+namespace Misukisu.Dancer
 {
 
 

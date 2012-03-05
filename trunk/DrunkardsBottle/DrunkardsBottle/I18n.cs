@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Sims3.Gameplay.Utilities;
 
-namespace Misukisu.Common
+namespace Misukisu.Drunkard
 {
     class CommonTexts
     {

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-using Misukisu.Common;
+using Misukisu.Anysim;
 using Sims3.Gameplay.Abstracts;
 using Sims3.Gameplay.Actors;
 using Sims3.Gameplay.Autonomy;
@@ -19,7 +19,6 @@ using Sims3.SimIFace;
 using Sims3.UI;
 using Sims3.Gameplay.Objects.Counters;
 using Misukisu.Sims3.Gameplay.Interactions.Anysim;
-using Misukisu.Anysim;
 
 namespace Sims3.Gameplay.Objects.Misukisu
 {
@@ -162,7 +161,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
                 }
                 catch (Exception ex)
                 {
-                    Message.Sender.ShowError(Texts.NAME, "Cannot create custom role", true, ex);
+                    Message.Sender.ShowError(this, "Cannot create custom role", true, ex);
                     this.mCurrentRole = value;
                 }
             }

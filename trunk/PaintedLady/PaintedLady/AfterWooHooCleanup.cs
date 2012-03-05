@@ -10,7 +10,7 @@ using Sims3.Gameplay.Interfaces;
 using Sims3.Gameplay.Objects.Misukisu;
 using Sims3.Gameplay.Core;
 using Sims3.Gameplay.Roles.Misukisu;
-using Misukisu.Common;
+using Misukisu.Paintedlady;
 using Sims3.Gameplay.Roles;
 
 
@@ -27,15 +27,11 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
             try
             {
                 Lot.MetaAutonomyType venueType = base.Actor.LotCurrent.GetMetaAutonomyType;
-                Courtesan courtesan = Courtesan.AssignedRole(base.Actor);
-                if (courtesan != null)
-                {
-                    courtesan.SwitchToProperClothing(base.Actor, venueType);
-                }
+                Courtesan.SwitchToProperClothing(base.Actor, venueType);
             }
             catch (Exception e)
             {
-                Message.Sender.ShowError(CourtesansPerfume.NAME, "Cannot restore clothes", false, e);
+                Message.Sender.ShowError(base.Actor, "Cannot restore clothes", false, e);
             }
             return true;
         }

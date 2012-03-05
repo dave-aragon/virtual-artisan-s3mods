@@ -19,15 +19,12 @@ using Sims3.SimIFace;
 using Sims3.UI;
 using Sims3.Gameplay.Objects.Counters;
 using Misukisu.Sims3.Gameplay.Interactions.Drunkard;
-using Misukisu.Common;
 
 namespace Sims3.Gameplay.Objects.Misukisu
 {
 
     public class DrunkardsBottle : GameObject, IRoleGiver, IRoleGiverExtended
     {
-        public static string NAME = "Drunkard's Bottle";
-
         private Roles.Role mCurrentRole;
         private float mStartTime = 0F;
         private float mEndTime = 0F;
@@ -164,7 +161,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
                 }
                 catch (Exception ex)
                 {
-                    Message.Sender.ShowError(DrunkardsBottle.NAME, "Cannot create custom role", true, ex);
+                    Message.Sender.ShowError(this, "Cannot create custom role", true, ex);
                     this.mCurrentRole = value;
                 }
             }
@@ -198,7 +195,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
             }
             catch (Exception ex)
             {
-                Message.Sender.ShowError(DrunkardsBottle.NAME, "Cannot order drink from bar ", false, ex);
+                Message.Sender.ShowError(this, "Cannot order drink from bar ", false, ex);
             }
         }
 

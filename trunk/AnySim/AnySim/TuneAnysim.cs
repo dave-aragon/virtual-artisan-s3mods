@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using Sims3.Gameplay.Actors;
 using Sims3.Gameplay.Interactions;
-using Misukisu.Common;
+using Misukisu.Anysim;
 using Sims3.Gameplay.Autonomy;
 using Sims3.UI;
 using Sims3.SimIFace;
 using Sims3.Gameplay.Objects.Misukisu;
 using Sims3.Gameplay.Interfaces;
 using Sims3.Gameplay.Utilities;
-using Misukisu.Anysim;
 
 namespace Misukisu.Sims3.Gameplay.Interactions.Anysim
 {
@@ -39,7 +38,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Anysim
             catch (Exception e)
             {
                 // TODO: maybe localize?
-                Message.Sender.ShowError(Texts.NAME, "Tuning failed, please try again", false, e);
+                Message.Sender.ShowError(base.Target, "Tuning failed, please try again", false, e);
             }
             return true;
         }

@@ -12,7 +12,7 @@ using Sims3.Gameplay.Objects.Misukisu;
 using Sims3.Gameplay.Skills;
 using System.Collections;
 using Sims3.Gameplay.Autonomy;
-using Misukisu.Common;
+using Misukisu.Dancer;
 
 namespace Sims3.Gameplay.Roles.Misukisu
 {
@@ -31,7 +31,14 @@ namespace Sims3.Gameplay.Roles.Misukisu
         {
             get
             {
-                return "Dancer";//Texts.CAREERTITLE;
+                string title=Texts.CAREERTITLE;
+                DancersStage stage= RoleGivingObject as DancersStage;
+                if (stage != null && stage.IsExoticShow())
+                {
+                    title = Texts.CAREERTITLE_EXOTIC;
+                }
+
+                return title;
             }
         }
 
@@ -58,7 +65,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
         {
             if (Message.Sender.IsDebugging())
             {
-                Message.Sender.Debug(this, mSim.FullName + " AnySim role push, minPassed=" + minPassed);
+                Message.Sender.Debug(this, mSim.FullName + " role push, minPassed=" + minPassed);
             }
             if (base.IsActive)
             {
@@ -82,12 +89,13 @@ namespace Sims3.Gameplay.Roles.Misukisu
 
         public override void EndRole()
         {
-            bool isActive = base.IsActive;
+           
             base.RoleGivingObject.RemoveRoleGivingInteraction(base.mSim.CreatedSim);
             UnprotectSimFromStoryProgression();
             Sim createdSim = base.mSim.CreatedSim;
-            if (isActive && (createdSim != null))
+            if (IsActive && (createdSim != null))
             {
+                mIsActive = false;
                 // CreatedSim.Motives.RemoveMotive(kind);
                 createdSim.Motives.RestoreDecays();
                 createdSim.InteractionQueue.CancelAllInteractions();
@@ -110,7 +118,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             }
             catch (Exception e)
             {
-                Message.Sender.ShowError(DancersStage.NAME, "Cannot change sim's clothes", false, e);
+                Message.Sender.ShowError(this, "Cannot change sim's clothes", false, e);
             }
 
         }
@@ -118,13 +126,19 @@ namespace Sims3.Gameplay.Roles.Misukisu
         public new void FreezeMotivesWhilePlaying()
         {
             base.FreezeMotivesWhilePlaying();
-            base.SimInRole.Motives.SetDecay(CommodityKind.Hygiene, false);
+            if (SimInRole != null)
+            {
+                SimInRole.Motives.SetDecay(CommodityKind.Hygiene, false);
+            }
         }
 
         public new void UnfreezeMotivesWhileNotPlaying()
         {
             base.UnfreezeMotivesWhileNotPlaying();
-            base.SimInRole.Motives.SetDecay(CommodityKind.Hygiene, true);
+            if (SimInRole != null)
+            {
+                base.SimInRole.Motives.SetDecay(CommodityKind.Hygiene, true);
+            }
         }
 
         public void AfterShowTasks()
@@ -203,7 +217,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             }
             catch (Exception e)
             {
-                Message.Sender.ShowError(DancersStage.NAME, "Cannot start the role", false, e);
+                Message.Sender.ShowError(this, "Cannot start the role", false, e);
             }
         }
 
@@ -230,7 +244,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             }
             catch (Exception e)
             {
-                Message.Sender.ShowError(DancersStage.NAME, "Cannot add skills to dancer", false, e);
+                Message.Sender.ShowError(this, "Cannot add skills to dancer", false, e);
             }
         }
 
