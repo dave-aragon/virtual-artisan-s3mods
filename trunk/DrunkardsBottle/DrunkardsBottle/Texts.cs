@@ -6,5 +6,6 @@ namespace Misukisu.Drunkard
 {
     class Texts
     {
+        public static string CAREERTITLE = "Misukisu.Roles.Drunkard:CareerTitle";
     }
 }

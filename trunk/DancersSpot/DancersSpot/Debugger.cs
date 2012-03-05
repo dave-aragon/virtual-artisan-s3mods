@@ -168,7 +168,7 @@ namespace Misukisu.Dancer
 
         private string GetId(object item)
         {
-            string id = "";
+            string id = null;
 
             if (item != null)
             {
@@ -192,7 +192,7 @@ namespace Misukisu.Dancer
                     Role roleItem = item as Role;
                     if (roleItem != null)
                     {
-                        id = GetId(roleItem.mSim);
+                        id = GetId(roleItem.SimInRole);
                     }
                 }
 
@@ -218,6 +218,10 @@ namespace Misukisu.Dancer
                 {
                     id = item.GetHashCode().ToString();
                 }
+            }
+            else
+            {
+                id = "null";
             }
 
             return id;

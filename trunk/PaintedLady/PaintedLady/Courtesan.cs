@@ -22,6 +22,14 @@ namespace Sims3.Gameplay.Roles.Misukisu
             : base()
         { }
 
+        public override string CareerTitleKey
+        {
+            get
+            {
+                return Texts.CAREERTITLE;
+            }
+        }
+
         public Courtesan(RoleData data, SimDescription s, IRoleGiver roleGiver)
             : base(data, s, roleGiver)
         { }
@@ -134,7 +142,7 @@ namespace Sims3.Gameplay.Roles.Misukisu
             }
 
             sim.SwitchToOutfitWithoutSpin(Sim.ClothesChangeReason.GoingToWork, outfitType);
-            
+
         }
 
         public override void StartRole()
@@ -149,25 +157,20 @@ namespace Sims3.Gameplay.Roles.Misukisu
                 {
                     InstantiateSim();
                     this.SwitchIntoOutfit();
-                    if (this.mSim.CreatedSim != null)
+                    Sim sim = this.mSim.CreatedSim;
+                    if (sim != null)
                     {
                         AddNeededMotives();
-
-                        if (base.RoleGivingObject != null)
+                        CourtesansPerfume perfume = GetPerfume();
+                        if (perfume != null)
                         {
                             this.mIsActive = true;
+                            perfume.PayIfNecessary(sim);
                             MakeSimComeToRoleLot();
                             ProtectSimFromStoryProgression();
-                            if (base.mSim.CreatedSim != null)
-                            {
-                                base.mRoleGivingObject.AddRoleGivingInteraction(base.mSim.CreatedSim);
-                            }
 
-
-                            if (this.RoleGivingObject != null)
-                            {
-                                this.RoleGivingObject.PushRoleStartingInteraction(this.mSim.CreatedSim);
-                            }
+                            perfume.AddRoleGivingInteraction(sim);
+                            perfume.PushRoleStartingInteraction(sim);
                         }
                     }
                 }

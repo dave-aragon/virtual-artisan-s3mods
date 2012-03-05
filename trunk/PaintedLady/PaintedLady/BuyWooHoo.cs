@@ -14,6 +14,7 @@ using Sims3.UI.Controller;
 using Sims3.Gameplay.ActorSystems;
 using Misukisu.Paintedlady;
 using Sims3.Gameplay.Roles.Misukisu;
+using Sims3.Gameplay.Core;
 
 namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
 {
@@ -31,23 +32,23 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
 
                 CreateRelationship(buyer, seller);
 
-                Bed place = findNearestBed(seller);
+                Bed place = FindNearestBed(seller);
                 if (place != null)
                 {
                     Pay(buyer, seller);
-                    PushWooHooOnBed(seller, buyer, place);
-                    InteractionInstance sellerCleanupAction = AfterWooHooCleanup.Singleton.CreateInstanceWithCallbacks(seller, seller,
-                        new InteractionPriority(InteractionPriorityLevel.RequiredNPCBehavior), false, false,
-                        new Callback(this.RestoreRelationship), new Callback(this.DoNothing), new Callback(this.DoNothing)
-                        );
-                    sellerCleanupAction.MustRun = true;
-                    seller.InteractionQueue.AddAfterCheckingForDuplicates(sellerCleanupAction);
+                    PushWooHooOnBed(seller, buyer, place, new Callback(this.CleanupActions));
+                    //InteractionInstance sellerCleanupAction = AfterWooHooCleanup.Singleton.CreateInstanceWithCallbacks(seller, seller,
+                    //    new InteractionPriority(InteractionPriorityLevel.UserDirected), false, false,
+                    //    new Callback(this.RestoreRelationship), new Callback(this.DoNothing), new Callback(this.DoNothing)
+                    //    );
+                    //sellerCleanupAction.MustRun = true;
+                    //seller.InteractionQueue.AddAfterCheckingForDuplicates(sellerCleanupAction);
 
-                    InteractionInstance buyerCleanupAction =
-                       AfterWooHooCleanup.Singleton.CreateInstance(buyer, buyer,
-                       new InteractionPriority(InteractionPriorityLevel.RequiredNPCBehavior), false, false);
-                    buyerCleanupAction.MustRun = true;
-                    buyer.InteractionQueue.AddAfterCheckingForDuplicates(buyerCleanupAction);
+                    //InteractionInstance buyerCleanupAction =
+                    //   AfterWooHooCleanup.Singleton.CreateInstance(buyer, buyer,
+                    //   new InteractionPriority(InteractionPriorityLevel.UserDirected), false, false);
+                    //buyerCleanupAction.MustRun = true;
+                    //buyer.InteractionQueue.AddAfterCheckingForDuplicates(buyerCleanupAction);
                 }
                 else
                 {
@@ -61,19 +62,22 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
             }
             return true;
         }
-
-
-        private void PushWooHooOnBed(Sim seller, Sim customer, Bed bed)
+     
+        private void PushWooHooOnBed(Sim actor, Sim recipient, Bed bed, Callback callback)
         {
             InteractionPriority priority = new InteractionPriority(InteractionPriorityLevel.RequiredNPCBehavior);
-            InteractionInstance relaxingAction = EnterRelaxing.Singleton.CreateInstance(bed, seller, priority, false, true);
-            if (seller.InteractionQueue.Add(relaxingAction))
+            InteractionInstance relaxingAction = EnterRelaxing.Singleton.CreateInstance(bed, actor, priority, false, true);
+            relaxingAction.MustRun = true;
+            if (actor.InteractionQueue.Add(relaxingAction))
             {
-                InteractionInstance entry = EnterRelaxing.Singleton.CreateInstance(bed, customer, priority, false, true);
-                customer.InteractionQueue.Add(entry);
-                InteractionInstance woohooAction = WooHoo.Singleton.CreateInstance(customer, seller,priority, false, true);
+                InteractionInstance entry = EnterRelaxing.Singleton.CreateInstance(bed, recipient, priority, false, true);
+                entry.MustRun = true;
+                recipient.InteractionQueue.Add(entry);
+                InteractionInstance woohooAction = WooHoo.Singleton.CreateInstanceWithCallbacks(recipient, actor, priority, false, true
+                    , new Callback(this.DoNothing),callback,callback);
+                woohooAction.MustRun = true;
                 woohooAction.GroupId = relaxingAction.GroupId;
-                seller.InteractionQueue.Add(woohooAction);
+                actor.InteractionQueue.Add(woohooAction);
             }
         }
 
@@ -86,7 +90,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
             CourtesansPerfume perfume = Courtesan.GetPerfume(seller);
             if (perfume != null)
             {
-                int amount = perfume.PayPerWoohoo;
+                int amount = perfume.PricePerWoohoo;
                 if (amount < base.Actor.FamilyFunds)
                 {
                     base.Actor.ModifyFunds(-amount);
@@ -94,7 +98,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
             }
         }
 
-        public void RestoreRelationship(Sim s, float x)
+        public void CleanupActions(Sim s, float x)
         {
             try
             {
@@ -111,6 +115,19 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
                 Message.Sender.ShowError(base.Target, "Restoring original relationships failed", false, e);
 
             }
+
+            try
+            {
+                Lot.MetaAutonomyType venueType = base.Actor.LotCurrent.GetMetaAutonomyType;
+                Courtesan.SwitchToProperClothing(base.Actor, venueType);
+                Courtesan.SwitchToProperClothing(base.Target, venueType);
+            }
+            catch (Exception e)
+            {
+                Message.Sender.ShowError(base.Actor, "Cannot restore clothes", false, e);
+            }
+
+            
         }
 
         private void CreateRelationship(Sim buyer, Sim seller)
@@ -125,9 +142,9 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
         }
 
 
-        private Bed findNearestBed(Sim sim)
+        private BedDouble FindNearestBed(Sim sim)
         {
-            return GlobalFunctions.GetClosestObject<Bed>(sim, true, true, new List<Bed>(), null);
+            return GlobalFunctions.GetClosestObject<BedDouble>(sim, true, true, new List<BedDouble>(), null);
 
         }
 
@@ -135,32 +152,64 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
         private sealed class Definition : InteractionDefinition<Sim, Sim, BuyWooHoo>
         {
 
-            public override string GetInteractionName(Sim a, Sim target, InteractionObjectPair interaction)
+            public override string GetInteractionName(Sim actor, Sim target, InteractionObjectPair interaction)
             {
+
                 string price = "0";
-                Courtesan role = Courtesan.AssignedRole(target);
-                if (role != null)
+                Sim owner = null;
+                CourtesansPerfume perfume = Courtesan.GetPerfume(target);
+                if (perfume != null)
                 {
-                    price = role.GetPerfume().PayPerWoohoo.ToString();
+                    price = perfume.PricePerWoohoo.ToString();
+
+                    owner = perfume.SlaveOwner;
                 }
 
-                return "Ask to WooHoo for Money (§" + price + ")";
+                string name = "Ask to WooHoo for Money (§" + price + ")";
+                if (owner == actor)
+                {
+                    name = "Ask to WooHoo";
+                }
+
+                return name;
             }
 
             public override bool Test(Sim actor, Sim target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
                 bool result = false;
-                if (!isAutonomous)
+                CourtesansPerfume perfume = Courtesan.GetPerfume(target);
+                if (perfume != null)
                 {
-                    InteractionDefinition interaction = BuyWooHoo.Singleton;
-                    result = Courtesan.IsTalkingTo(actor, target, result);
-
-                    if (actor.InteractionQueue.HasInteractionOfTypeAndTarget(BuyWooHoo.Singleton, target))
+                    if (perfume.SlaveOwner != null)
                     {
-                        result = true;
+                        if (actor == perfume.SlaveOwner)
+                        {
+                            result = IsTalkingToOrAlreadyBuying(actor, target, result);
+                        }
+                    }
+                    else if (!isAutonomous)
+                    {
+                        result = IsTalkingToOrAlreadyBuying(actor, target, result);
+                    }
+                }
+                else {
+                    if (Message.Sender.IsDebugging()) {
+                        Message.Sender.Debug(this, "action is not enabled since perfume does not exist");
                     }
                 }
 
+                return result;
+            }
+
+            private static bool IsTalkingToOrAlreadyBuying(Sim actor, Sim target, bool result)
+            {
+                InteractionDefinition interaction = BuyWooHoo.Singleton;
+                result = Courtesan.IsTalkingTo(actor, target, result);
+
+                if (actor.InteractionQueue.HasInteractionOfTypeAndTarget(BuyWooHoo.Singleton, target))
+                {
+                    result = true;
+                }
                 return result;
             }
 

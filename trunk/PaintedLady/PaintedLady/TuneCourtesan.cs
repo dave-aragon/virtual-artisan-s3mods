@@ -22,17 +22,19 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
         {
             try
             {
-               
+
                 float startTime;
                 float endTime;
                 base.Target.GetRoleTimes(out startTime, out endTime);
 
-                float start;
-                float end;
-                bool ok=ShowTimeTuningDialog(startTime, endTime, out start, out end);
+                float newStartTime;
+                float newEndTime;
+                int newPrice;
+                int newPricePerDay;
+                bool ok = ShowTimeTuningDialog(startTime, endTime, Target.PricePerWoohoo, Target.PricePerDay, out newStartTime, out newEndTime, out newPrice, out newPricePerDay);
                 if (ok)
                 {
-                    base.Target.TuningChanged( start, end);
+                    base.Target.TuningChanged(newStartTime, newEndTime);
                 }
             }
             catch (Exception e)
@@ -43,29 +45,55 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
             return true;
         }
 
-        private static bool ShowTimeTuningDialog(float startTime, float endTime, out float start, out float end)
+        private bool ShowTimeTuningDialog(float startTime, float endTime, int pricePerWoohoo, int pricePerDay,
+                out float newStartTime, out float newEndTime, out int newPrice, out int newPricePerDay)
         {
             bool changes = false;
-            string[] values = ThreeStringInputDialog.Show("The owner of the perfume", new string[] { "Arrives at (hour, 0-24, 0='reset')", "Leaves at (hour, 0-24, 0='reset')", "Spare field for future needs" }, new string[] { startTime.ToString(), endTime.ToString(), "" }, true);
+            string[] values = ThreeStringInputDialog.Show("The owner of the perfume",
+                new string[] { "Arrives at (hour, 0-24, 0='reset'):",
+                    "Leaves at (hour, 0-24, 0='reset'):",
+                    "Price range:" },
+                    new string[] { startTime.ToString(), endTime.ToString(), pricePerWoohoo + "-" + pricePerDay }, false);
 
             if (!string.IsNullOrEmpty(values[0]))
             {
-                start = float.Parse(values[0]);
+                newStartTime = float.Parse(values[0]);
                 changes = true;
             }
             else
             {
-                start = 0;
+                newStartTime = 0;
             }
 
             if (!string.IsNullOrEmpty(values[1]))
             {
-                end = float.Parse(values[1]);
+                newEndTime = float.Parse(values[1]);
                 changes = true;
             }
             else
             {
-                end = 0;
+                newEndTime = 0;
+            }
+
+            if (!string.IsNullOrEmpty(values[2]))
+            {
+                string[] prices = values[2].Split('-');
+                if (prices.Length == 2)
+                {
+                    newPrice = int.Parse(prices[0]);
+                    newPricePerDay = int.Parse(prices[1]);
+
+                    changes = true;
+                }
+                else
+                {
+                    throw new Exception(values[2] + " does not contain price range");
+                }
+            }
+            else
+            {
+                newPricePerDay = 0;
+                newPrice = 0;
             }
             return changes;
         }

@@ -20,6 +20,14 @@ namespace Sims3.Gameplay.Roles.Misukisu
             : base()
         { }
 
+        public override string CareerTitleKey
+        {
+            get
+            {
+                return Texts.CAREERTITLE;
+            }
+        }
+
         public Drunkard(RoleData data, SimDescription s, IRoleGiver roleGiver)
             : base(data, s, roleGiver)
         { }
