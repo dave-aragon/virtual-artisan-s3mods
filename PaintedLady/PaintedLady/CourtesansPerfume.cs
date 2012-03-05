@@ -158,10 +158,35 @@ namespace Sims3.Gameplay.Objects.Misukisu
             }
         }
 
+        public void PayIfNecessary(Actors.Sim sim)
+        {
+            try
+            {
+                if (SlaveOwner != null)
+                {
+                    bool paid = Pay(SlaveOwner, sim, false);
+                    if (!paid)
+                    {
+                        Message.Sender.Show(sim, "If you cannot pay, don't expect me to come");
+                        SlaveOwner = null;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Message.Sender.ShowError(this, "Payment failed", false, ex);
+            }
+        }
+
         public void AddRoleGivingInteraction(Actors.Sim sim)
         {
             sim.AddInteraction(BuyWooHoo.Singleton);
             sim.AddInteraction(ToggleTakeMistress.Singleton);
+            if (Message.Sender.IsDebugging())
+            {
+                Message.Sender.Debug(this, "Role interactions added to " + sim.FullName);
+            }
+
         }
 
         public Sim SlaveOwner
@@ -247,7 +272,7 @@ namespace Sims3.Gameplay.Objects.Misukisu
 
         public string RoleName(bool isFemale)
         {
-            return "Courtesan";
+            return "";
         }
 
         public Roles.Role.RoleType RoleType
@@ -255,14 +280,53 @@ namespace Sims3.Gameplay.Objects.Misukisu
             get { return Role.RoleType.Pianist; }
         }
 
-        public int PayPerDay
+        public bool Pay(Sim buyer, Sim seller, bool singleWoohoo)
+        {
+            bool paid = false;
+            if (singleWoohoo)
+            {
+                if (SlaveOwner == null)
+                {
+                    int amount = PricePerWoohoo;
+                    if (amount < buyer.FamilyFunds)
+                    {
+                        buyer.ModifyFunds(-amount);
+                        paid = true;
+                    }
+                }
+            }
+            else
+            {
+                int amount = PricePerDay;
+                if (amount < buyer.FamilyFunds)
+                {
+                    buyer.ModifyFunds(-amount);
+                    paid=true;
+                }
+            }
+            return paid;
+        }
+
+        public int PricePerDay
         {
             get { return mPayPerDay; }
         }
 
-        public int PayPerWoohoo
+        public int PricePerWoohoo
         {
-            get { return mPayPerWoohoo; }
+            get
+            {
+
+                if (SlaveOwner == null)
+                {
+                    return mPayPerWoohoo;
+                }
+                else
+                {
+                    return 0;
+                }
+
+            }
         }
 
         public ResourceKey GetRoleUniformKey(Sim Sim, Lot.MetaAutonomyType venueType)

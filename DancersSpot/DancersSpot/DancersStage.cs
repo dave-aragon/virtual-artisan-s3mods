@@ -87,9 +87,6 @@ namespace Sims3.Gameplay.Objects.Misukisu
             Message.Sender.Show(this, "new Show outfits are: " + OutfitsToString(mShowOutfits, " - "));
             if (Message.Sender.IsDebugging())
             {
-                //Message.Sender.Debug(this, "Role tuning changed - startTime="
-                //    + startTime + " endTime=" + endTime + " roleTitle=" + roleTitle);
-                Message.Sender.Show(this, "new Show outfits are: " + OutfitsToString(mShowOutfits, " - "));
                 Message.Sender.Debug(this, "new Show outfits are: " + OutfitsToString(mShowOutfits, " - "));
             }
             ResetRole();

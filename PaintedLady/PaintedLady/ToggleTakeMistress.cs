@@ -55,7 +55,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
                 CourtesansPerfume perfume = Courtesan.GetPerfume(target);
                 if (perfume != null)
                 {
-                    price = perfume.PayPerDay.ToString();
+                    price = perfume.PricePerDay.ToString();
 
                     owner = perfume.SlaveOwner;
                 }
@@ -79,12 +79,23 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
                 bool result = false;
                 if (!isAutonomous)
                 {
-                    InteractionDefinition interaction = BuyWooHoo.Singleton;
-                    result = Courtesan.IsTalkingTo(actor, target, result);
-
-                    if (actor.InteractionQueue.HasInteractionOfTypeAndTarget(ToggleTakeMistress.Singleton, target))
+                    CourtesansPerfume perfume = Courtesan.GetPerfume(target);
+                    if (perfume != null)
                     {
-                        result = true;
+                        if (perfume.SlaveOwner == null)
+                        {
+                            InteractionDefinition interaction = BuyWooHoo.Singleton;
+                            result = Courtesan.IsTalkingTo(actor, target, result);
+
+                            if (actor.InteractionQueue.HasInteractionOfTypeAndTarget(ToggleTakeMistress.Singleton, target))
+                            {
+                                result = true;
+                            }
+                        }
+                        else
+                        {
+                            result = true;
+                        }
                     }
                 }
 
