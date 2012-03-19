@@ -3,7 +3,6 @@ copy StringTableEnglish.txt StringTableCzech.txt
 copy StringTableEnglish.txt StringTableDanish.txt
 copy StringTableEnglish.txt StringTableDutch.txt
 copy StringTableEnglish.txt StringTableEnglish.txt
-copy StringTableEnglish.txt StringTableFinnish.txt
 copy StringTableEnglish.txt StringTableFrench.txt
 copy StringTableEnglish.txt StringTableGerman.txt
 copy StringTableEnglish.txt StringTableGreek.txt

@@ -37,8 +37,8 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Anysim
             }
             catch (Exception e)
             {
-                // TODO: maybe localize?
-                Message.Sender.ShowError(base.Target, "Tuning failed, please try again", false, e);
+               string msg = I18n.Localize(Texts.TUNING_FAILED,"Tuning failed, please try again");
+                Message.Sender.ShowError(base.Target, msg, false, e);
             }
             return true;
         }
