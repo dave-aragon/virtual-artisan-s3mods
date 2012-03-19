@@ -9,5 +9,6 @@ namespace Misukisu.Anysim
         public static string TUNING_DIALOG_ROLE_END_TIME = "Misukisu.Anysim.Tuning:RoleEndTime";
         public static string TUNING_DIALOG_ROLE_TOOLTIP = "Misukisu.Anysim.Tuning:RoleTooltip";
         public static string TUNING_DIALOG_INTERACTION = "Misukisu.Anysim.Tuning:InteractionName";
+        public static string TUNING_FAILED = "Misukisu.Anysim.Tuning:TuningFailedMsg";
     }
 }
