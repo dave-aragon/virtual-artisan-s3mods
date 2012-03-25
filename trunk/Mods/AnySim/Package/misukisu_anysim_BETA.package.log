@@ -1,0 +1,414 @@
+﻿Import: StringTableEnglish
+Import: StringTableChinese
+Import: StringTableTaiwanese
+Import: StringTableCzech
+Import: StringTableDanish
+Import: StringTableDutch
+Import: StringTableFinnish
+Import: StringTableFrench
+Import: StringTableGerman
+Import: StringTableGreek
+Import: StringTableHungarian
+Import: StringTableItalian
+Import: StringTableJapanese
+Import: StringTableKorean
+Import: StringTableNorwegian
+Import: StringTablePolish
+Import: StringTablePortugueseStandard
+Import: StringTablePortugueseBrazilian
+Import: StringTableRussian
+Import: StringTableSpanishStandard
+Import: StringTableSpanishMexican
+Import: StringTableSwedish
+Import: StringTableThai
+Test: English
+  Unknown Translation: 0x08DB496905F9BE86 - Any Sim
+  Unknown Translation: 0xEA8885044BDC06C2 - Put this to a community lot and a sim appears. CTRL+SHIFT+Click in Build/Buy mode to tune. By misukisu - Virtual Artisan.
+  Unknown Translation: 0x025CB75E1F10E6F3 - AnySim
+  Unknown Translation: 0xE91A29A37489C0D5 - Role Employee
+  Unknown Translation: 0xDAF63E675328095D - AnySim's Tuning
+  Unknown Translation: 0xC6D10C909533B184 - Anysim arrives at (0-24, 0=RESET):
+  Unknown Translation: 0x2D6BDF26452F4EF7 - Anysim leaves at (0-24, 0=RESET):
+  Unknown Translation: 0x95E19112E9D418B2 - Role name for AnySim:
+  Unknown Translation: 0xFFBD2B7EFD2B9526 - Tuning Dialog...
+  Unknown Translation: 0xAA0A26FD64B3E0EF - Debugging makes the game slower. Logging to: {0.String}
+  Unknown Translation: 0xC4A347B51D4E99AB - Virtual Artisan Debugger Started
+  Unknown Translation: 0x32FCD3C12836107E - Virtual Artisan Debugger CANNOT be started
+  Unknown Translation: 0x0A91A20331620EE2 - Cannot create debug log
+  Unknown Translation: 0xFF0337D238E3C4F3 - Stop Debugger
+  Unknown Translation: 0x366BE336AB2F3F79 - Start Debugger
+  Unknown Translation: 0xDB46F9B52D54F022 - Please exit the game without saving, this error cannot be recovered from
+Test: Chinese
+  Unknown Translation: 0x08DB496905F9BE86 - Any Sim
+  Unknown Translation: 0xEA8885044BDC06C2 - Put this to a community lot and a sim appears. CTRL+SHIFT+Click in Build/Buy mode to tune. By misukisu - Virtual Artisan.
+  Unknown Translation: 0x025CB75E1F10E6F3 - AnySim
+  Unknown Translation: 0xE91A29A37489C0D5 - Role Employee
+  Unknown Translation: 0xDAF63E675328095D - AnySim's Tuning
+  Unknown Translation: 0xC6D10C909533B184 - Anysim arrives at (0-24, 0=RESET):
+  Unknown Translation: 0x2D6BDF26452F4EF7 - Anysim leaves at (0-24, 0=RESET):
+  Unknown Translation: 0x95E19112E9D418B2 - Role name for AnySim:
+  Unknown Translation: 0xFFBD2B7EFD2B9526 - Tuning Dialog...
+  Unknown Translation: 0xAA0A26FD64B3E0EF - Debugging makes the game slower. Logging to: {0.String}
+  Unknown Translation: 0xC4A347B51D4E99AB - Virtual Artisan Debugger Started
+  Unknown Translation: 0x32FCD3C12836107E - Virtual Artisan Debugger CANNOT be started
+  Unknown Translation: 0x0A91A20331620EE2 - Cannot create debug log
+  Unknown Translation: 0xFF0337D238E3C4F3 - Stop Debugger
+  Unknown Translation: 0x366BE336AB2F3F79 - Start Debugger
+  Unknown Translation: 0xDB46F9B52D54F022 - Please exit the game without saving, this error cannot be recovered from
+Test: Taiwanese
+  Unknown Translation: 0x08DB496905F9BE86 - Any Sim
+  Unknown Translation: 0xEA8885044BDC06C2 - Put this to a community lot and a sim appears. CTRL+SHIFT+Click in Build/Buy mode to tune. By misukisu - Virtual Artisan.
+  Unknown Translation: 0x025CB75E1F10E6F3 - AnySim
+  Unknown Translation: 0xE91A29A37489C0D5 - Role Employee
+  Unknown Translation: 0xDAF63E675328095D - AnySim's Tuning
+  Unknown Translation: 0xC6D10C909533B184 - Anysim arrives at (0-24, 0=RESET):
+  Unknown Translation: 0x2D6BDF26452F4EF7 - Anysim leaves at (0-24, 0=RESET):
+  Unknown Translation: 0x95E19112E9D418B2 - Role name for AnySim:
+  Unknown Translation: 0xFFBD2B7EFD2B9526 - Tuning Dialog...
+  Unknown Translation: 0xAA0A26FD64B3E0EF - Debugging makes the game slower. Logging to: {0.String}
+  Unknown Translation: 0xC4A347B51D4E99AB - Virtual Artisan Debugger Started
+  Unknown Translation: 0x32FCD3C12836107E - Virtual Artisan Debugger CANNOT be started
+  Unknown Translation: 0x0A91A20331620EE2 - Cannot create debug log
+  Unknown Translation: 0xFF0337D238E3C4F3 - Stop Debugger
+  Unknown Translation: 0x366BE336AB2F3F79 - Start Debugger
+  Unknown Translation: 0xDB46F9B52D54F022 - Please exit the game without saving, this error cannot be recovered from
+Test: Czech
+  Unknown Translation: 0x08DB496905F9BE86 - Any Sim
+  Unknown Translation: 0xEA8885044BDC06C2 - Put this to a community lot and a sim appears. CTRL+SHIFT+Click in Build/Buy mode to tune. By misukisu - Virtual Artisan.
+  Unknown Translation: 0x025CB75E1F10E6F3 - AnySim
+  Unknown Translation: 0xE91A29A37489C0D5 - Role Employee
+  Unknown Translation: 0xDAF63E675328095D - AnySim's Tuning
+  Unknown Translation: 0xC6D10C909533B184 - Anysim arrives at (0-24, 0=RESET):
+  Unknown Translation: 0x2D6BDF26452F4EF7 - Anysim leaves at (0-24, 0=RESET):
+  Unknown Translation: 0x95E19112E9D418B2 - Role name for AnySim:
+  Unknown Translation: 0xFFBD2B7EFD2B9526 - Tuning Dialog...
+  Unknown Translation: 0xAA0A26FD64B3E0EF - Debugging makes the game slower. Logging to: {0.String}
+  Unknown Translation: 0xC4A347B51D4E99AB - Virtual Artisan Debugger Started
+  Unknown Translation: 0x32FCD3C12836107E - Virtual Artisan Debugger CANNOT be started
+  Unknown Translation: 0x0A91A20331620EE2 - Cannot create debug log
+  Unknown Translation: 0xFF0337D238E3C4F3 - Stop Debugger
+  Unknown Translation: 0x366BE336AB2F3F79 - Start Debugger
+  Unknown Translation: 0xDB46F9B52D54F022 - Please exit the game without saving, this error cannot be recovered from
+Test: Danish
+  Unknown Translation: 0x08DB496905F9BE86 - Any Sim
+  Unknown Translation: 0xEA8885044BDC06C2 - Put this to a community lot and a sim appears. CTRL+SHIFT+Click in Build/Buy mode to tune. By misukisu - Virtual Artisan.
+  Unknown Translation: 0x025CB75E1F10E6F3 - AnySim
+  Unknown Translation: 0xE91A29A37489C0D5 - Role Employee
+  Unknown Translation: 0xDAF63E675328095D - AnySim's Tuning
+  Unknown Translation: 0xC6D10C909533B184 - Anysim arrives at (0-24, 0=RESET):
+  Unknown Translation: 0x2D6BDF26452F4EF7 - Anysim leaves at (0-24, 0=RESET):
+  Unknown Translation: 0x95E19112E9D418B2 - Role name for AnySim:
+  Unknown Translation: 0xFFBD2B7EFD2B9526 - Tuning Dialog...
+  Unknown Translation: 0xAA0A26FD64B3E0EF - Debugging makes the game slower. Logging to: {0.String}
+  Unknown Translation: 0xC4A347B51D4E99AB - Virtual Artisan Debugger Started
+  Unknown Translation: 0x32FCD3C12836107E - Virtual Artisan Debugger CANNOT be started
+  Unknown Translation: 0x0A91A20331620EE2 - Cannot create debug log
+  Unknown Translation: 0xFF0337D238E3C4F3 - Stop Debugger
+  Unknown Translation: 0x366BE336AB2F3F79 - Start Debugger
+  Unknown Translation: 0xDB46F9B52D54F022 - Please exit the game without saving, this error cannot be recovered from
+Test: Dutch
+  Unknown Translation: 0x08DB496905F9BE86 - Any Sim
+  Unknown Translation: 0xEA8885044BDC06C2 - Put this to a community lot and a sim appears. CTRL+SHIFT+Click in Build/Buy mode to tune. By misukisu - Virtual Artisan.
+  Unknown Translation: 0x025CB75E1F10E6F3 - AnySim
+  Unknown Translation: 0xE91A29A37489C0D5 - Role Employee
+  Unknown Translation: 0xDAF63E675328095D - AnySim's Tuning
+  Unknown Translation: 0xC6D10C909533B184 - Anysim arrives at (0-24, 0=RESET):
+  Unknown Translation: 0x2D6BDF26452F4EF7 - Anysim leaves at (0-24, 0=RESET):
+  Unknown Translation: 0x95E19112E9D418B2 - Role name for AnySim:
+  Unknown Translation: 0xFFBD2B7EFD2B9526 - Tuning Dialog...
+  Unknown Translation: 0xAA0A26FD64B3E0EF - Debugging makes the game slower. Logging to: {0.String}
+  Unknown Translation: 0xC4A347B51D4E99AB - Virtual Artisan Debugger Started
+  Unknown Translation: 0x32FCD3C12836107E - Virtual Artisan Debugger CANNOT be started
+  Unknown Translation: 0x0A91A20331620EE2 - Cannot create debug log
+  Unknown Translation: 0xFF0337D238E3C4F3 - Stop Debugger
+  Unknown Translation: 0x366BE336AB2F3F79 - Start Debugger
+  Unknown Translation: 0xDB46F9B52D54F022 - Please exit the game without saving, this error cannot be recovered from
+Test: Finnish
+  Unknown Translation: 0x08DB496905F9BE86 - Any Sim
+  Unknown Translation: 0xEA8885044BDC06C2 - Put this to a community lot and a sim appears. CTRL+SHIFT+Click in Build/Buy mode to tune. By misukisu - Virtual Artisan.
+  Unknown Translation: 0x025CB75E1F10E6F3 - AnySim
+  Unknown Translation: 0xE91A29A37489C0D5 - Role Employee
+  Unknown Translation: 0xDAF63E675328095D - AnySim's Tuning
+  Unknown Translation: 0xC6D10C909533B184 - Anysim arrives at (0-24, 0=RESET):
+  Unknown Translation: 0x2D6BDF26452F4EF7 - Anysim leaves at (0-24, 0=RESET):
+  Unknown Translation: 0x95E19112E9D418B2 - Role name for AnySim:
+  Unknown Translation: 0xFFBD2B7EFD2B9526 - Tuning Dialog...
+  Unknown Translation: 0xAA0A26FD64B3E0EF - Debugging makes the game slower. Logging to: {0.String}
+  Unknown Translation: 0xC4A347B51D4E99AB - Virtual Artisan Debugger Started
+  Unknown Translation: 0x32FCD3C12836107E - Virtual Artisan Debugger CANNOT be started
+  Unknown Translation: 0x0A91A20331620EE2 - Cannot create debug log
+  Unknown Translation: 0xFF0337D238E3C4F3 - Stop Debugger
+  Unknown Translation: 0x366BE336AB2F3F79 - Start Debugger
+  Unknown Translation: 0xDB46F9B52D54F022 - Please exit the game without saving, this error cannot be recovered from
+Test: French
+  Unknown Translation: 0x08DB496905F9BE86 - Any Sim
+  Unknown Translation: 0xEA8885044BDC06C2 - Put this to a community lot and a sim appears. CTRL+SHIFT+Click in Build/Buy mode to tune. By misukisu - Virtual Artisan.
+  Unknown Translation: 0x025CB75E1F10E6F3 - AnySim
+  Unknown Translation: 0xE91A29A37489C0D5 - Role Employee
+  Unknown Translation: 0xDAF63E675328095D - AnySim's Tuning
+  Unknown Translation: 0xC6D10C909533B184 - Anysim arrives at (0-24, 0=RESET):
+  Unknown Translation: 0x2D6BDF26452F4EF7 - Anysim leaves at (0-24, 0=RESET):
+  Unknown Translation: 0x95E19112E9D418B2 - Role name for AnySim:
+  Unknown Translation: 0xFFBD2B7EFD2B9526 - Tuning Dialog...
+  Unknown Translation: 0xAA0A26FD64B3E0EF - Debugging makes the game slower. Logging to: {0.String}
+  Unknown Translation: 0xC4A347B51D4E99AB - Virtual Artisan Debugger Started
+  Unknown Translation: 0x32FCD3C12836107E - Virtual Artisan Debugger CANNOT be started
+  Unknown Translation: 0x0A91A20331620EE2 - Cannot create debug log
+  Unknown Translation: 0xFF0337D238E3C4F3 - Stop Debugger
+  Unknown Translation: 0x366BE336AB2F3F79 - Start Debugger
+  Unknown Translation: 0xDB46F9B52D54F022 - Please exit the game without saving, this error cannot be recovered from
+Test: German
+  Unknown Translation: 0x08DB496905F9BE86 - Any Sim
+  Unknown Translation: 0xEA8885044BDC06C2 - Put this to a community lot and a sim appears. CTRL+SHIFT+Click in Build/Buy mode to tune. By misukisu - Virtual Artisan.
+  Unknown Translation: 0x025CB75E1F10E6F3 - AnySim
+  Unknown Translation: 0xE91A29A37489C0D5 - Role Employee
+  Unknown Translation: 0xDAF63E675328095D - AnySim's Tuning
+  Unknown Translation: 0xC6D10C909533B184 - Anysim arrives at (0-24, 0=RESET):
+  Unknown Translation: 0x2D6BDF26452F4EF7 - Anysim leaves at (0-24, 0=RESET):
+  Unknown Translation: 0x95E19112E9D418B2 - Role name for AnySim:
+  Unknown Translation: 0xFFBD2B7EFD2B9526 - Tuning Dialog...
+  Unknown Translation: 0xAA0A26FD64B3E0EF - Debugging makes the game slower. Logging to: {0.String}
+  Unknown Translation: 0xC4A347B51D4E99AB - Virtual Artisan Debugger Started
+  Unknown Translation: 0x32FCD3C12836107E - Virtual Artisan Debugger CANNOT be started
+  Unknown Translation: 0x0A91A20331620EE2 - Cannot create debug log
+  Unknown Translation: 0xFF0337D238E3C4F3 - Stop Debugger
+  Unknown Translation: 0x366BE336AB2F3F79 - Start Debugger
+  Unknown Translation: 0xDB46F9B52D54F022 - Please exit the game without saving, this error cannot be recovered from
+Test: Greek
+  Unknown Translation: 0x08DB496905F9BE86 - Any Sim
+  Unknown Translation: 0xEA8885044BDC06C2 - Put this to a community lot and a sim appears. CTRL+SHIFT+Click in Build/Buy mode to tune. By misukisu - Virtual Artisan.
+  Unknown Translation: 0x025CB75E1F10E6F3 - AnySim
+  Unknown Translation: 0xE91A29A37489C0D5 - Role Employee
+  Unknown Translation: 0xDAF63E675328095D - AnySim's Tuning
+  Unknown Translation: 0xC6D10C909533B184 - Anysim arrives at (0-24, 0=RESET):
+  Unknown Translation: 0x2D6BDF26452F4EF7 - Anysim leaves at (0-24, 0=RESET):
+  Unknown Translation: 0x95E19112E9D418B2 - Role name for AnySim:
+  Unknown Translation: 0xFFBD2B7EFD2B9526 - Tuning Dialog...
+  Unknown Translation: 0xAA0A26FD64B3E0EF - Debugging makes the game slower. Logging to: {0.String}
+  Unknown Translation: 0xC4A347B51D4E99AB - Virtual Artisan Debugger Started
+  Unknown Translation: 0x32FCD3C12836107E - Virtual Artisan Debugger CANNOT be started
+  Unknown Translation: 0x0A91A20331620EE2 - Cannot create debug log
+  Unknown Translation: 0xFF0337D238E3C4F3 - Stop Debugger
+  Unknown Translation: 0x366BE336AB2F3F79 - Start Debugger
+  Unknown Translation: 0xDB46F9B52D54F022 - Please exit the game without saving, this error cannot be recovered from
+Test: Hungarian
+  Unknown Translation: 0x08DB496905F9BE86 - Any Sim
+  Unknown Translation: 0xEA8885044BDC06C2 - Put this to a community lot and a sim appears. CTRL+SHIFT+Click in Build/Buy mode to tune. By misukisu - Virtual Artisan.
+  Unknown Translation: 0x025CB75E1F10E6F3 - AnySim
+  Unknown Translation: 0xE91A29A37489C0D5 - Role Employee
+  Unknown Translation: 0xDAF63E675328095D - AnySim's Tuning
+  Unknown Translation: 0xC6D10C909533B184 - Anysim arrives at (0-24, 0=RESET):
+  Unknown Translation: 0x2D6BDF26452F4EF7 - Anysim leaves at (0-24, 0=RESET):
+  Unknown Translation: 0x95E19112E9D418B2 - Role name for AnySim:
+  Unknown Translation: 0xFFBD2B7EFD2B9526 - Tuning Dialog...
+  Unknown Translation: 0xAA0A26FD64B3E0EF - Debugging makes the game slower. Logging to: {0.String}
+  Unknown Translation: 0xC4A347B51D4E99AB - Virtual Artisan Debugger Started
+  Unknown Translation: 0x32FCD3C12836107E - Virtual Artisan Debugger CANNOT be started
+  Unknown Translation: 0x0A91A20331620EE2 - Cannot create debug log
+  Unknown Translation: 0xFF0337D238E3C4F3 - Stop Debugger
+  Unknown Translation: 0x366BE336AB2F3F79 - Start Debugger
+  Unknown Translation: 0xDB46F9B52D54F022 - Please exit the game without saving, this error cannot be recovered from
+Test: Italian
+  Unknown Translation: 0x08DB496905F9BE86 - Any Sim
+  Unknown Translation: 0xEA8885044BDC06C2 - Put this to a community lot and a sim appears. CTRL+SHIFT+Click in Build/Buy mode to tune. By misukisu - Virtual Artisan.
+  Unknown Translation: 0x025CB75E1F10E6F3 - AnySim
+  Unknown Translation: 0xE91A29A37489C0D5 - Role Employee
+  Unknown Translation: 0xDAF63E675328095D - AnySim's Tuning
+  Unknown Translation: 0xC6D10C909533B184 - Anysim arrives at (0-24, 0=RESET):
+  Unknown Translation: 0x2D6BDF26452F4EF7 - Anysim leaves at (0-24, 0=RESET):
+  Unknown Translation: 0x95E19112E9D418B2 - Role name for AnySim:
+  Unknown Translation: 0xFFBD2B7EFD2B9526 - Tuning Dialog...
+  Unknown Translation: 0xAA0A26FD64B3E0EF - Debugging makes the game slower. Logging to: {0.String}
+  Unknown Translation: 0xC4A347B51D4E99AB - Virtual Artisan Debugger Started
+  Unknown Translation: 0x32FCD3C12836107E - Virtual Artisan Debugger CANNOT be started
+  Unknown Translation: 0x0A91A20331620EE2 - Cannot create debug log
+  Unknown Translation: 0xFF0337D238E3C4F3 - Stop Debugger
+  Unknown Translation: 0x366BE336AB2F3F79 - Start Debugger
+  Unknown Translation: 0xDB46F9B52D54F022 - Please exit the game without saving, this error cannot be recovered from
+Test: Japanese
+  Unknown Translation: 0x08DB496905F9BE86 - Any Sim
+  Unknown Translation: 0xEA8885044BDC06C2 - Put this to a community lot and a sim appears. CTRL+SHIFT+Click in Build/Buy mode to tune. By misukisu - Virtual Artisan.
+  Unknown Translation: 0x025CB75E1F10E6F3 - AnySim
+  Unknown Translation: 0xE91A29A37489C0D5 - Role Employee
+  Unknown Translation: 0xDAF63E675328095D - AnySim's Tuning
+  Unknown Translation: 0xC6D10C909533B184 - Anysim arrives at (0-24, 0=RESET):
+  Unknown Translation: 0x2D6BDF26452F4EF7 - Anysim leaves at (0-24, 0=RESET):
+  Unknown Translation: 0x95E19112E9D418B2 - Role name for AnySim:
+  Unknown Translation: 0xFFBD2B7EFD2B9526 - Tuning Dialog...
+  Unknown Translation: 0xAA0A26FD64B3E0EF - Debugging makes the game slower. Logging to: {0.String}
+  Unknown Translation: 0xC4A347B51D4E99AB - Virtual Artisan Debugger Started
+  Unknown Translation: 0x32FCD3C12836107E - Virtual Artisan Debugger CANNOT be started
+  Unknown Translation: 0x0A91A20331620EE2 - Cannot create debug log
+  Unknown Translation: 0xFF0337D238E3C4F3 - Stop Debugger
+  Unknown Translation: 0x366BE336AB2F3F79 - Start Debugger
+  Unknown Translation: 0xDB46F9B52D54F022 - Please exit the game without saving, this error cannot be recovered from
+Test: Korean
+  Unknown Translation: 0x08DB496905F9BE86 - Any Sim
+  Unknown Translation: 0xEA8885044BDC06C2 - Put this to a community lot and a sim appears. CTRL+SHIFT+Click in Build/Buy mode to tune. By misukisu - Virtual Artisan.
+  Unknown Translation: 0x025CB75E1F10E6F3 - AnySim
+  Unknown Translation: 0xE91A29A37489C0D5 - Role Employee
+  Unknown Translation: 0xDAF63E675328095D - AnySim's Tuning
+  Unknown Translation: 0xC6D10C909533B184 - Anysim arrives at (0-24, 0=RESET):
+  Unknown Translation: 0x2D6BDF26452F4EF7 - Anysim leaves at (0-24, 0=RESET):
+  Unknown Translation: 0x95E19112E9D418B2 - Role name for AnySim:
+  Unknown Translation: 0xFFBD2B7EFD2B9526 - Tuning Dialog...
+  Unknown Translation: 0xAA0A26FD64B3E0EF - Debugging makes the game slower. Logging to: {0.String}
+  Unknown Translation: 0xC4A347B51D4E99AB - Virtual Artisan Debugger Started
+  Unknown Translation: 0x32FCD3C12836107E - Virtual Artisan Debugger CANNOT be started
+  Unknown Translation: 0x0A91A20331620EE2 - Cannot create debug log
+  Unknown Translation: 0xFF0337D238E3C4F3 - Stop Debugger
+  Unknown Translation: 0x366BE336AB2F3F79 - Start Debugger
+  Unknown Translation: 0xDB46F9B52D54F022 - Please exit the game without saving, this error cannot be recovered from
+Test: Norwegian
+  Unknown Translation: 0x08DB496905F9BE86 - Any Sim
+  Unknown Translation: 0xEA8885044BDC06C2 - Put this to a community lot and a sim appears. CTRL+SHIFT+Click in Build/Buy mode to tune. By misukisu - Virtual Artisan.
+  Unknown Translation: 0x025CB75E1F10E6F3 - AnySim
+  Unknown Translation: 0xE91A29A37489C0D5 - Role Employee
+  Unknown Translation: 0xDAF63E675328095D - AnySim's Tuning
+  Unknown Translation: 0xC6D10C909533B184 - Anysim arrives at (0-24, 0=RESET):
+  Unknown Translation: 0x2D6BDF26452F4EF7 - Anysim leaves at (0-24, 0=RESET):
+  Unknown Translation: 0x95E19112E9D418B2 - Role name for AnySim:
+  Unknown Translation: 0xFFBD2B7EFD2B9526 - Tuning Dialog...
+  Unknown Translation: 0xAA0A26FD64B3E0EF - Debugging makes the game slower. Logging to: {0.String}
+  Unknown Translation: 0xC4A347B51D4E99AB - Virtual Artisan Debugger Started
+  Unknown Translation: 0x32FCD3C12836107E - Virtual Artisan Debugger CANNOT be started
+  Unknown Translation: 0x0A91A20331620EE2 - Cannot create debug log
+  Unknown Translation: 0xFF0337D238E3C4F3 - Stop Debugger
+  Unknown Translation: 0x366BE336AB2F3F79 - Start Debugger
+  Unknown Translation: 0xDB46F9B52D54F022 - Please exit the game without saving, this error cannot be recovered from
+Test: Polish
+  Unknown Translation: 0x08DB496905F9BE86 - Any Sim
+  Unknown Translation: 0xEA8885044BDC06C2 - Put this to a community lot and a sim appears. CTRL+SHIFT+Click in Build/Buy mode to tune. By misukisu - Virtual Artisan.
+  Unknown Translation: 0x025CB75E1F10E6F3 - AnySim
+  Unknown Translation: 0xE91A29A37489C0D5 - Role Employee
+  Unknown Translation: 0xDAF63E675328095D - AnySim's Tuning
+  Unknown Translation: 0xC6D10C909533B184 - Anysim arrives at (0-24, 0=RESET):
+  Unknown Translation: 0x2D6BDF26452F4EF7 - Anysim leaves at (0-24, 0=RESET):
+  Unknown Translation: 0x95E19112E9D418B2 - Role name for AnySim:
+  Unknown Translation: 0xFFBD2B7EFD2B9526 - Tuning Dialog...
+  Unknown Translation: 0xAA0A26FD64B3E0EF - Debugging makes the game slower. Logging to: {0.String}
+  Unknown Translation: 0xC4A347B51D4E99AB - Virtual Artisan Debugger Started
+  Unknown Translation: 0x32FCD3C12836107E - Virtual Artisan Debugger CANNOT be started
+  Unknown Translation: 0x0A91A20331620EE2 - Cannot create debug log
+  Unknown Translation: 0xFF0337D238E3C4F3 - Stop Debugger
+  Unknown Translation: 0x366BE336AB2F3F79 - Start Debugger
+  Unknown Translation: 0xDB46F9B52D54F022 - Please exit the game without saving, this error cannot be recovered from
+Test: PortugueseStandard
+  Unknown Translation: 0x08DB496905F9BE86 - Any Sim
+  Unknown Translation: 0xEA8885044BDC06C2 - Put this to a community lot and a sim appears. CTRL+SHIFT+Click in Build/Buy mode to tune. By misukisu - Virtual Artisan.
+  Unknown Translation: 0x025CB75E1F10E6F3 - AnySim
+  Unknown Translation: 0xE91A29A37489C0D5 - Role Employee
+  Unknown Translation: 0xDAF63E675328095D - AnySim's Tuning
+  Unknown Translation: 0xC6D10C909533B184 - Anysim arrives at (0-24, 0=RESET):
+  Unknown Translation: 0x2D6BDF26452F4EF7 - Anysim leaves at (0-24, 0=RESET):
+  Unknown Translation: 0x95E19112E9D418B2 - Role name for AnySim:
+  Unknown Translation: 0xFFBD2B7EFD2B9526 - Tuning Dialog...
+  Unknown Translation: 0xAA0A26FD64B3E0EF - Debugging makes the game slower. Logging to: {0.String}
+  Unknown Translation: 0xC4A347B51D4E99AB - Virtual Artisan Debugger Started
+  Unknown Translation: 0x32FCD3C12836107E - Virtual Artisan Debugger CANNOT be started
+  Unknown Translation: 0x0A91A20331620EE2 - Cannot create debug log
+  Unknown Translation: 0xFF0337D238E3C4F3 - Stop Debugger
+  Unknown Translation: 0x366BE336AB2F3F79 - Start Debugger
+  Unknown Translation: 0xDB46F9B52D54F022 - Please exit the game without saving, this error cannot be recovered from
+Test: PortugueseBrazilian
+  Unknown Translation: 0x08DB496905F9BE86 - Any Sim
+  Unknown Translation: 0xEA8885044BDC06C2 - Put this to a community lot and a sim appears. CTRL+SHIFT+Click in Build/Buy mode to tune. By misukisu - Virtual Artisan.
+  Unknown Translation: 0x025CB75E1F10E6F3 - AnySim
+  Unknown Translation: 0xE91A29A37489C0D5 - Role Employee
+  Unknown Translation: 0xDAF63E675328095D - AnySim's Tuning
+  Unknown Translation: 0xC6D10C909533B184 - Anysim arrives at (0-24, 0=RESET):
+  Unknown Translation: 0x2D6BDF26452F4EF7 - Anysim leaves at (0-24, 0=RESET):
+  Unknown Translation: 0x95E19112E9D418B2 - Role name for AnySim:
+  Unknown Translation: 0xFFBD2B7EFD2B9526 - Tuning Dialog...
+  Unknown Translation: 0xAA0A26FD64B3E0EF - Debugging makes the game slower. Logging to: {0.String}
+  Unknown Translation: 0xC4A347B51D4E99AB - Virtual Artisan Debugger Started
+  Unknown Translation: 0x32FCD3C12836107E - Virtual Artisan Debugger CANNOT be started
+  Unknown Translation: 0x0A91A20331620EE2 - Cannot create debug log
+  Unknown Translation: 0xFF0337D238E3C4F3 - Stop Debugger
+  Unknown Translation: 0x366BE336AB2F3F79 - Start Debugger
+  Unknown Translation: 0xDB46F9B52D54F022 - Please exit the game without saving, this error cannot be recovered from
+Test: Russian
+  Unknown Translation: 0x08DB496905F9BE86 - Any Sim
+  Unknown Translation: 0xEA8885044BDC06C2 - Put this to a community lot and a sim appears. CTRL+SHIFT+Click in Build/Buy mode to tune. By misukisu - Virtual Artisan.
+  Unknown Translation: 0x025CB75E1F10E6F3 - AnySim
+  Unknown Translation: 0xE91A29A37489C0D5 - Role Employee
+  Unknown Translation: 0xDAF63E675328095D - AnySim's Tuning
+  Unknown Translation: 0xC6D10C909533B184 - Anysim arrives at (0-24, 0=RESET):
+  Unknown Translation: 0x2D6BDF26452F4EF7 - Anysim leaves at (0-24, 0=RESET):
+  Unknown Translation: 0x95E19112E9D418B2 - Role name for AnySim:
+  Unknown Translation: 0xFFBD2B7EFD2B9526 - Tuning Dialog...
+  Unknown Translation: 0xAA0A26FD64B3E0EF - Debugging makes the game slower. Logging to: {0.String}
+  Unknown Translation: 0xC4A347B51D4E99AB - Virtual Artisan Debugger Started
+  Unknown Translation: 0x32FCD3C12836107E - Virtual Artisan Debugger CANNOT be started
+  Unknown Translation: 0x0A91A20331620EE2 - Cannot create debug log
+  Unknown Translation: 0xFF0337D238E3C4F3 - Stop Debugger
+  Unknown Translation: 0x366BE336AB2F3F79 - Start Debugger
+  Unknown Translation: 0xDB46F9B52D54F022 - Please exit the game without saving, this error cannot be recovered from
+Test: SpanishStandard
+  Unknown Translation: 0x08DB496905F9BE86 - Any Sim
+  Unknown Translation: 0xEA8885044BDC06C2 - Put this to a community lot and a sim appears. CTRL+SHIFT+Click in Build/Buy mode to tune. By misukisu - Virtual Artisan.
+  Unknown Translation: 0x025CB75E1F10E6F3 - AnySim
+  Unknown Translation: 0xE91A29A37489C0D5 - Role Employee
+  Unknown Translation: 0xDAF63E675328095D - AnySim's Tuning
+  Unknown Translation: 0xC6D10C909533B184 - Anysim arrives at (0-24, 0=RESET):
+  Unknown Translation: 0x2D6BDF26452F4EF7 - Anysim leaves at (0-24, 0=RESET):
+  Unknown Translation: 0x95E19112E9D418B2 - Role name for AnySim:
+  Unknown Translation: 0xFFBD2B7EFD2B9526 - Tuning Dialog...
+  Unknown Translation: 0xAA0A26FD64B3E0EF - Debugging makes the game slower. Logging to: {0.String}
+  Unknown Translation: 0xC4A347B51D4E99AB - Virtual Artisan Debugger Started
+  Unknown Translation: 0x32FCD3C12836107E - Virtual Artisan Debugger CANNOT be started
+  Unknown Translation: 0x0A91A20331620EE2 - Cannot create debug log
+  Unknown Translation: 0xFF0337D238E3C4F3 - Stop Debugger
+  Unknown Translation: 0x366BE336AB2F3F79 - Start Debugger
+  Unknown Translation: 0xDB46F9B52D54F022 - Please exit the game without saving, this error cannot be recovered from
+Test: SpanishMexican
+  Unknown Translation: 0x08DB496905F9BE86 - Any Sim
+  Unknown Translation: 0xEA8885044BDC06C2 - Put this to a community lot and a sim appears. CTRL+SHIFT+Click in Build/Buy mode to tune. By misukisu - Virtual Artisan.
+  Unknown Translation: 0x025CB75E1F10E6F3 - AnySim
+  Unknown Translation: 0xE91A29A37489C0D5 - Role Employee
+  Unknown Translation: 0xDAF63E675328095D - AnySim's Tuning
+  Unknown Translation: 0xC6D10C909533B184 - Anysim arrives at (0-24, 0=RESET):
+  Unknown Translation: 0x2D6BDF26452F4EF7 - Anysim leaves at (0-24, 0=RESET):
+  Unknown Translation: 0x95E19112E9D418B2 - Role name for AnySim:
+  Unknown Translation: 0xFFBD2B7EFD2B9526 - Tuning Dialog...
+  Unknown Translation: 0xAA0A26FD64B3E0EF - Debugging makes the game slower. Logging to: {0.String}
+  Unknown Translation: 0xC4A347B51D4E99AB - Virtual Artisan Debugger Started
+  Unknown Translation: 0x32FCD3C12836107E - Virtual Artisan Debugger CANNOT be started
+  Unknown Translation: 0x0A91A20331620EE2 - Cannot create debug log
+  Unknown Translation: 0xFF0337D238E3C4F3 - Stop Debugger
+  Unknown Translation: 0x366BE336AB2F3F79 - Start Debugger
+  Unknown Translation: 0xDB46F9B52D54F022 - Please exit the game without saving, this error cannot be recovered from
+Test: Swedish
+  Unknown Translation: 0x08DB496905F9BE86 - Any Sim
+  Unknown Translation: 0xEA8885044BDC06C2 - Put this to a community lot and a sim appears. CTRL+SHIFT+Click in Build/Buy mode to tune. By misukisu - Virtual Artisan.
+  Unknown Translation: 0x025CB75E1F10E6F3 - AnySim
+  Unknown Translation: 0xE91A29A37489C0D5 - Role Employee
+  Unknown Translation: 0xDAF63E675328095D - AnySim's Tuning
+  Unknown Translation: 0xC6D10C909533B184 - Anysim arrives at (0-24, 0=RESET):
+  Unknown Translation: 0x2D6BDF26452F4EF7 - Anysim leaves at (0-24, 0=RESET):
+  Unknown Translation: 0x95E19112E9D418B2 - Role name for AnySim:
+  Unknown Translation: 0xFFBD2B7EFD2B9526 - Tuning Dialog...
+  Unknown Translation: 0xAA0A26FD64B3E0EF - Debugging makes the game slower. Logging to: {0.String}
+  Unknown Translation: 0xC4A347B51D4E99AB - Virtual Artisan Debugger Started
+  Unknown Translation: 0x32FCD3C12836107E - Virtual Artisan Debugger CANNOT be started
+  Unknown Translation: 0x0A91A20331620EE2 - Cannot create debug log
+  Unknown Translation: 0xFF0337D238E3C4F3 - Stop Debugger
+  Unknown Translation: 0x366BE336AB2F3F79 - Start Debugger
+  Unknown Translation: 0xDB46F9B52D54F022 - Please exit the game without saving, this error cannot be recovered from
+Test: Thai
+  Unknown Translation: 0x08DB496905F9BE86 - Any Sim
+  Unknown Translation: 0xEA8885044BDC06C2 - Put this to a community lot and a sim appears. CTRL+SHIFT+Click in Build/Buy mode to tune. By misukisu - Virtual Artisan.
+  Unknown Translation: 0x025CB75E1F10E6F3 - AnySim
+  Unknown Translation: 0xE91A29A37489C0D5 - Role Employee
+  Unknown Translation: 0xDAF63E675328095D - AnySim's Tuning
+  Unknown Translation: 0xC6D10C909533B184 - Anysim arrives at (0-24, 0=RESET):
+  Unknown Translation: 0x2D6BDF26452F4EF7 - Anysim leaves at (0-24, 0=RESET):
+  Unknown Translation: 0x95E19112E9D418B2 - Role name for AnySim:
+  Unknown Translation: 0xFFBD2B7EFD2B9526 - Tuning Dialog...
+  Unknown Translation: 0xAA0A26FD64B3E0EF - Debugging makes the game slower. Logging to: {0.String}
+  Unknown Translation: 0xC4A347B51D4E99AB - Virtual Artisan Debugger Started
+  Unknown Translation: 0x32FCD3C12836107E - Virtual Artisan Debugger CANNOT be started
+  Unknown Translation: 0x0A91A20331620EE2 - Cannot create debug log
+  Unknown Translation: 0xFF0337D238E3C4F3 - Stop Debugger
+  Unknown Translation: 0x366BE336AB2F3F79 - Start Debugger
+  Unknown Translation: 0xDB46F9B52D54F022 - Please exit the game without saving, this error cannot be recovered from
