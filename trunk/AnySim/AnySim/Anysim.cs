@@ -24,6 +24,8 @@ namespace Sims3.Gameplay.Roles.Misukisu
             }
         }
 
+        public Anysim() : base() { }
+
         public Anysim(RoleData data, SimDescription s, IRoleGiver roleGiver)
             : base(data, s, roleGiver)
         {
