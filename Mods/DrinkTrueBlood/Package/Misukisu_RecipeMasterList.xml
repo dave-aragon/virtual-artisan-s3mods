@@ -69,9 +69,6 @@
   <Is_Vegetarian>x</Is_Vegetarian>
   <Create_In_Fridge>FoodSnackTrueBlood</Create_In_Fridge>
   <Can_Make_Single>x</Can_Make_Single>
-  <Single_Full>plasmaPack#foodFull</Single_Full>
-  <Single_Half>plasmaPack#foodHalf</Single_Half>
-  <Single_Empty>plasmaPack#foodUsed</Single_Empty>
   <Utensil>spoon</Utensil>
  </Data>
 </MisukisuRecipeMasterList>
