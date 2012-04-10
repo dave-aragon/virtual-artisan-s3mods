@@ -21,7 +21,7 @@ namespace Misukisu.DrinkTrueBlood
             StartDebugLog(target);
         }
 
-        public void StartDebugLog(object target)
+        private void StartDebugLog(object target)
         {
             string result = "";
             try

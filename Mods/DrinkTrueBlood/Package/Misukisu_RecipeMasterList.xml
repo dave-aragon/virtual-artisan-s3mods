@@ -70,5 +70,7 @@
   <Create_In_Fridge>FoodSnackTrueBlood</Create_In_Fridge>
   <Can_Make_Single>x</Can_Make_Single>
   <Utensil>spoon</Utensil>
+  <RegisterCost>1</RegisterCost>
+  <VenueCost>1</VenueCost>
  </Data>
 </MisukisuRecipeMasterList>
