@@ -4,6 +4,9 @@ using Sims3.UI;
 using Sims3.Gameplay.Utilities;
 using System;
 using Sims3.Gameplay;
+using Sims3.Gameplay.Objects.Counters;
+using System.Collections.Generic;
+using Misukisu.Interactions;
 
 namespace Misukisu.DrinkTrueBlood
 {
@@ -12,20 +15,46 @@ namespace Misukisu.DrinkTrueBlood
         [TunableComment("Scripting Mod Instantiator, value does not matter, only its existence"), Tunable]
         protected static bool kInstantiator = false;
         private static RecipeReader instance = new RecipeReader();
-        private Debugger debugger;
+        //private Debugger debugger;
 
         public RecipeReader()
         {
-            debugger = new Debugger("RecipeReader");
+            //debugger = new Debugger("RecipeReader");
             //debugger.Debug(this, "Recipe reader instance created");
         }
 
         static RecipeReader()
         {
-            World.sOnWorldLoadFinishedEventHandler += new EventHandler(instance.ReadRecipe);
+
+            World.sOnWorldLoadFinishedEventHandler += new EventHandler(instance.ReadRecipeAndAddInteractions);
         }
 
-        public void ReadRecipe(object sender, EventArgs e)
+        public void ReadRecipeAndAddInteractions(object sender, EventArgs e)
+        {
+            try
+            {
+                ReadRecipe();
+                AddDrinkInteractionToProfessionalBars();
+            }
+            catch (Exception ex)
+            {
+                Debugger debugger = new Debugger("RecipeReader");
+                debugger.DebugError("RecipeReader", ex.Message, ex);
+                debugger.EndDebugLog();
+            }
+
+        }
+
+        private void AddDrinkInteractionToProfessionalBars()
+        {
+            List<BarProfessional> bars = new List<BarProfessional>(Sims3.Gameplay.Queries.GetObjects<BarProfessional>());
+            foreach (BarProfessional bar in bars)
+            {
+                bar.AddInteraction(OrderTrueBlood.Singleton);
+            }
+        }
+
+        public void ReadRecipe()
         {
             try
             {
@@ -42,7 +71,7 @@ namespace Misukisu.DrinkTrueBlood
                 }
                 //debugger.Debug(this, "Recipes loaded ");
                 //debugger.EndDebugLog();
-                TestStuff();
+                //TestStuff();
             }
             catch (Exception ex)
             {
@@ -50,52 +79,52 @@ namespace Misukisu.DrinkTrueBlood
             }
         }
 
-        
-        private void TestStuff()
-        {
-            Recipe recipe = Recipe.NameToRecipeHash["VampireJuice"];
-            debugger.Debug(this, "VAMPJUICE Object: " + recipe.ObjectToCreateInFridge + ", Code:" + recipe.CodeVersion.ToString());
-            ulong guid = NameGuidMap.GetGuidByName(recipe.ObjectToCreateInFridge);
-            if (guid == NameGuidMap.kInvalidNameGuid)
-            {
-                debugger.Debug(this, "VAMPJUICE GUID is null");
-            }
-            else
-            {
-                debugger.Debug(this, " VAMPJUICEGUID found: " + guid);
-            }
-            GlobalFunctions.CreateObjectOutOfWorld(recipe.ObjectToCreateInFridge, recipe.CodeVersion);
-            recipe = Recipe.NameToRecipeHash["TrueBlood"];
-            debugger.Debug(this, "TB Object: " + recipe.ObjectToCreateInFridge + ", Code:" + recipe.CodeVersion.ToString());
 
-             guid = NameGuidMap.GetGuidByName(recipe.ObjectToCreateInFridge);
-            if (guid == NameGuidMap.kInvalidNameGuid)
-            {
-                debugger.Debug(this, "GUID is null");
-            }
-            else
-            {
-                debugger.Debug(this, "GUID found");
-            }
+        //private void TestStuff()
+        //{
+        //    Recipe recipe = Recipe.NameToRecipeHash["VampireJuice"];
+        //    debugger.Debug(this, "VAMPJUICE Object: " + recipe.ObjectToCreateInFridge + ", Code:" + recipe.CodeVersion.ToString());
+        //    ulong guid = NameGuidMap.GetGuidByName(recipe.ObjectToCreateInFridge);
+        //    if (guid == NameGuidMap.kInvalidNameGuid)
+        //    {
+        //        debugger.Debug(this, "VAMPJUICE GUID is null");
+        //    }
+        //    else
+        //    {
+        //        debugger.Debug(this, " VAMPJUICEGUID found: " + guid);
+        //    }
+        //    GlobalFunctions.CreateObjectOutOfWorld(recipe.ObjectToCreateInFridge, recipe.CodeVersion);
+        //    recipe = Recipe.NameToRecipeHash["TrueBlood"];
+        //    debugger.Debug(this, "TB Object: " + recipe.ObjectToCreateInFridge + ", Code:" + recipe.CodeVersion.ToString());
 
-            ResourceKey key = GlobalFunctions.CreateProductKey(recipe.ObjectToCreateInFridge, recipe.CodeVersion);
-            if (key == null)
-            {
-                debugger.Debug(this, "Resource key is null");
-            }
-            else
-            {
-                debugger.Debug(this, "Resource key is " + key.InstanceId);
-            }
+        //     guid = NameGuidMap.GetGuidByName(recipe.ObjectToCreateInFridge);
+        //    if (guid == NameGuidMap.kInvalidNameGuid)
+        //    {
+        //        debugger.Debug(this, "GUID is null");
+        //    }
+        //    else
+        //    {
+        //        debugger.Debug(this, "GUID found");
+        //    }
 
-            try
-            {
-                GlobalFunctions.CreateObjectOutOfWorld(recipe.ObjectToCreateInFridge, recipe.CodeVersion);
-            }
-            finally
-            {
-                debugger.EndDebugLog();
-            }
-        }
+        //    ResourceKey key = GlobalFunctions.CreateProductKey(recipe.ObjectToCreateInFridge, recipe.CodeVersion);
+        //    if (key == null)
+        //    {
+        //        debugger.Debug(this, "Resource key is null");
+        //    }
+        //    else
+        //    {
+        //        debugger.Debug(this, "Resource key is " + key.InstanceId);
+        //    }
+
+        //    try
+        //    {
+        //        GlobalFunctions.CreateObjectOutOfWorld(recipe.ObjectToCreateInFridge, recipe.CodeVersion);
+        //    }
+        //    finally
+        //    {
+        //        debugger.EndDebugLog();
+        //    }
+        //}
     }
 }
