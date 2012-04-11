@@ -61,7 +61,7 @@
   <Recipe_Name>TrueBlood</Recipe_Name>
   <CodeVersion>EP3</CodeVersion>
   <Recipe_Description>TrueBloodDescription</Recipe_Description>
-  <Recipe_Class>SnackDefault</Recipe_Class>
+  <Recipe_Class>TrueBlood</Recipe_Class>
   <Level>0</Level>
   <Skill_Chunk>0</Skill_Chunk>
   <Learnable>False</Learnable>
@@ -69,6 +69,9 @@
   <Is_Vegetarian>x</Is_Vegetarian>
   <Create_In_Fridge>FoodSnackTrueBlood</Create_In_Fridge>
   <Can_Make_Single>x</Can_Make_Single>
+  <Single_Full>trueBloodBottle#foodFull</Single_Full>
+  <Single_Half>trueBloodBottle#foodHalf</Single_Half>
+  <Single_Empty>trueBloodBottle#foodUsed</Single_Empty>
   <Utensil>spoon</Utensil>
   <RegisterCost>1</RegisterCost>
   <VenueCost>1</VenueCost>
