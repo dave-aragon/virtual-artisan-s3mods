@@ -10,17 +10,40 @@ using Sims3.Gameplay.Objects.CookingObjects;
 using Sims3.Gameplay.Objects.Appliances;
 using Sims3.Gameplay.Actors;
 using Sims3.Gameplay.Objects.CookingObjects.Misukisu;
+using Sims3.Gameplay.ActorSystems;
 
 namespace Misukisu.DrinkTrueBlood
 {
-    public class TestStatus : ImmediateInteraction<Sim, TrueBlood>
+    public class TestStatus : Interaction<Sim, TrueBlood>
     {
         public static readonly InteractionDefinition Singleton = new Definition();
         public override bool Run()
         {
 
-            CheckRecipeStatus();
+            //CheckRecipeStatus();
+            MicrowaveBlood();
             return true;
+        }
+
+        private void MicrowaveBlood()
+        {
+            Recipe recipe = Recipe.NameToRecipeHash["TrueBlood"];
+            Target.CookingProcess = createCookingProcess(recipe);
+            Target.InitializeForRecipe(recipe);
+            CookingProcess.MoveToNextStep(Target, Actor);
+            CarrySystem.EnterWhileHolding(this.Actor, Target, false);
+            InteractionDefinition followup = (Target as IRemovableFromFridgeAsInitialRecipeStep).FollowupInteraction;
+            Debugger log = new Debugger("MicrowaveTest");
+            log.Debug(this,"Interaction is:  "+followup.GetType().FullName);
+
+            log.Debug(this,"Target Interaction test is: "+Target.CookingProcess.InteractionTest(Actor, Target));
+
+
+           log.Debug(this,"Interaction test is: "+ Microwave.InteractionTestForPutInMicrowave(Actor, Target));
+           log.Debug(this, "Trying to push item to micro: "+Microwave.InteractionBodyForPutInMicrowave(this));
+            //this.Actor.InteractionQueue.PushAsContinuation(followup, Target, true);
+             //log.Debug(this,"Action pushed to sim");
+            log.EndDebugLog();
         }
 
         private void CheckRecipeStatus()
@@ -30,7 +53,7 @@ namespace Misukisu.DrinkTrueBlood
             CookingProcessData data = recipe.CookingProcessData;
             log.Debug(this, "Cooking process is: " + data.ToString());
             log.Debug(this, "Micro usage is: " + data.UsesAMicrowave.ToString());
-
+            log.Debug(this, "Actor is: " + Actor.ToString());
 
             CookingProcess process = createCookingProcess(recipe);
             log.Debug(this, "This should show");
@@ -52,19 +75,21 @@ namespace Misukisu.DrinkTrueBlood
             CookingProcess process =
                 new CookingProcess(recipe, new List<Ingredient>(), null, Actor.LotCurrent, Recipe.MealDestination.SurfaceOrEat,
                     Recipe.MealQuantity.Single, Recipe.MealRepetition.MakeOne, "Have", new String[] { "Tadaa" },
-                    Target, base.Actor);
+                    Target, Actor);
             return process;
         }
 
-        private sealed class Definition : ActorlessInteractionDefinition<IActor, IGameObject, TestStatus>
+        private sealed class Definition : InteractionDefinition<Sim, TrueBlood, TestStatus>
         {
 
-            public override string GetInteractionName(IActor a, IGameObject target, InteractionObjectPair interaction)
+            public override string GetInteractionName(Sim a, TrueBlood target, InteractionObjectPair interaction)
             {
                 return "Check status";
             }
 
-            public override bool Test(IActor actor, IGameObject target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
+           
+
+            public override bool Test(Sim actor, TrueBlood target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
                 return !isAutonomous;
             }
