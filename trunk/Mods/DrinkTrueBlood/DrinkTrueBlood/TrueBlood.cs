@@ -10,10 +10,12 @@ using Sims3.Gameplay.Interactions;
 using Sims3.Gameplay.Objects.FoodObjects;
 using Sims3.Gameplay.ActorSystems;
 using Sims3.Gameplay.Actors;
+using Misukisu.Interactions;
+using Sims3.Gameplay.Interfaces;
 
 namespace Sims3.Gameplay.Objects.CookingObjects.Misukisu
 {
-    public class TrueBlood : SnackVampireJuice, IMicrowavable
+    public class TrueBlood : SnackVampireJuice, IMicrowavable, IRemovableFromFridgeAsInitialRecipeStep
     {
         //private Debugger debugger;
         public TrueBlood()
@@ -47,7 +49,8 @@ namespace Sims3.Gameplay.Objects.CookingObjects.Misukisu
         {
             get
             {
-                return "Plate";
+                return "BowlLarge";
+                //return "Plate";
             }
         }
     }

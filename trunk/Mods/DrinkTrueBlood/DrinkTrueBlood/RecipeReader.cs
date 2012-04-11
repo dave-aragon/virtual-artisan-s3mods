@@ -12,6 +12,7 @@ using Sims3.Gameplay.Objects.CookingObjects.Misukisu;
 using Sims3.Gameplay.Objects;
 using Sims3.Gameplay.Skills;
 using Sims3.Gameplay.Objects.CookingObjects;
+using Sims3.Gameplay.Objects.Appliances;
 
 namespace Misukisu.DrinkTrueBlood
 {
@@ -22,7 +23,7 @@ namespace Misukisu.DrinkTrueBlood
         [TunableComment("Scripting Mod Instantiator, value does not matter, only its existence"), Tunable]
         protected static bool kInstantiator = false;
         private static RecipeReader instance = new RecipeReader();
-        private Debugger debugger;
+        //private Debugger debugger;
 
         public RecipeReader()
         {
@@ -49,6 +50,7 @@ namespace Misukisu.DrinkTrueBlood
             {
                 ReadRecipe();
                 AddOrderInteractionToProfessionalBars();
+                AddWarmupInteractionToMicrowaves();
             }
             catch (Exception ex)
             {
@@ -59,6 +61,8 @@ namespace Misukisu.DrinkTrueBlood
 
         }
 
+        
+
         protected ListenerAction OnObjectBought(Event e)
         {
             BarProfessional bar = e.TargetObject as BarProfessional;
@@ -66,6 +70,13 @@ namespace Misukisu.DrinkTrueBlood
             if (bar != null)
             {
                 AddOrderInteractionToBar(bar);
+            }
+
+            Microwave micro = e.TargetObject as Microwave;
+
+            if (micro != null)
+            {
+                AddWarmupInteractionToMicrowave(micro);
             }
 
             return ListenerAction.Keep;
@@ -79,6 +90,20 @@ namespace Misukisu.DrinkTrueBlood
             {
                 AddOrderInteractionToBar(bar);
             }
+        }
+
+        private void AddWarmupInteractionToMicrowaves()
+        {
+            List<Microwave> micros = new List<Microwave>(Sims3.Gameplay.Queries.GetObjects<Microwave>());
+            foreach (Microwave micro in micros)
+            {
+                AddWarmupInteractionToMicrowave(micro);
+            }
+        }
+
+        private void AddWarmupInteractionToMicrowave(Microwave micro)
+        {
+            micro.AddInteraction(MicrowaveBlood.Singleton);
         }
 
         private static void AddOrderInteractionToBar(BarProfessional bar)
