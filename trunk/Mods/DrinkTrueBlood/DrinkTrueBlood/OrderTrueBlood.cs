@@ -16,6 +16,8 @@ using Sims3.Gameplay.Objects;
 using Sims3.Gameplay.ActorSystems;
 using Sims3.Gameplay.Objects.CookingObjects.Misukisu;
 using Sims3.Gameplay.Core;
+using Sims3.Gameplay.Objects.FoodObjects;
+using Sims3.Gameplay;
 
 
 namespace Misukisu.Interactions
@@ -31,7 +33,7 @@ namespace Misukisu.Interactions
 
         public override string GetInteractionName()
         {
-            return "Order Tru:Blood";
+            return "Order Tru Blood";
         }
 
         public override bool RunBehavior()
@@ -164,8 +166,7 @@ namespace Misukisu.Interactions
         {
             public override string GetInteractionName(Sim actor, BarProfessional target, InteractionObjectPair iop)
             {
-
-                return "Tru:Blood (§" + Bartending.GetCostForDrink(DrinkDescription, target.LotCurrent.GetMetaAutonomyType) + ")";
+                return "Tru Blood (§" + Bartending.GetCostForDrink(DrinkDescription, target.LotCurrent.GetMetaAutonomyType) + ")";
             }
             public override string[] GetPath(bool isFemale)
             {
@@ -202,7 +203,7 @@ namespace Misukisu.Interactions
                     {
                         return false;
                     }
-                   
+
                 }
                 if (DrinkDescription != null)
                 {
@@ -213,6 +214,33 @@ namespace Misukisu.Interactions
                         return false;
                     }
                 }
+                return true;
+            }
+        }
+    }
+
+    class ServeTrueBlood : BarProfessional.BartenderInteraction
+    {
+        public static readonly InteractionDefinition Singleton = new Definition();
+
+        public override string GetInteractionName()
+        {
+            return "Serve Tru Blood";
+        }
+
+        public override bool RunMakeBehavior()
+        {
+            Recipe recipe = Recipe.NameToRecipeHash["TrueBlood"];
+            TrueBlood tb = GlobalFunctions.CreateObjectOutOfWorld(recipe.ObjectToCreateInFridge, recipe.CodeVersion) as TrueBlood;
+            tb.ParentToSlot(this.Actor, Sim.ContainmentSlots.RightHand);
+            CarrySystem.EnterWhileHolding(this.Actor, tb);
+            return true;
+        }
+
+        public class Definition : InteractionDefinition<Sim, BarProfessional, ServeTrueBlood>
+        {
+            public override bool Test(Sim actor, BarProfessional target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
+            {
                 return true;
             }
         }

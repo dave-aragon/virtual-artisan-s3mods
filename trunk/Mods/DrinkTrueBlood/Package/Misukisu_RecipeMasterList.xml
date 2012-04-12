@@ -61,7 +61,7 @@
   <Recipe_Name>TrueBlood</Recipe_Name>
   <CodeVersion>EP3</CodeVersion>
   <Recipe_Description>TrueBloodDescription</Recipe_Description>
-  <Recipe_Class>TrueBlood</Recipe_Class>
+  <Recipe_Class>SnackDefault</Recipe_Class>
   <Level>0</Level>
   <Skill_Chunk>0</Skill_Chunk>
   <Learnable>False</Learnable>

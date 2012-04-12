@@ -37,8 +37,6 @@
     <Compile Include="OrderTrueBlood.cs" />
     <Compile Include="RecipeReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServeTrueBlood.cs" />
-    <Compile Include="TestStatus.cs" />
     <Compile Include="TrueBlood.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -12,20 +12,16 @@ using Sims3.Gameplay.ActorSystems;
 using Sims3.Gameplay.Actors;
 using Misukisu.Interactions;
 using Sims3.Gameplay.Interfaces;
+using Sims3.Gameplay.EventSystem;
 
 namespace Sims3.Gameplay.Objects.CookingObjects.Misukisu
 {
     public class TrueBlood : SnackVampireJuice, IMicrowavable, IRemovableFromFridgeAsInitialRecipeStep
     {
-        //private Debugger debugger;
         public TrueBlood()
             : base()
         {
             RecipeReader.InitTrueBloodInstance(this);
-            //debugger = new Debugger(this);
-            //debugger.Debug(this, "Instance of true blood created");
-
-            //debugger.EndDebugLog();
         }
 
         
@@ -34,7 +30,6 @@ namespace Sims3.Gameplay.Objects.CookingObjects.Misukisu
         {
             base.OnStartup();
             base.AddInteraction(Snack.Snack_Microwave.Singleton);
-            AddInteraction(TestStatus.Singleton);
         }
 
         public override bool CanBeCleanedUp
@@ -50,8 +45,9 @@ namespace Sims3.Gameplay.Objects.CookingObjects.Misukisu
             get
             {
                 return "BowlLarge";
-                //return "Plate";
             }
         }
+
+       
     }
 }
