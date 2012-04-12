@@ -16,36 +16,54 @@ using Sims3.Gameplay.Abstracts;
 using Sims3.Gameplay.ActorSystems;
 using Sims3.Gameplay.Core;
 using Sims3.Gameplay.Socializing;
+using Sims3.Gameplay.Objects.Counters;
+using Sims3.Gameplay.ObjectComponents;
+using Sims3.Gameplay.Skills;
+using Sims3.Gameplay.TuningValues;
+using Sims3.Gameplay.Objects.Seating;
+using Sims3.SimIFace.Enums;
 
 namespace Misukisu.Interactions
 {
-    public class MicrowaveBlood : Interaction<Sim, Microwave>
+    public class WarmUpBloodInMicrowave : Interaction<Sim, Microwave>
     {
-        public class Definition : InteractionDefinition<Sim, Microwave, MicrowaveBlood>
+
+        public override string GetInteractionName()
+        {
+            return "Have Tru Blood";
+        }
+
+        public class Definition : InteractionDefinition<Sim, Microwave, WarmUpBloodInMicrowave>
         {
             public override string GetInteractionName(Sim a, Microwave target, InteractionObjectPair interaction)
             {
-                return "Warm up Tru:Blood";
+                return "Tru Blood";
+            }
+
+            public override string[] GetPath(bool isFemale)
+            {
+                string[] menuPath = new string[]
+				{
+					Food.GetString(Food.StringIndices.HaveSnack) + Localization.Ellipsis
+				};
+                return menuPath;
             }
 
             public override bool Test(Sim a, Microwave target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
-                return true;
-                //return Microwave.InteractionTestForPutInMicrowave(a, target);
+                return !target.InUse && target.Parent is Counter;
             }
         }
         public static InteractionDefinition Singleton = new Definition();
         public override bool Run()
         {
-            // return Microwave.InteractionBodyForPutInMicrowave(this);
-
             Fridge fridge = GlobalFunctions.GetClosestObject<Fridge>(Actor, false, true, null, null);
             if (fridge == null)
             {
                 return false;
             }
             Actor.InteractionQueue.PushAsContinuation(TakeBloodFromFridge.Singleton, fridge, true);
-           
+
             return true;
 
         }
@@ -55,6 +73,12 @@ namespace Misukisu.Interactions
     {
         public ImpassableRegion mImpassableRegion = new ImpassableRegion();
         public static InteractionDefinition Singleton = new Definition();
+
+        public override string GetInteractionName()
+        {
+            return "Have Tru Blood";
+        }
+
         public class Definition : InteractionDefinition<Sim, Fridge, TakeBloodFromFridge>
         {
             public override bool Test(Sim actor, Fridge target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
@@ -69,6 +93,19 @@ namespace Misukisu.Interactions
             {
                 return Recipe.NameToRecipeHash["TrueBlood"];
             }
+        }
+
+        public override void CleanupAfterExitReason()
+        {
+            if (this.Actor.IsHoldingAnything())
+            {
+                if (this.Actor.CarryStateMachine == null)
+                {
+                    CarrySystem.EnterWhileHolding(this.Actor, this.Actor.GetObjectInRightHand() as ICarryable);
+                }
+                Food.PutHeldObjectDownOnCounterTableOrFloor(this.Actor, SurfaceType.Normal);
+            }
+            base.CleanupAfterExitReason();
         }
 
         public override void Cleanup()
@@ -103,23 +140,28 @@ namespace Misukisu.Interactions
             if (this.ChosenRecipe.UseUpIngredientsFrom(this.Actor, ref ingredientsUsed, Recipe.MealQuantity.Single) || this.Actor.IsNPC)
             {
                 Fridge.EnterStateMachine(this);
-                IRemovableFromFridgeAsInitialRecipeStep removableFromFridgeAsInitialRecipeStep = GlobalFunctions.CreateObjectOutOfWorld(this.ChosenRecipe.ObjectToCreateInFridge, this.ChosenRecipe.CodeVersion) as IRemovableFromFridgeAsInitialRecipeStep;
-                GameObject gameObject = removableFromFridgeAsInitialRecipeStep as GameObject;
+                TrueBlood trueBlood = GlobalFunctions.CreateObjectOutOfWorld(this.ChosenRecipe.ObjectToCreateInFridge, this.ChosenRecipe.CodeVersion) as TrueBlood;
+                GameObject gameObject = trueBlood as GameObject;
                 gameObject.AddToUseList(this.Actor);
                 try
                 {
                     this.Target.PutOnFridgeShelf(gameObject);
-                    removableFromFridgeAsInitialRecipeStep.InitializeForRecipe(this.ChosenRecipe);
-                    base.SetActor(removableFromFridgeAsInitialRecipeStep.ActorNameForFridge, gameObject);
+                    trueBlood.InitializeForRecipe(this.ChosenRecipe);
+                    Recipe.MealDestination destination = Recipe.MealDestination.SurfaceOrEat;
+                    CookingProcess process = new CookingProcess(ChosenRecipe, new List<Ingredient>(), Target, Actor.LotCurrent, destination,
+                         Recipe.MealQuantity.Single, Recipe.MealRepetition.MakeOne, "Tru Blood", new String[] { }, trueBlood, Actor, false);
+                    trueBlood.CookingProcess = process;
+                    CookingProcess.MoveToNextStep(trueBlood, Actor);
+                    base.SetActor(trueBlood.ActorNameForFridge, gameObject);
 
-                    base.AnimateSim("Remove - " + removableFromFridgeAsInitialRecipeStep.ActorNameForFridge);
+                    base.AnimateSim("Remove - " + trueBlood.ActorNameForFridge);
                 }
                 catch
                 {
                     gameObject.Destroy();
                     throw;
                 }
-                CarrySystem.EnterWhileHolding(this.Actor, removableFromFridgeAsInitialRecipeStep, false);
+                CarrySystem.EnterWhileHolding(this.Actor, trueBlood, false);
                 if (this.CheckForCancelAndCleanup())
                 {
                     return false;
@@ -152,30 +194,185 @@ namespace Misukisu.Interactions
             {
                 public override bool Test(Sim a, TrueBlood target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
                 {
-                    return true;
+                    return target.CookingProcess.InteractionTest(a, target);
                 }
             }
             public static InteractionDefinition Singleton = new Definition();
             public override bool Run()
             {
-                // return Microwave.InteractionBodyForPutInMicrowave(this);
+                if (this.CheckForCancelAndCleanup())
+                {
+                    return false;
+                }
 
-                Fridge fridge = GlobalFunctions.GetClosestObject<Fridge>(Actor, false, true, null, null);
-                if (fridge == null)
+                Microwave microwave = GlobalFunctions.GetClosestObject<Microwave>(Actor, false, true, null, null);
+                if (microwave == null)
                 {
                     return false;
                 }
                 if (Target.Parent == Actor)
                 {
-                    if (!Microwave.PutInMicrowave(this))
+                    if (microwave.RouteToMicrowave(this))
+                    {
+                        string actorNameForMicrowave = (Target as IMicrowavable).ActorNameForMicrowave;
+                        microwave.AddToUseList(Actor);
+                        try
+                        {
+                            microwave.SimStateMachineClient.SetActor(actorNameForMicrowave, Target);
+                            microwave.SimStateMachineClient.SetActor("x", Actor);
+                            microwave.SimStateMachineClient.AddOneShotScriptEventHandler(1001u, new SacsEventHandler(microwave.StartLoopSoundCallback));
+                            microwave.SimStateMachineClient.EnterState("x", "Enter - Holding " + actorNameForMicrowave);
+                            microwave.SimStateMachineClient.RequestState("x", "Start Microwave");
+                            microwave.MicrowaveSelfStateMachineClient.EnterState("Microwave", "Enter");
+                            microwave.MicrowaveSelfStateMachineClient.RequestState("Microwave", "Loop - Cook");
+                            microwave.On = true;
+                            microwave.AddCookingAlarm((Target as IPartOfCookingProcess).CookingProcess.CookTimeLeftMinutes / microwave.CookTimeSpeedMultiplier);
+                            microwave.SimStateMachineClient.RequestState("x", "Exit - Hands Empty");
+                        }
+                        finally
+                        {
+                            microwave.RemoveFromUseList(Actor);
+                        }
+                        if (Actor.HasExitReason(ExitReason.Canceled))
+                        {
+                            return false;
+                        }
+                        Actor.InteractionQueue.PushAsContinuation(TakeBloodFromMicrowave.Singleton, microwave, true);
+                    }
+                    else
                     {
                         return false;
                     }
+                }
+                else
+                {
+                    return false;
                 }
 
                 return true;
 
             }
+        }
+    }
+
+    public class TakeBloodFromMicrowave : Interaction<Sim, Microwave>
+    {
+        public class Definition : InteractionDefinition<Sim, Microwave, TakeBloodFromMicrowave>
+        {
+            public override bool Test(Sim a, Microwave target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
+            {
+                return !target.InUse && target.Parent is Counter && target.GetContainedObject(Microwave.kContainmentSlot) is TrueBlood;
+            }
+        }
+
+        public override string GetInteractionName()
+        {
+            return "Warm Tru Blood in Microwave";
+        }
+
+        public static InteractionDefinition Singleton = new Definition();
+        public override bool Run()
+        {
+            if (this.CheckForCancelAndCleanup())
+            {
+                return false;
+            }
+            if (!this.Target.RouteToMicrowave(this, false))
+            {
+                return false;
+            }
+            if (this.CheckForCancelAndCleanup())
+            {
+                return false;
+            }
+            TrueBlood trueBlood = this.Target.GetContainedObject(Microwave.kContainmentSlot) as TrueBlood;
+            if (trueBlood == null || trueBlood.CookingProcess == null)
+            {
+                return false;
+            }
+            base.StandardEntry();
+
+            this.Target.SimStateMachineClient.EnterState("x", "Enter - Hands Empty");
+            this.Target.SimStateMachineClient.SetActor("x", this.Actor);
+            this.Target.SimStateMachineClient.SetActor("BowlLarge", trueBlood);
+            bool flag = this.Actor.HasTrait(TraitNames.NaturalCook) &&
+                this.Actor.SkillManager.GetSkillLevel(SkillNames.Cooking) >= TraitTuning.NaturalCookTraitLevelToEnhanceFood
+                && RandomUtil.RandomChance01(TraitTuning.NaturalCookTraitChanceToPlayEnhanceAnimation);
+            this.Target.SimStateMachineClient.SetParameter("isNaturalCook", flag);
+            if (flag)
+            {
+                trueBlood.CookingProcess.NaturalCookEnhanced = true;
+            }
+            if (this.Actor.HasTrait(TraitNames.BornToCook))
+            {
+                trueBlood.CookingProcess.BornToCookEnhanced = true;
+            }
+
+            this.MicrowaveCookLoop(trueBlood);
+
+            if (trueBlood.CookingProcess.IsDoneCooking)
+            {
+                this.CreateFinalCookingObjectAndExit(trueBlood);
+            }
+            else
+            {
+                this.Target.SimStateMachineClient.RequestState("x", "Exit - Hands Empty");
+            }
+            if (this.CheckForCancelAndCleanup())
+            {
+                return false;
+            }
+            Counter counter = this.Target.Parent as Counter;
+            if (counter != null && counter.IsCleanable)
+            {
+                counter.Cleanable.DirtyInc(this.Actor);
+            }
+            base.StandardExit();
+            return true;
+
+        }
+
+        public void MicrowaveCookLoop(IPartOfCookingProcess cookingObject)
+        {
+            this.Target.SimStateMachineClient.RequestState("x", "Loop");
+            float nukeTime = (float)((int)cookingObject.CookingProcess.CookTimeLeftMinutes) / this.Target.CookTimeSpeedMultiplier;
+            this.Target.CheckForAlarm(this.Actor, nukeTime);
+            this.DoLoop(ExitReason.Default, delegate(StateMachineClient smc, InteractionInstance.LoopData ld)
+            {
+                if (cookingObject.CookingProcess.IsDoneCooking)
+                {
+                    this.Actor.AddExitReason(ExitReason.Finished);
+                }
+            }
+            , null);
+        }
+
+        public bool CreateFinalCookingObjectAndExit(TrueBlood trueBlood)
+        {
+            this.Target.SimStateMachineClient.SetActor((trueBlood as IMicrowavable).ActorNameForMicrowave, trueBlood);
+            this.Target.SimStateMachineClient.RequestState("x", "Exit - " + "BowlLarge");
+            CarrySystem.EnterWhileHolding(this.Actor, trueBlood as ICarryable);
+            if (this.CheckForCancelAndCleanup())
+            {
+                return false;
+            }
+            trueBlood.PushEatSnack(this.Actor);
+
+            return true;
+        }
+
+
+        public override void CleanupAfterExitReason()
+        {
+            if (this.Actor.IsHoldingAnything())
+            {
+                if (this.Actor.CarryStateMachine == null)
+                {
+                    CarrySystem.EnterWhileHolding(this.Actor, this.Actor.GetObjectInRightHand() as ICarryable);
+                }
+                Food.PutHeldObjectDownOnCounterTableOrFloor(this.Actor, SurfaceType.Normal);
+            }
+            base.CleanupAfterExitReason();
         }
     }
 

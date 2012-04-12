@@ -23,12 +23,9 @@ namespace Misukisu.DrinkTrueBlood
         [TunableComment("Scripting Mod Instantiator, value does not matter, only its existence"), Tunable]
         protected static bool kInstantiator = false;
         private static RecipeReader instance = new RecipeReader();
-        //private Debugger debugger;
 
         public RecipeReader()
         {
-            //debugger = new Debugger("RecipeReader");
-            //debugger.Debug(this, "Recipe reader instance created");
         }
 
         static RecipeReader()
@@ -103,7 +100,7 @@ namespace Misukisu.DrinkTrueBlood
 
         private void AddWarmupInteractionToMicrowave(Microwave micro)
         {
-            micro.AddInteraction(MicrowaveBlood.Singleton);
+            micro.AddInteraction(WarmUpBloodInMicrowave.Singleton);
         }
 
         private static void AddOrderInteractionToBar(BarProfessional bar)
