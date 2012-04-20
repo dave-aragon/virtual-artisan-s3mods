@@ -5,8 +5,10 @@ using Sims3.Gameplay.Interactions;
 using Sims3.Gameplay.Actors;
 using Sims3.Gameplay.Objects.CmoPoseBox;
 using Sims3.Gameplay.Autonomy;
+using Sims3.SimIFace;
+using Misukisu.PosePlayerAddon;
 
-namespace Misukisu.SimAddonToPosePlayer
+namespace Misukisu.PosePlayerAddon
 {
     class StopPosing : ImmediateInteraction<Sim, Sim>
     {
@@ -14,8 +16,7 @@ namespace Misukisu.SimAddonToPosePlayer
 
         public override bool Run()
         {
-            Target.AddExitReason(ExitReason.UserCanceled);
-            Target.InteractionQueue.CancelAllInteractionsByType(PlayPoseFromList.Singleton);
+            PoseManager.CancelAllPosingActions(Target);
             return true;
         }
 
@@ -24,20 +25,15 @@ namespace Misukisu.SimAddonToPosePlayer
         {
             public override bool Test(Sim actor, Sim target, bool isAutonomous, ref Sims3.SimIFace.GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
-
-                if (target.InteractionQueue.GetCurrentInteraction() is PlayPoseFromList)
-                {
-                    return true;
-                }
-
-                return false;
+                return PoseManager.IsPosing(target) && !isAutonomous;
             }
 
             public override string[] GetPath(bool isFemale)
             {
-                return new String[] { "Posing..." };
+                return PoseManager.GetPoseMenuPath();
             }
 
+           
             public override string GetInteractionName(Sim actor, Sim target, InteractionObjectPair iop)
             {
                 return "Stop Posing";
