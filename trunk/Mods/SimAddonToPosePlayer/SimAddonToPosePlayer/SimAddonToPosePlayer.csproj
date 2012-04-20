@@ -8,7 +8,7 @@
     <ProjectGuid>{9AB5AE0A-381A-4747-B77D-AEAB3213741D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SimAddonToPosePlayer</RootNamespace>
+    <RootNamespace>PosePlayerAddon</RootNamespace>
     <AssemblyName>SimAddonToPosePlayer</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -34,11 +34,15 @@
   <ItemGroup>
     <Compile Include="AddonLoader.cs" />
     <Compile Include="Debugger.cs" />
-    <Compile Include="PoseInteraction.cs" />
+    <Compile Include="MoveSim.cs" />
+    <Compile Include="PlayPoseFromList.cs" />
     <Compile Include="PoseManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SnapshotPose.cs" />
+    <Compile Include="PutPoseToList.cs" />
+    <Compile Include="QuickPose.cs" />
+    <Compile Include="QuickPoseFromMyList.cs" />
     <Compile Include="StopPosing.cs" />
+    <Compile Include="TakeSamePoseAs.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="poser">
