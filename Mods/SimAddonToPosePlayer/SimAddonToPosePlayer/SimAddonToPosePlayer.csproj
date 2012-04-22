@@ -33,9 +33,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AddonLoader.cs" />
-    <Compile Include="Debugger.cs" />
-    <Compile Include="MoveSim.cs" />
+    <Compile Include="LocationVectors.cs" />
+    <Compile Include="MoveObject.cs" />
+    <Compile Include="MoveInteractions.cs" />
+    <Compile Include="MoveThings.cs" />
     <Compile Include="PlayPoseFromList.cs" />
+    <Compile Include="PlayPoseFromMyList.cs" />
     <Compile Include="PoseManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PutPoseToList.cs" />
