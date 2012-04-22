@@ -21,7 +21,7 @@ namespace Misukisu.PosePlayerAddon
         public override bool Run()
         {
             PoseManager.CancelAllPosingActions(Target);
-            Target.InteractionQueue.AddAfterCheckingForDuplicates(LinkedInteraction.CreateInstance(
+            Target.InteractionQueue.AddNext(LinkedInteraction.CreateInstance(
                 PoseManager.PoseBox, Target, new InteractionPriority(InteractionPriorityLevel.UserDirected), false, true));
             return true;
         }
