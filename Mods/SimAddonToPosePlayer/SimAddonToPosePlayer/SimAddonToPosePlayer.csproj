@@ -44,6 +44,7 @@
     <Compile Include="PutPoseToList.cs" />
     <Compile Include="QuickPose.cs" />
     <Compile Include="QuickPoseFromMyList.cs" />
+    <Compile Include="RepeatPoseWithLookAt.cs" />
     <Compile Include="StopPosing.cs" />
     <Compile Include="TakeSamePoseAs.cs" />
   </ItemGroup>

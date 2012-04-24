@@ -17,7 +17,7 @@ namespace Misukisu.PosePlayerAddon
 
         public static string[] GetTiltMenuPath()
         {
-            return new String[] { "Rotate And Tilt..." };
+            return new String[] { "Tilt And Turn..." };
         }
 
         internal static float AskUserInput(string title, string labelText)
@@ -92,6 +92,11 @@ namespace Misukisu.PosePlayerAddon
         {
             Vector3 newForward = new Vector3(-sim.ForwardVector.x, sim.ForwardVector.y, -sim.ForwardVector.z);
             sim.SetForward(newForward);
+        }
+
+        internal static void Turn(GameObject sim, float angle)
+        {
+            sim.SetRotation((float)(angle * Math.PI / 180));
         }
 
         internal static void Tilt(GameObject sim, float x, float y, float z)

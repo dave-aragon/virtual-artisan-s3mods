@@ -15,7 +15,7 @@ namespace Misukisu.PosePlayerAddon
         public override bool Run()
         {
             PoseManager.CancelAllPosingActions(Target);
-            Target.InteractionQueue.AddAfterCheckingForDuplicates(TakeSamePoseAs.Singleton.CreateInstance(
+            Target.InteractionQueue.AddNext(TakeSamePoseAs.Singleton.CreateInstance(
                 PoseManager.PoseBox, Target, new InteractionPriority(InteractionPriorityLevel.UserDirected), false, true));
             return true;
         }
@@ -24,6 +24,11 @@ namespace Misukisu.PosePlayerAddon
         {
             public override bool Test(Sim actor, Sim target, bool isAutonomous, ref Sims3.SimIFace.GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
+                if (!PoseManager.IsPoseBoxAvailable())
+                {
+                    return false;
+                }
+
                 Sim poser = PoseManager.LastPoser;
                 if (poser == null)
                 {
@@ -83,6 +88,7 @@ namespace Misukisu.PosePlayerAddon
             {
                 return false;
             }
+            
             this.Actor.OverlayComponent.UpdateInteractionFreeParts(AwarenessLevel.OverlayNone);
             this.Actor.LookAtManager.DisableLookAts();
             PoseManager.SetCurrentPose(Actor, poseData);

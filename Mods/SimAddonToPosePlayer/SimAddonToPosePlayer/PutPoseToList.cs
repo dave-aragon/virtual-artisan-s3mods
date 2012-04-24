@@ -25,7 +25,7 @@ namespace Misukisu.PosePlayerAddon
 
             public override bool Test(Sim a, Sim target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
-                return PoseManager.IsPosing(target) && !isAutonomous;
+                return PoseManager.IsPosing(target) && !isAutonomous && PoseManager.IsPoseBoxAvailable();
             }
         }
         public static InteractionDefinition Singleton = new Definition();
