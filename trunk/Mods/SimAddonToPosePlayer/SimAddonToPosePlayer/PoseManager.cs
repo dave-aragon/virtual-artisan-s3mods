@@ -9,6 +9,7 @@ using Sims3.Gameplay.Interactions;
 using Sims3.Gameplay.Interfaces;
 using Sims3.Gameplay.Abstracts;
 using Sims3.SimIFace;
+using Sims3.Gameplay.EventSystem;
 
 namespace Misukisu.PosePlayerAddon
 {
@@ -24,28 +25,43 @@ namespace Misukisu.PosePlayerAddon
             : base()
         {
             PoseBox = FindPoseBox();
+            EventTracker.AddListener(EventTypeId.kSimInstantiated, new ProcessEventDelegate(NewSimIsHere));
 
             List<SimDescription> sims = Household.AllSimsLivingInWorld();
             foreach (SimDescription sim in sims)
             {
                 Sim aSim = sim.CreatedSim;
-                if (aSim != null)
-                {
-                    aSim.AddInteraction(StartPoseFromList.Singleton);
-                    aSim.AddInteraction(StartPosingFromMyList.Singleton);
-                    aSim.AddInteraction(StopPosing.Singleton);
-                    aSim.AddInteraction(StartQuickPosing.Singleton);
-                    aSim.AddInteraction(StartQuickPosingFromList.Singleton);
-                    aSim.AddInteraction(StartTakingSamePoseAs.Singleton);
-                    aSim.AddInteraction(PutPoseToList.Singleton);
-                    aSim.AddInteraction(RemovePoseFromList.Singleton);
-                    aSim.AddInteraction(MoveObject.Singleton);
-                    aSim.AddInteraction(StopMovingObjects.Singleton);
-
-                    AddMoveInteractions(aSim);
-                }
+                AddSimInteractions(aSim);
             }
 
+        }
+
+        public ListenerAction NewSimIsHere(Event e)
+        {
+            Sim sim = e.TargetObject as Sim;
+            AddSimInteractions(sim);
+            return ListenerAction.Keep;
+        }
+
+        private static void AddSimInteractions(Sim aSim)
+        {
+            if (aSim != null)
+            {
+                aSim.AddInteraction(StartPoseFromList.Singleton);
+                aSim.AddInteraction(StartPosingFromMyList.Singleton);
+                aSim.AddInteraction(StopPosing.Singleton);
+                aSim.AddInteraction(ReleaseAllPosingSims.Singleton);
+                aSim.AddInteraction(StartQuickPosing.Singleton);
+                aSim.AddInteraction(StartQuickPosingFromList.Singleton);
+                aSim.AddInteraction(StartTakingSamePoseAs.Singleton);
+                aSim.AddInteraction(PutPoseToList.Singleton);
+                aSim.AddInteraction(RemovePoseFromList.Singleton);
+                aSim.AddInteraction(MoveObject.Singleton);
+                aSim.AddInteraction(PoseLookingAt.Singleton);
+                aSim.AddInteraction(StopMovingObjects.Singleton);
+
+                AddMoveInteractions(aSim);
+            }
         }
 
         public static void AddMoveInteractions(GameObject gameObject)
@@ -76,7 +92,10 @@ namespace Misukisu.PosePlayerAddon
             gameObject.AddInteraction(MoveForward.Singleton);
             gameObject.AddInteraction(MoveForwardUserDefined.Singleton);
             gameObject.AddInteraction(MoveRight.Singleton);
+            gameObject.AddInteraction(MoveRightUserDefined.Singleton);
             gameObject.AddInteraction(MoveLeft.Singleton);
+            gameObject.AddInteraction(MoveLeftUserDefined.Singleton);
+            gameObject.AddInteraction(TurnAtAngle.Singleton);
         }
 
         internal static void RestoreAllMovedObjects()
@@ -104,8 +123,9 @@ namespace Misukisu.PosePlayerAddon
                 MovedObjects.Remove(gameObject);
             }
             gameObject.RemoveInteractionByType(StopMovingMe.Singleton);
-            
+
             gameObject.RemoveInteractionByType(TurnLeft.Singleton);
+            gameObject.RemoveInteractionByType(TurnAtAngle.Singleton);
             gameObject.RemoveInteractionByType(TurnRight.Singleton);
             gameObject.RemoveInteractionByType(TurnAround.Singleton);
             gameObject.RemoveInteractionByType(TiltFaceUp.Singleton);
@@ -131,10 +151,16 @@ namespace Misukisu.PosePlayerAddon
 
         public static bool IsPoseBoxAvailable()
         {
+            if (PoseBox != null && PoseBox.HasBeenDestroyed)
+            {
+                PoseBox = null;
+            }
+
             if (PoseManager.PoseBox == null)
             {
                 PoseManager.FindPoseBox();
             }
+            
             return (PoseManager.PoseBox != null);
         }
 
@@ -195,12 +221,25 @@ namespace Misukisu.PosePlayerAddon
 
         public static void CancelAllPosingActions(Sim Target)
         {
+            Target.LookAtManager.ClearAllLookAts(true);
             Target.AddExitReason(ExitReason.UserCanceled);
             Target.InteractionQueue.CancelAllInteractionsByType(PlayPoseFromList.Singleton);
             Target.InteractionQueue.CancelAllInteractionsByType(PoseFromMyList.Singleton);
             Target.InteractionQueue.CancelAllInteractionsByType(TakeSamePoseAs.Singleton);
             Target.InteractionQueue.CancelAllInteractionsByType(QuickPose.Singleton);
             Target.InteractionQueue.CancelAllInteractionsByType(QuickPoseFromMyList.Singleton);
+            Target.InteractionQueue.CancelAllInteractionsByType(RepeatPoseWithLookAt.Singleton);
+
+        }
+
+        internal static void ReleaseAllPosers()
+        {
+            List<Sim> keys = new List<Sim>(CurrentPoses.Keys);
+            foreach (Sim key in keys)
+            {
+                CancelAllPosingActions(key);
+                SimStoppedPosing(key);
+            }
         }
 
         public static bool IsPosing(GameObject gameObject)
@@ -213,7 +252,9 @@ namespace Misukisu.PosePlayerAddon
                     || currentAction is QuickPose
                     || currentAction is QuickPoseFromMyList
                     || currentAction is TakeSamePoseAs
-                    || currentAction is PoseFromMyList)
+                    || currentAction is PoseFromMyList
+                    || currentAction is RepeatPoseWithLookAt
+                   )
                 {
                     return true;
                 }
@@ -230,6 +271,8 @@ namespace Misukisu.PosePlayerAddon
                 return true;
             }
         }
+
+
 
 
     }

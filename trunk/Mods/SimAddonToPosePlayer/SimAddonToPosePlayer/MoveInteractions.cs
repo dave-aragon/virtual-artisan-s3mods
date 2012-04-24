@@ -44,6 +44,39 @@ namespace Misukisu.PosePlayerAddon
         }
     }
 
+    class MoveRightUserDefined : ImmediateInteraction<Sim, GameObject>
+    {
+        public static readonly InteractionDefinition Singleton = new Definition();
+
+        public override bool Run()
+        { float centimeters = MoveThings.AskUserInput("Move Left", "How many units? (100 = 1 Tile)");
+        if (centimeters > 0F)
+        {
+            MoveThings.TurnRight(Target);
+            MoveThings.MoveForward(this.Target, centimeters / 100);
+            MoveThings.TurnAround(Target);
+            MoveThings.TurnRight(Target);
+        }
+            return true;
+        }
+
+        private sealed class Definition : InteractionDefinition<Sim, GameObject, MoveRightUserDefined>
+        {
+            public override bool Test(Sim actor, GameObject target, bool isAutonomous, ref Sims3.SimIFace.GreyedOutTooltipCallback greyedOutTooltipCallback)
+            {
+                return PoseManager.IsPosing(target) && !isAutonomous;
+            }
+            public override string[] GetPath(bool isFemale)
+            {
+                return MoveThings.GetMenuPath();
+            }
+            public override string GetInteractionName(Sim actor, GameObject target, InteractionObjectPair iop)
+            {
+                return "Right...";
+            }
+        }
+    }
+
     class MoveLeft : ImmediateInteraction<Sim, GameObject>
     {
         public static readonly InteractionDefinition Singleton = new Definition();
@@ -70,6 +103,40 @@ namespace Misukisu.PosePlayerAddon
             public override string GetInteractionName(Sim actor, GameObject target, InteractionObjectPair iop)
             {
                 return "Left 1 Tile";
+            }
+        }
+    }
+
+    class MoveLeftUserDefined : ImmediateInteraction<Sim, GameObject>
+    {
+        public static readonly InteractionDefinition Singleton = new Definition();
+
+        public override bool Run()
+        {
+            float centimeters = MoveThings.AskUserInput("Move Left", "How many units? (100 = 1 Tile)");
+            if (centimeters > 0F)
+            {
+                MoveThings.TurnAround(Target);
+                MoveThings.TurnRight(Target);
+                MoveThings.MoveForward(this.Target, centimeters / 100);
+                MoveThings.TurnRight(Target);
+            }
+            return true;
+        }
+
+        private sealed class Definition : InteractionDefinition<Sim, GameObject, MoveLeftUserDefined>
+        {
+            public override bool Test(Sim actor, GameObject target, bool isAutonomous, ref Sims3.SimIFace.GreyedOutTooltipCallback greyedOutTooltipCallback)
+            {
+                return PoseManager.IsPosing(target) && !isAutonomous;
+            }
+            public override string[] GetPath(bool isFemale)
+            {
+                return MoveThings.GetMenuPath();
+            }
+            public override string GetInteractionName(Sim actor, GameObject target, InteractionObjectPair iop)
+            {
+                return "Left...";
             }
         }
     }
@@ -334,6 +401,38 @@ namespace Misukisu.PosePlayerAddon
         }
     }
 
+    class TurnAtAngle : ImmediateInteraction<Sim, GameObject>
+    {
+        public static readonly InteractionDefinition Singleton = new Definition();
+
+        public override bool Run()
+        {
+            float angle = MoveThings.AskUserInput("Turn To Global Angle", "Angle (1 - 360)");
+            if (angle > 0F)
+            {
+
+                MoveThings.Turn(this.Target, angle);
+            }
+            return true;
+        }
+
+        private sealed class Definition : InteractionDefinition<Sim, GameObject, TurnAtAngle>
+        {
+            public override bool Test(Sim actor, GameObject target, bool isAutonomous, ref Sims3.SimIFace.GreyedOutTooltipCallback greyedOutTooltipCallback)
+            {
+                return PoseManager.IsPosing(target) && !isAutonomous;
+            }
+            public override string[] GetPath(bool isFemale)
+            {
+                return MoveThings.GetTiltMenuPath();
+            }
+            public override string GetInteractionName(Sim actor, GameObject target, InteractionObjectPair iop)
+            {
+                return "Turn...";
+            }
+        }
+    }
+
     class TiltFaceUp : ImmediateInteraction<Sim, GameObject>
     {
         public static readonly InteractionDefinition Singleton = new Definition();
@@ -449,7 +548,7 @@ namespace Misukisu.PosePlayerAddon
 
         public override bool Run()
         {
-            MoveThings.Tilt(this.Target, 0.4109836f, 0.8137475f, 0.4109836f);
+            MoveThings.Tilt(this.Target, -0.4109836f, -0.8137475f, -0.4109836f);
             return true;
         }
 
@@ -469,7 +568,7 @@ namespace Misukisu.PosePlayerAddon
             }
         }
     }
-      
+
     class TiltFaceDown : ImmediateInteraction<Sim, GameObject>
     {
         public static readonly InteractionDefinition Singleton = new Definition();

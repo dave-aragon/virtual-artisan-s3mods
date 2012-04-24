@@ -19,16 +19,7 @@ namespace Misukisu.PosePlayerAddon
 
         protected static void InstallAddon(object sender, EventArgs e)
         {
-            if (IsPosePlayerAvailable())
-            {
-                new PoseManager();
-                EventTracker.AddListener(EventTypeId.kSimInstantiated, new ProcessEventDelegate(OnSimInstantiated));
-            }
-        }
-
-        protected static ListenerAction OnSimInstantiated(Event e)
-        {
-            return ListenerAction.Keep;
+           new PoseManager();
         }
 
         private static bool IsPosePlayerAvailable()
