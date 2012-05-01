@@ -43,26 +43,12 @@ namespace Misukisu.PosePlayerAddon
     class PoseFromMyList : Interaction<Sim, CmoPoseBox>
     {
         public static readonly InteractionDefinition Singleton = new Definition();
-        public static uint simMinutesToPose = 2;
 
         public override bool Run()
         {
             this.Target.ShowDialog();
             this.Target.MyListShow();
-            if (CmoPoseBox.mName == null || CmoPoseBox.mName == "")
-            {
-                return true;
-            }
-            this.Actor.OverlayComponent.UpdateInteractionFreeParts(AwarenessLevel.OverlayNone);
-            this.Actor.LookAtManager.DisableLookAts();
-            PoseManager.SetCurrentPose(Actor, CmoPoseBox.mName);
-            this.Actor.PlaySoloAnimation(CmoPoseBox.mName, true);
-            this.Actor.ResetAllAnimation();
-            this.Actor.PlaySoloAnimation(CmoPoseBox.mName, true);
-            this.Actor.ResetAllAnimation();
-            this.Actor.WaitForExitReason(3.40282347E+38f, ExitReason.UserCanceled);
-            this.Actor.LookAtManager.EnableLookAts();
-            return true;
+            return PoseManager.Pose(Actor, Target, CmoPoseBox.mName);
         }
 
         private sealed class Definition : InteractionDefinition<Sim, CmoPoseBox, PoseFromMyList>

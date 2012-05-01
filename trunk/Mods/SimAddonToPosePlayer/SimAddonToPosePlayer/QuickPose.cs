@@ -76,9 +76,9 @@ namespace Misukisu.PosePlayerAddon
                     break;
                 }
                 PoseManager.SetCurrentPose(Actor, poseData.Key);
-                Actor.PlaySoloAnimation(poseData.Key, true);
+                Target.PlaySoloAnimation(this.Actor.SimDescription.IsHuman, this.Actor, poseData.Key, true, ProductVersion.BaseGame);
                 Actor.ResetAllAnimation();
-                Actor.PlaySoloAnimation(poseData.Key, true);
+                Target.PlaySoloAnimation(this.Actor.SimDescription.IsHuman, this.Actor, poseData.Key, true, ProductVersion.BaseGame);
                 Actor.ResetAllAnimation();
                 bool userCanceled = Actor.WaitForExitReason(simMinutesToPose, ExitReason.UserCanceled);
                 if (userCanceled)
