@@ -48,6 +48,7 @@ namespace Misukisu.PosePlayerAddon
             if (aSim != null)
             {
                 aSim.AddInteraction(StartPoseFromList.Singleton);
+                aSim.AddInteraction(StartPoseByName.Singleton);
                 aSim.AddInteraction(StartPosingFromMyList.Singleton);
                 aSim.AddInteraction(StopPosing.Singleton);
                 aSim.AddInteraction(ReleaseAllPosingSims.Singleton);
@@ -57,11 +58,30 @@ namespace Misukisu.PosePlayerAddon
                 aSim.AddInteraction(PutPoseToList.Singleton);
                 aSim.AddInteraction(RemovePoseFromList.Singleton);
                 aSim.AddInteraction(MoveObject.Singleton);
+                //aSim.AddInteraction(React.Singleton);
                 aSim.AddInteraction(PoseLookingAt.Singleton);
                 aSim.AddInteraction(StopMovingObjects.Singleton);
 
                 AddMoveInteractions(aSim);
             }
+        }
+
+        public static bool Pose(Sim actor, CmoPoseBox poseBox, String poseName)
+        {
+            if (poseName == null || poseName == "")
+            {
+                return false;
+            }
+            SetCurrentPose(actor, poseName);
+            actor.OverlayComponent.UpdateInteractionFreeParts(AwarenessLevel.OverlayNone);
+            actor.LookAtManager.DisableLookAts();
+            poseBox.PlaySoloAnimation(actor.SimDescription.IsHuman, actor, poseName, true, ProductVersion.BaseGame);
+            actor.ResetAllAnimation();
+            poseBox.PlaySoloAnimation(actor.SimDescription.IsHuman, actor, poseName, true, ProductVersion.BaseGame);
+            actor.ResetAllAnimation();
+            actor.WaitForExitReason(3.40282347E+38f, ExitReason.UserCanceled);
+            actor.LookAtManager.EnableLookAts();
+            return true;
         }
 
         public static void AddMoveInteractions(GameObject gameObject)
@@ -223,6 +243,7 @@ namespace Misukisu.PosePlayerAddon
         {
             Target.LookAtManager.ClearAllLookAts(true);
             Target.AddExitReason(ExitReason.UserCanceled);
+            Target.InteractionQueue.CancelAllInteractionsByType(PoseByName.Singleton);
             Target.InteractionQueue.CancelAllInteractionsByType(PlayPoseFromList.Singleton);
             Target.InteractionQueue.CancelAllInteractionsByType(PoseFromMyList.Singleton);
             Target.InteractionQueue.CancelAllInteractionsByType(TakeSamePoseAs.Singleton);
@@ -254,6 +275,7 @@ namespace Misukisu.PosePlayerAddon
                     || currentAction is TakeSamePoseAs
                     || currentAction is PoseFromMyList
                     || currentAction is RepeatPoseWithLookAt
+                    || currentAction is PoseByName
                    )
                 {
                     return true;

@@ -33,6 +33,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AddonLoader.cs" />
+    <Compile Include="Debugger.cs" />
+    <Compile Include="PlayTextPose.cs" />
     <Compile Include="LocationVectors.cs" />
     <Compile Include="MoveObject.cs" />
     <Compile Include="MoveInteractions.cs" />
@@ -44,6 +46,7 @@
     <Compile Include="PutPoseToList.cs" />
     <Compile Include="QuickPose.cs" />
     <Compile Include="QuickPoseFromMyList.cs" />
+    <Compile Include="Reactor.cs" />
     <Compile Include="RepeatPoseWithLookAt.cs" />
     <Compile Include="StopPosing.cs" />
     <Compile Include="TakeSamePoseAs.cs" />

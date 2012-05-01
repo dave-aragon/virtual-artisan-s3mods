@@ -46,17 +46,17 @@ namespace Misukisu.PosePlayerAddon
         }
     }
 
-    class RepeatPoseWithLookAt : Interaction<Sim, IGameObject>
+    class RepeatPoseWithLookAt : Interaction<Sim, CmoPoseBox>
     {
         public static InteractionDefinition Singleton = new Definition();
 
-        public class Definition : InteractionDefinition<Sim, IGameObject, RepeatPoseWithLookAt>
+        public class Definition : InteractionDefinition<Sim, CmoPoseBox, RepeatPoseWithLookAt>
         {
-            public override string GetInteractionName(Sim actor, IGameObject target, InteractionObjectPair iop)
+            public override string GetInteractionName(Sim actor, CmoPoseBox target, InteractionObjectPair iop)
             {
                 return "Pose Looking At Other Sim";
             }
-            public override bool Test(Sim actor, IGameObject target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
+            public override bool Test(Sim actor, CmoPoseBox target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
                 return true;
             }
@@ -81,9 +81,9 @@ namespace Misukisu.PosePlayerAddon
             this.Actor.OverlayComponent.UpdateInteractionFreeParts(AwarenessLevel.OverlayUpperbody);
             this.Actor.LookAtManager.DisableLookAts();
             PoseManager.SetCurrentPose(Actor, poseData);
-            this.Actor.PlaySoloAnimation(poseData, true);
+            Target.PlaySoloAnimation(this.Actor.SimDescription.IsHuman, this.Actor, poseData, true, ProductVersion.BaseGame);
             this.Actor.ResetAllAnimation();
-            this.Actor.PlaySoloAnimation(poseData, true);
+            Target.PlaySoloAnimation(this.Actor.SimDescription.IsHuman, this.Actor, poseData, true, ProductVersion.BaseGame);
             this.Actor.ResetAllAnimation();
             this.Actor.WaitForExitReason(3.40282347E+38f, ExitReason.UserCanceled);
            

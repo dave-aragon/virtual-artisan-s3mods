@@ -6,6 +6,7 @@ using Sims3.Gameplay.Actors;
 using Sims3.Gameplay.Autonomy;
 using Sims3.Gameplay.Interfaces;
 using Sims3.SimIFace;
+using Sims3.Gameplay.Objects.CmoPoseBox;
 
 namespace Misukisu.PosePlayerAddon
 {
@@ -60,17 +61,17 @@ namespace Misukisu.PosePlayerAddon
         }
     }
 
-    public class TakeSamePoseAs : Interaction<Sim, IGameObject>
+    public class TakeSamePoseAs : Interaction<Sim, CmoPoseBox>
     {
         public static InteractionDefinition Singleton = new Definition();
 
-        public class Definition : InteractionDefinition<Sim, IGameObject, TakeSamePoseAs>
+        public class Definition : InteractionDefinition<Sim, CmoPoseBox, TakeSamePoseAs>
         {
-            public override string GetInteractionName(Sim actor, IGameObject target, InteractionObjectPair iop)
+            public override string GetInteractionName(Sim actor, CmoPoseBox target, InteractionObjectPair iop)
             {
                 return getPoseNameWithLastPoser();
             }
-            public override bool Test(Sim actor, IGameObject target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
+            public override bool Test(Sim actor, CmoPoseBox target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
                 return true;
             }
@@ -83,22 +84,13 @@ namespace Misukisu.PosePlayerAddon
             {
                 return false;
             }
-            string poseData = PoseManager.GetCurrentPose(poser);
-            if (poseData == null)
+            string poseName = PoseManager.GetCurrentPose(poser);
+            if (poseName == null)
             {
                 return false;
             }
-            
-            this.Actor.OverlayComponent.UpdateInteractionFreeParts(AwarenessLevel.OverlayNone);
-            this.Actor.LookAtManager.DisableLookAts();
-            PoseManager.SetCurrentPose(Actor, poseData);
-            this.Actor.PlaySoloAnimation(poseData, true);
-            this.Actor.ResetAllAnimation();
-            this.Actor.PlaySoloAnimation(poseData, true);
-            this.Actor.ResetAllAnimation();
-            this.Actor.WaitForExitReason(3.40282347E+38f, ExitReason.UserCanceled);
-            this.Actor.LookAtManager.EnableLookAts();
-            return true;
+
+            return PoseManager.Pose(Actor, Target, poseName);
         }
 
         public static string getPoseNameWithLastPoser()
