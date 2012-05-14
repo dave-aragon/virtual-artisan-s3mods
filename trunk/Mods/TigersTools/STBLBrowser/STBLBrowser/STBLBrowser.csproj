@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F4826A8F-9C2E-410B-B384-9C98CEA8C588}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>STBLBrowser</RootNamespace>
+    <AssemblyName>Stubble</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\DBPFBrowser\DBPFBrowser\DBPF\DBPFCompression.cs">
+      <Link>DBPF\DBPFCompression.cs</Link>
+    </Compile>
+    <Compile Include="..\..\DBPFBrowser\DBPFBrowser\DBPF\DBPFDataStream.cs">
+      <Link>DBPF\DBPFDataStream.cs</Link>
+    </Compile>
+    <Compile Include="..\..\DBPFBrowser\DBPFBrowser\DBPF\DBPFException.cs">
+      <Link>DBPF\DBPFException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\DBPFBrowser\DBPFBrowser\DBPF\DBPFFile.cs">
+      <Link>DBPF\DBPFFile.cs</Link>
+    </Compile>
+    <Compile Include="..\..\DBPFBrowser\DBPFBrowser\DBPF\DBPFIndex.cs">
+      <Link>DBPF\DBPFIndex.cs</Link>
+    </Compile>
+    <Compile Include="..\..\DBPFBrowser\DBPFBrowser\DBPF\DBPFIndexEntry.cs">
+      <Link>DBPF\DBPFIndexEntry.cs</Link>
+    </Compile>
+    <Compile Include="..\..\DBPFBrowser\DBPFBrowser\DBPF\DBPFReference.cs">
+      <Link>DBPF\DBPFReference.cs</Link>
+    </Compile>
+    <Compile Include="FindById.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FindById.Designer.cs">
+      <DependentUpon>FindById.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FNV.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FNV.Designer.cs">
+      <DependentUpon>FNV.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IdInput.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="IdInput.Designer.cs">
+      <DependentUpon>IdInput.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImportExport\ExportCSV.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ImportExport\ExportCSV.Designer.cs">
+      <DependentUpon>ExportCSV.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImportExport\ExportPackage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ImportExport\ExportPackage.Designer.cs">
+      <DependentUpon>ExportPackage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImportExport\ImportCSV.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ImportExport\ImportCSV.Designer.cs">
+      <DependentUpon>ImportCSV.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImportExport\IExport.cs" />
+    <Compile Include="NewString.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewString.Designer.cs">
+      <DependentUpon>NewString.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FindById.resx">
+      <DependentUpon>FindById.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FNV.resx">
+      <DependentUpon>FNV.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IdInput.resx">
+      <DependentUpon>IdInput.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImportExport\ExportCSV.resx">
+      <DependentUpon>ExportCSV.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImportExport\ExportPackage.resx">
+      <DependentUpon>ExportPackage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImportExport\ImportCSV.resx">
+      <DependentUpon>ImportCSV.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NewString.resx">
+      <DependentUpon>NewString.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TextSearch.resx">
+      <DependentUpon>TextSearch.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="STBLVault.cs" />
+    <Compile Include="STBLWriter.cs" />
+    <Compile Include="StubbleEntry.cs" />
+    <Compile Include="TextSearch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TextSearch.Designer.cs">
+      <DependentUpon>TextSearch.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Debug\HookLnS_d.dll">
+      <Link>HookLnS_d.dll</Link>
+    </None>
+    <Content Include="..\Release\HookLnS.dll">
+      <Link>HookLnS.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="STBL.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
