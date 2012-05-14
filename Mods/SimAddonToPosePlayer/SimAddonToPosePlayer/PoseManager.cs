@@ -58,7 +58,7 @@ namespace Misukisu.PosePlayerAddon
                 aSim.AddInteraction(PutPoseToList.Singleton);
                 aSim.AddInteraction(RemovePoseFromList.Singleton);
                 aSim.AddInteraction(MoveObject.Singleton);
-                //aSim.AddInteraction(React.Singleton);
+                aSim.AddInteraction(React.Singleton);
                 aSim.AddInteraction(PoseLookingAt.Singleton);
                 aSim.AddInteraction(StopMovingObjects.Singleton);
 

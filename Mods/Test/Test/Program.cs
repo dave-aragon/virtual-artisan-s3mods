@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Sims3.SimIFace;
+using System.Diagnostics;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
+using System.Threading;
+using System.IO;
+using Microsoft.Win32;
+
 
 namespace Test
 {
@@ -47,6 +54,25 @@ namespace Test
     class Program
     {
         static void Main(string[] args)
+        {
+            System.Diagnostics.Process[] plist = System.Diagnostics.Process.GetProcessesByName("TS3W");
+            Console.WriteLine("Processes found: " + plist.Length);
+            RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Sims\The Sims 3");
+            string basepath = key.GetValue("Install Dir") as string;
+            basepath = Path.Combine(basepath, "Game", "Bin", "TS3W.exe");
+            Console.WriteLine(basepath);
+            Console.ReadLine();
+        }
+
+        //C:\Program Files (x86)\Electronic Arts\The Sims 3\Game\Bin\TS3W.exe
+
+   
+
+        
+
+        
+
+        static void TestAngles(string[] args)
         {
             //RotateXZ();
 
