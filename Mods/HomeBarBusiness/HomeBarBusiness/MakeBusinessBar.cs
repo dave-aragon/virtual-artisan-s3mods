@@ -52,6 +52,11 @@ namespace Misukisu.HomeBarBusiness
                 {
                     return false;
                 }
+
+                if (target.mBartender != null)
+                {
+                    return false;
+                }
                 return true;
 
             }
