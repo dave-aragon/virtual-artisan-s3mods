@@ -23,6 +23,8 @@ namespace Misukisu.HomeBarBusiness
 
     public class TendHomeBar : Interaction<Sim, BarProfessional>
     {
+        public static Dictionary<string, EventListener> listeners = new Dictionary<string, EventListener>();
+
         public class Definition : InteractionDefinition<Sim, BarProfessional, TendHomeBar>, IAllowedOnClosedVenues
         {
 
@@ -101,6 +103,7 @@ namespace Misukisu.HomeBarBusiness
 
                         if (isBartender(bartender))
                         {
+                            int price = GetCostForDrink(order.Drink);
                             Lot lotCurrent = bartender.LotCurrent;
 
                             List<Sim> sims = lotCurrent.GetObjectsInRoom<Sim>(bartender.RoomId);
@@ -116,7 +119,8 @@ namespace Misukisu.HomeBarBusiness
                                     payerFound = true;
                                     if (!houseHold.Contains(current.SimDescription))
                                     {
-                                        PayDrink(current, bartender);
+                                        PayDrink(current, bartender, price);
+                                        //ActivateBusiness.debugger.Debug("OnDringOrder", current.Name + " paying " + price+" to bartender " + bartender.Name);
                                     }
                                     break;
                                 }
@@ -128,6 +132,7 @@ namespace Misukisu.HomeBarBusiness
                             if (!payerFound)
                             {
                                 bartender.ModifyFunds(15);
+                                //ActivateBusiness.debugger.Debug("OnDringOrder", "Paying " + price + " to bartender " + bartender.Name);
                             }
                         }
 
@@ -142,23 +147,51 @@ namespace Misukisu.HomeBarBusiness
             return ListenerAction.Keep;
         }
 
+        public static int GetCostForDrink(Bartending.Drink drink)
+        {
+            float num = 5f;
+            //ActivateBusiness.debugger.Debug("OnDringOrder", "drink is " + drink.ToString());
+            if (drink.IsDataDrink)
+            {
+                //ActivateBusiness.debugger.Debug("OnDringOrder", "Drinks is datadrink");
+                Bartending.DrinkData drinkData = Bartending.GetDrinkData(drink.DataKey);
+                if (drinkData != null)
+                {
+                    //ActivateBusiness.debugger.Debug("OnDringOrder", "datafound");
+                    num = (float)drinkData.Price;
+                }
+            }
+            else
+            {
+                //ActivateBusiness.debugger.Debug("OnDringOrder", "Drinks is mooddrink");
+                Bartending.MoodData moodData = Bartending.GetMoodData(drink.Mood);
+                if (moodData != null)
+                {
+                    //ActivateBusiness.debugger.Debug("OnDringOrder", "datafound");
+                    num = (float)moodData.Price;
+                }
+            }
 
-        public static void PayDrink(Sim actor, IActor bartender)
+
+            return (int)num;
+        }
+
+
+        public static void PayDrink(Sim actor, IActor bartender, int price)
         {
             //tipAmount = 0;
 
-            int num = 15;
 
-             //SkillManager skillManager = bartender.SkillManager;
-             //if (skillManager != null)
-             //{
-             //    Skill skill = skillManager.GetSkill<Skill>(SkillNames.Bartending);
-             //    if (skill != null)
-             //    {
-             //       int level = skill.SkillLevel;
-             //        for(int i =0; i < level
-             //    }
-             //}
+            //SkillManager skillManager = bartender.SkillManager;
+            //if (skillManager != null)
+            //{
+            //    Skill skill = skillManager.GetSkill<Skill>(SkillNames.Bartending);
+            //    if (skill != null)
+            //    {
+            //       int level = skill.SkillLevel;
+            //        for(int i =0; i < level
+            //    }
+            //}
             //if (Bartending.HasTabOpen(actor, bartender.LotCurrent))
             //{
             //    num = 0;
@@ -184,7 +217,7 @@ namespace Misukisu.HomeBarBusiness
             //else
             //{
 
-            if (num > actor.FamilyFunds)
+            if (price > actor.FamilyFunds)
             {
                 actor.ShowTNSIfSelectable(BarProfessional.LocalizeString(actor.IsFemale, "CantPayForDrink", new object[0]),
                     StyledNotification.NotificationStyle.kSimTalking, bartender.ObjectId, actor.ObjectId);
@@ -192,8 +225,8 @@ namespace Misukisu.HomeBarBusiness
             }
             else
             {
-                actor.ModifyFunds(-num);
-                bartender.ModifyFunds(num);
+                actor.ModifyFunds(-price);
+                bartender.ModifyFunds(price);
             }
 
             //int cost = num + tipAmount;
@@ -226,9 +259,22 @@ namespace Misukisu.HomeBarBusiness
 
         public override bool Run()
         {
-            EventTracker.RemoveListener();
-            EventTracker.AddListener(EventTypeId.kMixedDrink, new ProcessEventDelegate(TendHomeBar.OnDrinkOrdered), this.Actor);
-            AddNeededSkills(this.Actor);
+
+            EventListener listener = null;
+            if (listeners.TryGetValue(Actor.FullName, out listener))
+            {
+                if (EventTracker.ContainsListener(listener))
+                {
+                    EventTracker.RemoveListener(listener);
+                }
+                listeners.Remove(Actor.FullName);
+            }
+
+            listener = EventTracker.AddListener(EventTypeId.kMixedDrink, new ProcessEventDelegate(TendHomeBar.OnDrinkOrdered), this.Actor);
+            listeners.Add(Actor.FullName, listener);
+
+
+            //AddNeededSkills(this.Actor);
             MakeBusinessBar.EnableBarInteractions(Target);
             Sim mBartender = this.Target.mBartender;
             bool flag = false;
