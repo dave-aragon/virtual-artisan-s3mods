@@ -10,12 +10,13 @@ using Sims3.SimIFace;
 using Sims3.UI;
 using Sims3.Gameplay.Skills;
 using Sims3.SimIFace.RouteDestinations;
-using HomeBarBusiness;
 using Sims3.Gameplay.EventSystem;
 using Sims3.Gameplay.CelebritySystem;
 using Sims3.Gameplay.CAS;
 using Sims3.Gameplay.Interfaces;
 using Sims3.Gameplay;
+
+using Sims3.Gameplay.TuningValues;
 
 namespace Misukisu.HomeBarBusiness
 {
@@ -90,48 +91,145 @@ namespace Misukisu.HomeBarBusiness
         {
             try
             {
-                ActivateBusiness.debugger.Debug("order ", "order taken");
                 Sims3.Gameplay.Skills.Bartending.MixedDrinkEvent order = e as Sims3.Gameplay.Skills.Bartending.MixedDrinkEvent;
                 if (order != null)
                 {
-                    IActor actor = e.Actor;
+                    IActor bartender = e.Actor;
                     Household houseHold = Household.ActiveHousehold;
-                    if (actor.LotCurrent == houseHold.LotHome)
+                    if (bartender.LotCurrent == houseHold.LotHome)
                     {
-                        ActivateBusiness.debugger.Debug("order ", "drink was made here");
-                        BarProfessional bar = GlobalFunctions.GetClosestObject<BarProfessional>(actor, true, true, new List<BarProfessional>(), null);
-                        if (bar.mBartender == actor)
+
+                        if (isBartender(bartender))
                         {
-                            ActivateBusiness.debugger.Debug("order ", "drink was made here");
-                            foreach (Sim current in houseHold.LotHome.GetSims())
+                            Lot lotCurrent = bartender.LotCurrent;
+
+                            List<Sim> sims = lotCurrent.GetObjectsInRoom<Sim>(bartender.RoomId);
+                            bool payerFound = false;
+
+                            foreach (Sim current in sims)
                             {
-                                ActivateBusiness.debugger.Debug("order ", current.Name);
+
                                 InteractionInstance action = current.InteractionQueue.GetCurrentInteraction();
-                                if (action != null)
+                                //ActivateBusiness.debugger.Debug("Testing", "action is "+ action.ToString());
+                                if (action is BarProfessional.OrderDrink || action is BarProfessional.OrderDrinkOnResidentalLot)
                                 {
-                                    // TODO: try this, it should work now
-                                    ActivateBusiness.debugger.Debug("order ", "action: " + action.ToString());
+                                    payerFound = true;
+                                    if (!houseHold.Contains(current.SimDescription))
+                                    {
+                                        PayDrink(current, bartender);
+                                    }
+                                    break;
                                 }
+
+
+
+                            }
+
+                            if (!payerFound)
+                            {
+                                bartender.ModifyFunds(15);
                             }
                         }
+
                     }
                 }
                 string text = e.ToDetailedString();
-                ActivateBusiness.debugger.Debug("order ", text);
             }
             catch (Exception ex)
             {
-                ActivateBusiness.debugger.DebugError("order ", "failed!",ex);
+
             }
             return ListenerAction.Keep;
         }
 
 
+        public static void PayDrink(Sim actor, IActor bartender)
+        {
+            //tipAmount = 0;
+
+            int num = 15;
+
+             //SkillManager skillManager = bartender.SkillManager;
+             //if (skillManager != null)
+             //{
+             //    Skill skill = skillManager.GetSkill<Skill>(SkillNames.Bartending);
+             //    if (skill != null)
+             //    {
+             //       int level = skill.SkillLevel;
+             //        for(int i =0; i < level
+             //    }
+             //}
+            //if (Bartending.HasTabOpen(actor, bartender.LotCurrent))
+            //{
+            //    num = 0;
+            //}
+            //else
+            //{
+            //if (actor.HasTrait(Sims3.Gameplay.ActorSystems.TraitNames.WateringHoleRegular))
+            //{
+            //    num = (int)((float)num * TraitTuning.WateringHoleRegularPriceMultiplier);
+            //}
+            //}
+            //float celebrityDiscount = actor.CelebrityManager.GetCelebrityDiscount(true);
+            //tipAmount = Bartending.GetTipAmount(actor, instanceActor, drink, this.Target.LotCurrent.GetMetaAutonomyType, this.mDescription);
+
+            //if (Bartending.HasTabOpen(actor, actor.LotCurrent))
+            //{
+            //    Bartending.AddToTab(actor.LotCurrent, num);
+            //    //if (actor.IsSelectable)
+            //    //{
+            //    //    actor.ModifyFunds(-tipAmount);
+            //    //}
+            //}
+            //else
+            //{
+
+            if (num > actor.FamilyFunds)
+            {
+                actor.ShowTNSIfSelectable(BarProfessional.LocalizeString(actor.IsFemale, "CantPayForDrink", new object[0]),
+                    StyledNotification.NotificationStyle.kSimTalking, bartender.ObjectId, actor.ObjectId);
+
+            }
+            else
+            {
+                actor.ModifyFunds(-num);
+                bartender.ModifyFunds(num);
+            }
+
+            //int cost = num + tipAmount;
+            //if (!CelebrityManager.TryModifyFundsWithCelebrityDiscount(actor, bar, cost, celebrityDiscount, true))
+            //{
+            //    return false;
+            //}
+
+            //}
+
+        }
+
+
+        private static bool isBartender(IActor actor)
+        {
+            List<BarProfessional> bars = actor.LotCurrent.GetObjectsInRoom<BarProfessional>(actor.RoomId);
+
+            foreach (BarProfessional bar in bars)
+            {
+                if (bar.mBartender == actor)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+
+
         public override bool Run()
         {
+            EventTracker.RemoveListener();
             EventTracker.AddListener(EventTypeId.kMixedDrink, new ProcessEventDelegate(TendHomeBar.OnDrinkOrdered), this.Actor);
-            ActivateBusiness.debugger.Debug("order ", "Tending the bar now");
             AddNeededSkills(this.Actor);
+            MakeBusinessBar.EnableBarInteractions(Target);
             Sim mBartender = this.Target.mBartender;
             bool flag = false;
             if (this.Target.IsBartenderReplacement())
@@ -208,114 +306,10 @@ namespace Misukisu.HomeBarBusiness
             this.Actor.Posture = new BarProfessional.TendingPosture(this.Actor, this.Target, hasSwitchedIntoBarTendHomeBarerOutfit);
             this.Actor.BridgeOrigin = this.Actor.Posture.Idle();
             InteractionInstance continuation = BarProfessional.IdleTend.Singleton.CreateInstance(this.Target, this.Actor, base.GetPriority(), true, true);
-            ActivateBusiness.debugger.Debug("order ", "Going idletend");
             return base.TryPushAsContinuation(continuation);
         }
     }
 
-    //public class WaitForOrders : Interaction<Sim, BarProfessional>
-    //{
-    //    public class Definition : InteractionDefinition<Sim, BarProfessional, WaitForOrders>
-    //    {
-    //        public override string GetInteractionName(Sim actor, BarProfessional target, InteractionObjectPair iop)
-    //        {
-    //            return string.Empty;
-    //        }
-    //        public override bool Test(Sim a, BarProfessional target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
-    //        {
-    //            return a.Posture.Container == target && !a.Posture.HasBeenCanceled;
-    //        }
-    //    }
-    //    public static InteractionDefinition Singleton = new WaitForOrders.Definition();
-    //    public override void ConfigureInteraction()
-    //    {
-    //        base.Hidden = true;
-    //    }
-    //    public override bool Run()
-    //    {
-    //        ActivateBusiness.debugger.Debug("order ", "Tending the IDLE now");
-    //        if (!this.Target.RouteToBarAsBartender(this.Actor))
-    //        {
-    //            return false;
-    //        }
-    //        base.StandardEntry(false);
-    //        base.BeginCommodityUpdates();
-    //        base.EnterStateMachine("BarProfessional", "Enter", "x");
-    //        base.SetActor("barProfessional", this.Target);
-    //        base.AnimateSim("Tend - Tend Loop");
-    //        bool flag = this.DoLoop(ExitReason.Default, new InteractionInstance.InsideLoopFunction(this.CheckForNextInteraction), this.mCurrentStateMachine);
-    //        base.AnimateSim("Exit");
-    //        base.EndCommodityUpdates(flag);
-    //        base.StandardExit(false, false);
-    //        if (flag && this.Actor.InteractionQueue.GetNextInteraction() == null)
-    //        {
-    //            this.Actor.InteractionQueue.PushAsContinuation(WaitForOrders.Singleton, this.Target, true);
-    //        }
-
-    //        if (this.Actor.InteractionQueue.GetNextInteraction() != null)
-    //        {
-    //            InteractionInstance interaction = this.Actor.InteractionQueue.GetNextInteraction();
-    //            if (interaction.InteractionDefinition == BarProfessional.MakeDrink.Singleton || interaction.InteractionDefinition == BarProfessional.MakeRound.Singleton)
-    //            {
-    //                ActivateBusiness.debugger.Debug("order ", "make him pay! " + interaction.ToString());
-
-    //            }
-    //            else
-    //            {
-    //                ActivateBusiness.debugger.Debug("test ", "actino " + interaction.GetType().Name);
-    //            }
-    //        }
-    //        return flag;
-    //    }
-
-    //    public void CheckForNextInteraction(StateMachineClient smc, InteractionInstance.LoopData ld)
-    //    {
-    //        if (this.Actor.InteractionQueue.GetNextInteraction() != null)
-    //        {
-    //            this.Actor.AddExitReason(ExitReason.CanceledByScript);
-    //        }
-    //    }
-
-    //    public bool RunPaymentBehavior(Bartending.Drink drink, out int tipAmount)
-    //    {
-    //        tipAmount = 0;
-
-    //        Sim instanceActor = this.LinkedInteractionInstance.InstanceActor;
-    //        int num = 15;
-    //        //int num = BarProfessional.GetCost(this.mDescription, this.Target.LotCurrent.GetMetaAutonomyType, this.Actor, this.Target, true) * this.mNumberOfDrinks;
-    //        if (num == 0)
-    //        {
-    //            return true;
-    //        }
-    //        float celebrityDiscount = this.Actor.CelebrityManager.GetCelebrityDiscount(true);
-    //        //tipAmount = Bartending.GetTipAmount(this.Actor, instanceActor, drink, this.Target.LotCurrent.GetMetaAutonomyType, this.mDescription);
-    //        if (Bartending.HasTabOpen(this.Actor, this.Target.LotCurrent))
-    //        {
-    //            Bartending.AddToTab(this.Target.LotCurrent, num);
-    //            if (this.Actor.IsSelectable)
-    //            {
-    //                this.Actor.ModifyFunds(-tipAmount);
-    //            }
-    //        }
-    //        else
-    //        {
-    //            if (this.Actor.IsSelectable)
-    //            {
-    //                if (num > this.Actor.FamilyFunds)
-    //                {
-    //                    this.Actor.ShowTNSIfSelectable(BarProfessional.LocalizeString(this.Actor.IsFemale, "CantPayForDrink", new object[0]), StyledNotification.NotificationStyle.kSimTalking, instanceActor.ObjectId, this.Actor.ObjectId);
-    //                    return false;
-    //                }
-    //                int cost = num + tipAmount;
-    //                if (!CelebrityManager.TryModifyFundsWithCelebrityDiscount(this.Actor, this.Target, cost, celebrityDiscount, true))
-    //                {
-    //                    return false;
-    //                }
-    //            }
-    //        }
-    //        return true;
-    //    }
-    //}
 
 
 }
