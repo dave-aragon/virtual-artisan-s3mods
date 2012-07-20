@@ -34,7 +34,7 @@
   <ItemGroup>
     <Compile Include="Debugger.cs" />
     <Compile Include="HomeBarBusiness.cs" />
-    <Compile Include="InteractionQueueWithEvents.cs" />
+    <Compile Include="MakeBusinessBar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TendHomeBar.cs" />
   </ItemGroup>
