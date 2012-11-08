@@ -96,11 +96,11 @@ namespace Misukisu.HomeBarBusiness
                 Sims3.Gameplay.Skills.Bartending.MixedDrinkEvent order = e as Sims3.Gameplay.Skills.Bartending.MixedDrinkEvent;
                 if (order != null)
                 {
-                    IActor bartender = e.Actor;
+                    noworky
+                    Sim bartender = e.Actor as Sim;
                     Household houseHold = Household.ActiveHousehold;
-                    if (bartender.LotCurrent == houseHold.LotHome)
+                    if (bartender != null && bartender.LotCurrent == houseHold.LotHome)
                     {
-
                         if (isBartender(bartender))
                         {
                             int price = GetCostForDrink(order.Drink);

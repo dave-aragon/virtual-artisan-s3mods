@@ -18,6 +18,7 @@ using Sims3.Gameplay.Objects.CookingObjects.Misukisu;
 using Sims3.Gameplay.Core;
 using Sims3.Gameplay.Objects.FoodObjects;
 using Sims3.Gameplay;
+using Sims3.Gameplay.CAS;
 
 
 namespace Misukisu.Interactions
@@ -177,6 +178,15 @@ namespace Misukisu.Interactions
             }
             public override bool Test(Sim actor, BarProfessional target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
+                SimDescription theActor = actor.SimDescription;
+                if (theActor != null)
+                {
+                    if (theActor.IsVampire == false)
+                    {
+                        return false;
+                    }
+                }
+
                 if (!target.IsBartenderAvailable())
                 {
                     return false;
@@ -191,6 +201,7 @@ namespace Misukisu.Interactions
                 }
                 if (isAutonomous)
                 {
+                   
                     if (BarProfessional.IsRunningBarInteraction(actor))
                     {
                         return false;
