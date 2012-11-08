@@ -101,17 +101,7 @@ namespace Misukisu.PosePlayerAddon
             List<ObjectPicker.RowInfo> tableData = new List<ObjectPicker.RowInfo>();
 
             int roomId = sim.RoomId;
-            GameObject[] gameObjectsInLot = sim.LotCurrent.GetObjects<GameObject>();
-            foreach (GameObject gameObject in gameObjectsInLot)
-            {
-                if (gameObject.RoomId == roomId && !HasMoveInteraction(gameObject))
-                {
-                    ObjectPicker.RowInfo rowInfo = new ObjectPicker.RowInfo(gameObject, new List<ObjectPicker.ColumnInfo>());
-                    ThumbnailKey thumbnail = gameObject.GetThumbnailKey();
-                    rowInfo.ColumnInfo.Add(new ObjectPicker.ThumbAndTextColumn(thumbnail, gameObject.GetLocalizedName()));
-                    tableData.Add(rowInfo);
-                }
-            }
+            listAllObjectsInRoom(sim, tableData, roomId);
 
             List<ObjectPicker.TabInfo> list3 = new List<ObjectPicker.TabInfo>();
             list3.Add(new ObjectPicker.TabInfo("shop_all_r2", "Select An Object", tableData));
@@ -124,6 +114,21 @@ namespace Misukisu.PosePlayerAddon
                 return null;
             }
             return userSelection[0].Item as GameObject;
+        }
+
+        private void listAllObjectsInRoom(Sim sim, List<ObjectPicker.RowInfo> tableData, int roomId)
+        {
+            GameObject[] gameObjectsInLot = sim.LotCurrent.GetObjects<GameObject>();
+            foreach (GameObject gameObject in gameObjectsInLot)
+            {
+                if (gameObject.RoomId == roomId && !HasMoveInteraction(gameObject))
+                {
+                    ObjectPicker.RowInfo rowInfo = new ObjectPicker.RowInfo(gameObject, new List<ObjectPicker.ColumnInfo>());
+                    ThumbnailKey thumbnail = gameObject.GetThumbnailKey();
+                    rowInfo.ColumnInfo.Add(new ObjectPicker.ThumbAndTextColumn(thumbnail, gameObject.GetLocalizedName()));
+                    tableData.Add(rowInfo);
+                }
+            }
         }
 
         private bool HasMoveInteraction(GameObject gameObject)
