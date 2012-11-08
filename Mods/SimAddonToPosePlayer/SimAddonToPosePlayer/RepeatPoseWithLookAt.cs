@@ -10,6 +10,7 @@ using Sims3.Gameplay.ActorSystems;
 using Sims3.UI;
 using Sims3.Gameplay.Utilities;
 using Sims3.Gameplay.Objects.CmoPoseBox;
+using Sims3.Gameplay.Abstracts;
 
 namespace Misukisu.PosePlayerAddon
 {
@@ -64,7 +65,7 @@ namespace Misukisu.PosePlayerAddon
 
         public override bool Run()
         {
-            Sim lookAtTarget = ShowSimSelectionDialog(Actor);
+            GameObject lookAtTarget = ShowObjectSelectionDialog(Actor);
             if (lookAtTarget == null)
             {
                 return false;
@@ -85,12 +86,13 @@ namespace Misukisu.PosePlayerAddon
             this.Actor.ResetAllAnimation();
             Target.PlaySoloAnimation(this.Actor.SimDescription.IsHuman, this.Actor, poseData, true, ProductVersion.BaseGame);
             this.Actor.ResetAllAnimation();
+
             this.Actor.WaitForExitReason(3.40282347E+38f, ExitReason.UserCanceled);
-           
+            Actor.LookAtManager.EnableLookAts();
             return true;
         }
 
-        public static Sim ShowSimSelectionDialog(Sim sim)
+        public static GameObject ShowObjectSelectionDialog(Sim sim)
         {
             List<ObjectPicker.HeaderInfo> headers = new List<ObjectPicker.HeaderInfo>();
             headers.Add(new ObjectPicker.HeaderInfo("Sim", null, 400));
@@ -99,8 +101,8 @@ namespace Misukisu.PosePlayerAddon
             List<ObjectPicker.RowInfo> tableData = new List<ObjectPicker.RowInfo>();
 
             int roomId = sim.RoomId;
-            Sim[] gameObjectsInLot = sim.LotCurrent.GetObjects<Sim>();
-            foreach (Sim gameObject in gameObjectsInLot)
+            GameObject[] gameObjectsInLot = sim.LotCurrent.GetObjects<GameObject>();
+            foreach (GameObject gameObject in gameObjectsInLot)
             {
                 if (gameObject.RoomId == roomId && gameObject != sim)
                 {
@@ -112,16 +114,18 @@ namespace Misukisu.PosePlayerAddon
             }
 
             List<ObjectPicker.TabInfo> list3 = new List<ObjectPicker.TabInfo>();
-            list3.Add(new ObjectPicker.TabInfo("shop_all_r2", "Select A Sim To Look At", tableData));
+            list3.Add(new ObjectPicker.TabInfo("shop_all_r2", "Select Something To Look At", tableData));
             string buttonOk = Localization.LocalizeString("Ui/Caption/Global:Ok", new object[0]);
             string buttonCancel = Localization.LocalizeString("Ui/Caption/Global:Cancel", new object[0]);
             List<ObjectPicker.RowInfo> userSelection = BigObjectPickerDialog.Show(true, ModalDialog.PauseMode.PauseSimulator,
-                "Select A Sim To Look At", buttonOk, buttonCancel, list3, headers, 1);
+                "Select Something To Look At", buttonOk, buttonCancel, list3, headers, 1);
             if (userSelection == null || userSelection.Count < 1)
             {
                 return null;
             }
-            return userSelection[0].Item as Sim;
+            return userSelection[0].Item as GameObject;
         }
+
+
     }
 }

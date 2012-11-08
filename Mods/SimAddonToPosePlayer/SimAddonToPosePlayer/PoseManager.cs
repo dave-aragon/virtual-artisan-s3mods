@@ -276,6 +276,7 @@ namespace Misukisu.PosePlayerAddon
                     || currentAction is PoseFromMyList
                     || currentAction is RepeatPoseWithLookAt
                     || currentAction is PoseByName
+                    || currentAction is DoReact
                    )
                 {
                     return true;

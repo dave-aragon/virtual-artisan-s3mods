@@ -21,7 +21,6 @@ namespace Misukisu.PosePlayerAddon
         public override bool Run()
         {
             PoseManager.CancelAllPosingActions(Target);
-            // Reactor.React(Actor, Target, ReactionTypes.Angry);
             Target.InteractionQueue.AddNext(DoReact.Singleton.CreateInstance(
                 Actor, Target, new InteractionPriority(InteractionPriorityLevel.UserDirected), false, true));
             return true;
@@ -32,7 +31,7 @@ namespace Misukisu.PosePlayerAddon
         {
             public override bool Test(Sim actor, Sim target, bool isAutonomous, ref Sims3.SimIFace.GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
-                return PoseManager.IsPoseBoxAvailable();
+                return PoseManager.IsPosing(target) && !isAutonomous && PoseManager.IsPoseBoxAvailable();
             }
 
             public override string[] GetPath(bool isFemale)
@@ -42,7 +41,7 @@ namespace Misukisu.PosePlayerAddon
 
             public override string GetInteractionName(Sim actor, Sim target, InteractionObjectPair iop)
             {
-                return "Play Reaction";
+                return "Change Facial Expression";
             }
         }
     }
@@ -55,7 +54,7 @@ namespace Misukisu.PosePlayerAddon
         {
             public override string GetInteractionName(Sim actor, Sim target, InteractionObjectPair iop)
             {
-                return "Play Reaction";
+                return "Change Facial Expression";
             }
             public override bool Test(Sim actor, Sim target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
@@ -67,11 +66,11 @@ namespace Misukisu.PosePlayerAddon
         {
 
             List<ObjectListPickerInfo> Entries = ListExpressions();
-            string text = (string)ObjectListPickerDialog.Show("My List", Entries);
+            string text = (string)ObjectListPickerDialog.Show("Expression", Entries);
             if (text != null && text != "")
             {
                 ReactionTypes reaction = (ReactionTypes)Enum.Parse(typeof(ReactionTypes), text);
-               
+
                 Array reactionTypes = Enum.GetValues(typeof(ReactionTypes));
                 CustomOverlayData data = null;
                 CmoPoseBox box = PoseManager.FindPoseBox();
@@ -81,16 +80,13 @@ namespace Misukisu.PosePlayerAddon
                     return false;
                 }
                 Actor.LookAtManager.DisableLookAts();
+                PoseManager.SetCurrentPose(Actor, poseData);
                 box.PlaySoloAnimation(Actor.SimDescription.IsHuman, Actor, poseData, true, ProductVersion.BaseGame);
                 Actor.ResetAllAnimation();
-                //SetCurrentPose(actor, poseName);
-                Actor.OverlayComponent.UpdateInteractionFreeParts(AwarenessLevel.OverlayUpperbody);
+                Actor.OverlayComponent.UpdateInteractionFreeParts(AwarenessLevel.OverlayFace);//OverlayUpperbody);
                 StateMachineClient stateMachineClient = StateMachineClient.Acquire(Actor.ObjectId, "facial_idle", AnimationPriority.kAPDefault, true);
-                //StateMachineClient genericStateMachine = OverlayData.GetGenericStateMachine(Actor, false, false, true, false);
-                data = (CustomOverlayData)OverlayComponent.GetOverlayData(ReactionTypes.FacialFear, Actor);
-                //Debugger log = new Debugger(this);
-                //log.Debug(this, "Enterstate-" + data.EnterState);
-                //log.Debug(this, "Clip-" + data.AnimClipName);
+                data = (CustomOverlayData)OverlayComponent.GetOverlayData(reaction, Actor);
+
 
                 stateMachineClient.UseActorBridgeOrigins = false;
                 stateMachineClient.SetActor("x", Actor);
@@ -98,17 +94,11 @@ namespace Misukisu.PosePlayerAddon
                 stateMachineClient.RemoveEventHandler(new SacsEventHandler(Actor.OverlayComponent.ClearInteractionPartLevelCallback));
                 stateMachineClient.EnterState("x", "Enter");
                 stateMachineClient.SetProductVersion(data.ProductVersion);
-                //   stateMachineClient.SetParameter("AnimClipName", data.AnimClipName);
                 stateMachineClient.RequestState("x", data.AnimClipName);
                 //Actor.OverlayComponent.UpdateInteractionFreeParts(AwarenessLevel.OverlayFace);
 
                 box.PlaySoloAnimation(Actor.SimDescription.IsHuman, Actor, poseData, true, ProductVersion.BaseGame);
                 Actor.ResetAllAnimation();
-
-                //"SeatedOverlay"
-                //Actor.OverlayComponent.PlayReaction(reaction, null, true, jazzStateName, animationTime);
-                //this.Actor.IdleManager.PlayReactionAnimation(ReactionTypes.Awe);
-                //this.Actor.IdleManager.PlayReactionAnimation(ReactionTypes.FacialEvil);
 
                 Actor.WaitForExitReason(3.40282347E+38f, ExitReason.UserCanceled);
                 Actor.LookAtManager.EnableLookAts();
@@ -120,9 +110,9 @@ namespace Misukisu.PosePlayerAddon
         private static List<ObjectListPickerInfo> ListExpressions()
         {
             List<ObjectListPickerInfo> Entries = new List<ObjectListPickerInfo>();
-            string rType = ReactionTypes.FacialDepressed.ToString();
-            Entries.Add(new ObjectListPickerInfo(rType, rType));
-            rType = ReactionTypes.FacialAnger.ToString();
+           // string rType = ReactionTypes.FacialDepressed.ToString();
+            //Entries.Add(new ObjectListPickerInfo(rType, rType));
+            string rType = ReactionTypes.FacialAnger.ToString();
             Entries.Add(new ObjectListPickerInfo(rType, rType));
             rType = ReactionTypes.FacialDisgust.ToString();
             Entries.Add(new ObjectListPickerInfo(rType, rType));
