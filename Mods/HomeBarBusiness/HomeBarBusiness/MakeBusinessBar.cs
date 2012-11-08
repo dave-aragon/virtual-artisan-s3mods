@@ -21,10 +21,10 @@ using Sims3.Gameplay.TuningValues;
 namespace Misukisu.HomeBarBusiness
 {
 
-    public class MakeBusinessBar : Interaction<Sim, BarProfessional>
+    public class MakeBusinessBar : ImmediateInteraction<Sim, BarProfessional>
     {
 
-        public class Definition : InteractionDefinition<Sim, BarProfessional, MakeBusinessBar>, IAllowedOnClosedVenues
+        public class Definition : ImmediateInteractionDefinition<Sim, BarProfessional, MakeBusinessBar>, IAllowedOnClosedVenues
         {
 
             public override string GetInteractionName(Sim actor, BarProfessional target, InteractionObjectPair iop)

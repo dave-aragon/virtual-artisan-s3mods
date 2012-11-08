@@ -61,8 +61,7 @@ namespace Misukisu.HomeBarBusiness
 
             bar.RemoveInteractionByType(MakeBusinessBar.Singleton);
             bar.AddInteraction(MakeBusinessBar.Singleton);
-            //bar.RemoveInteractionByType(WaitForOrders.Singleton);
-            //bar.AddInteraction(WaitForOrders.Singleton);
+
         }
     }
 

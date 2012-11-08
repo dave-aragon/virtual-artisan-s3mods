@@ -32,6 +32,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AssignBartender.cs" />
+    <Compile Include="EmployeeCertificate.cs" />
+    <Compile Include="GoToALot.cs" />
+    <Compile Include="HomeBartender.cs" />
+    <Compile Include="BigObjectPickerDialog.cs" />
     <Compile Include="Debugger.cs" />
     <Compile Include="HomeBarBusiness.cs" />
     <Compile Include="MakeBusinessBar.cs" />
