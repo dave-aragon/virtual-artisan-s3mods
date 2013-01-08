@@ -39,6 +39,9 @@ namespace Misukisu.HomeBarBusiness
             this.mRoleGivingObject = bar;
             this.mSim.AssignedRole = this;
 
+           // float hourOfDay;
+          //  float hourOfDay2;
+           // roleGiverExtended.GetRoleTimes(out hourOfDay, out hourOfDay2);
             SetAlarms(19, 2);
             ValidateAndSetupOutfit();
             debugger.Debug(this, "role created for " + sim.FullName);

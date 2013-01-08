@@ -26,15 +26,15 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
             if (role != null)
             {
                 CourtesansPerfume perfume = role.GetPerfume();
-                Sim owner = perfume.SlaveOwner;
+                Sim owner = perfume.Pimp;
                 if (owner == null)
                 {
-                    perfume.SlaveOwner = this.Actor;
+                    perfume.Pimp = this.Actor;
                     Message.Sender.Show(base.Target, "I have obligations today, but I'll come to you tomorrow");
                 }
                 else if (Actor == owner)
                 {
-                    perfume.SlaveOwner = null;
+                    perfume.Pimp = null;
                 }
                 else
                 {
@@ -55,9 +55,9 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
                 CourtesansPerfume perfume = Courtesan.GetPerfume(target);
                 if (perfume != null)
                 {
-                    price = perfume.PricePerDay.ToString();
+                    price = perfume.PimpShare.ToString();
 
-                    owner = perfume.SlaveOwner;
+                    owner = perfume.Pimp;
                 }
 
                 string name = "Ask for personal fulltime service(§" + price + ")";
@@ -82,7 +82,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
                     CourtesansPerfume perfume = Courtesan.GetPerfume(target);
                     if (perfume != null)
                     {
-                        if (perfume.SlaveOwner == null)
+                        if (perfume.Pimp == null)
                         {
                             InteractionDefinition interaction = BuyWooHoo.Singleton;
                             result = Courtesan.IsTalkingTo(actor, target, result);

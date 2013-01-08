@@ -18,7 +18,7 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
     class GoToALot : Interaction<Sim, Sim>, IRouteFromInventoryOrSelfWithoutCarrying
     {
         // Fields
-        public static readonly ISoloInteractionDefinition Singleton = new Definition();
+        public static readonly InteractionDefinition Singleton = new Definition();
 
         // Methods
         public override bool Run()
@@ -29,15 +29,14 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
                 if ((assignedRole != null) && assignedRole.IsActive)
                 {
                     Lot target = null;
-                    CourtesansPerfume bottle = assignedRole.RoleGivingObject as CourtesansPerfume;
-                    if (bottle != null)
+                    GameObject roleGivingObject = assignedRole.RoleGivingObject as GameObject;
+                    if (roleGivingObject != null)
                     {
-                        target = bottle.GetTargetLot();
+                        target = roleGivingObject.LotCurrent;
                     }
 
                     if (target != null)
                     {
-
                         InteractionInstance instance = null;
                         if (target.IsCommunityLot)
                         {
@@ -49,51 +48,48 @@ namespace Misukisu.Sims3.Gameplay.Interactions.Paintedlady
                             instance = GoToLot.Singleton
                               .CreateInstance(target, base.Actor, base.GetPriority(), false, false);
                             // Greet to get inside, visitsituation to really do something inside 
-
+                          
                             if (VisitSituation.FindVisitSituationInvolvingGuest(base.Actor) == null)
                             {
                                 VisitSituation.Create(base.Actor, target);
                             }
                             base.Actor.GreetSimOnLot(target);
                         }
-
                         if (base.TryPushAsContinuation(instance))
                         {
                             assignedRole.UpdateFulfillingLot(target.LotId);
-
-                            if (Message.Sender.IsDebugging())
-                            {
-                                Message.Sender.Debug(this, "Sim called to lot " + target.Name);
-                            }
                             return true;
                         }
                     }
                     assignedRole.UpdateFulfillingLot(0L);
 
                 }
-                else
-                {
-                    if (Message.Sender.IsDebugging())
-                    {
-                        Message.Sender.Debug(this, "Role was not active " + base.Actor);
-                    }
-                }
+
             }
             catch (Exception ex)
             {
-                Message.Sender.ShowError(base.Actor, "Cannot take role sims to role lot", false, ex);
+                
             }
             return false;
         }
 
+
+
         // Nested Types
-        private sealed class Definition : SoloSimInteractionDefinition<GoToALot>
+        private sealed class Definition : InteractionDefinition<Sim, Sim, GoToALot>
         {
             // Methods
             public override bool Test(Sim a, Sim target, bool isAutonomous, ref GreyedOutTooltipCallback greyedOutTooltipCallback)
             {
-                if (a.SimDescription.HasActiveRole)
+               
+                if (isAutonomous)
                 {
+                    return false;
+                }
+                Role assignedRole = a.SimDescription.AssignedRole;
+                if (a.SimDescription.HasActiveRole && assignedRole.RoleGivingObject != null && a.LotCurrent != assignedRole.RoleGivingObject.LotCurrent)
+                {
+                  
                     return true;
                 }
                 return false;

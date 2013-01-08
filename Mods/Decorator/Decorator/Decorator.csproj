@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{2154D1E8-1CDF-45D1-BBAB-7FB4DF3F5CDB}</ProjectGuid>
+    <ProjectGuid>{C142B36F-3438-4572-93C9-7F4CF6A24A33}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PaintedLady</RootNamespace>
-    <AssemblyName>PaintedLady</AssemblyName>
+    <RootNamespace>Decorator</RootNamespace>
+    <AssemblyName>Decorator</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -32,53 +32,37 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AssignCourtesan.cs" />
     <Compile Include="BigObjectPickerDialog.cs" />
-    <Compile Include="BuyWooHoo.cs" />
-    <Compile Include="CourtesansPerfume.cs" />
     <Compile Include="Debugger.cs" />
-    <Compile Include="GoToALot.cs" />
-    <Compile Include="I18n.cs" />
-    <Compile Include="Message.cs" />
-    <Compile Include="Courtesan.cs" />
-    <Compile Include="PimpCourtesan.cs" />
+    <Compile Include="Decorator.cs" />
+    <Compile Include="MoveInteractions.cs" />
+    <Compile Include="MoveThings.cs" />
+    <Compile Include="MoveWithProxyInteractions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="AfterWooHooCleanup.cs" />
-    <Compile Include="ToggleTakeMistress.cs" />
-    <Compile Include="Texts.cs" />
-    <Compile Include="ToggleDebugger.cs" />
-    <Compile Include="TuneCourtesan.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="ScriptCore">
       <HintPath>..\..\..\..\..\..\..\..\Temp\References\ScriptCore.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="SimIFace">
       <HintPath>..\..\..\..\..\..\..\..\Temp\References\SimIFace.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="Sims3GameplayObjects">
       <HintPath>..\..\..\..\..\..\..\..\Temp\References\Sims3GameplayObjects.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="Sims3GameplaySystems">
       <HintPath>..\..\..\..\..\..\..\..\Temp\References\Sims3GameplaySystems.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="Sims3Metadata">
       <HintPath>..\..\..\..\..\..\..\..\Temp\References\Sims3Metadata.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="Sims3StoreObjects">
       <HintPath>..\..\..\..\..\..\..\..\Temp\References\Sims3StoreObjects.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="ui">
       <HintPath>..\..\..\..\..\..\..\..\Temp\References\ui.dll</HintPath>
-      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

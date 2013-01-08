@@ -12,10 +12,12 @@ using Misukisu.Sims3.Gameplay.Interactions.Paintedlady;
 using Sims3.Gameplay.Objects.Misukisu;
 using Misukisu.Paintedlady;
 using Sims3.Gameplay.Socializing;
+using Sims3.SimIFace;
+using Sims3.Gameplay.Utilities;
 
 namespace Sims3.Gameplay.Roles.Misukisu
 {
-    public class Courtesan : Pianist
+    public class Courtesan : Bouncer
     {
 
         public Courtesan()
@@ -33,6 +35,45 @@ namespace Sims3.Gameplay.Roles.Misukisu
         public Courtesan(RoleData data, SimDescription s, IRoleGiver roleGiver)
             : base(data, s, roleGiver)
         { }
+
+        public Courtesan(SimDescription sim, IRoleGiverExtended roleGiver)
+        {
+            this.mWorld = GameUtils.GetCurrentWorld();
+            this.mType = RoleType.Bouncer;
+            this.mSim = sim;
+            this.mRoleGivingObject = roleGiver;
+            this.mSim.AssignedRole = this;
+
+            float hourOfDay;
+            float hourOfDay2;
+            roleGiver.GetRoleTimes(out hourOfDay, out hourOfDay2);
+            SetAlarms(hourOfDay, hourOfDay2);
+            ValidateAndSetupOutfit();
+        }
+
+        public void SetAlarms(float startTime, float endTime)
+        {
+
+            int num = this.Data.StartTime.Length;
+            for (int i = 0; i < num; i++)
+            {
+                if (startTime != endTime)
+                {
+                    Lazy.Allocate<List<AlarmHandle>>(ref this.mAlarmHandles);
+                    AlarmHandle alarmHandle2 = AlarmManager.Global.AddAlarmDay(startTime, DaysOfTheWeek.All,
+                        new AlarmTimerCallback(this.StartRoleAlarmHandler), "Start NPC Role alarm index: " + i, AlarmType.AlwaysPersisted, this);
+                    AlarmManager.Global.AlarmWillYield(alarmHandle2);
+                    this.mAlarmHandles.Add(alarmHandle2);
+                    this.mAlarmHandles.Add(AlarmManager.Global.AddAlarmDay(endTime, DaysOfTheWeek.All,
+                        new AlarmTimerCallback(this.EndRole), "End NPC Role alarm index: " + i, AlarmType.AlwaysPersisted, this));
+                }
+            }
+        }
+
+        public override bool AllowToGoToOtherLots()
+        {
+            return true;
+        }
 
         public new void RemoveSimFromRole()
         {
@@ -75,7 +116,28 @@ namespace Sims3.Gameplay.Roles.Misukisu
 
         public override void SimulateRole(float minPassed)
         {
-            // No Push needed, sim will work on its on
+            if (base.IsActive && isRoleEnabledOnThisLot())
+            {
+                Sim createdSim = this.mSim.CreatedSim;
+                if (createdSim != null && base.RoleGivingObject != null && createdSim.LotCurrent == base.RoleGivingObject.LotCurrent)
+                {
+                    base.RoleGivingObject.PushRoleStartingInteraction(createdSim);
+                }
+            }
+        }
+
+        public bool isRoleEnabledOnThisLot()
+        {
+            Sim createdSim = this.mSim.CreatedSim;
+            if (createdSim != null && base.RoleGivingObject != null)
+            {
+                Lot lot = RoleGivingObject.LotCurrent;
+                if ((Household.ActiveHousehold.LotHome == lot) || (lot.IsCommunityLot))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public override bool IsStoryProgressionProtected
@@ -88,23 +150,29 @@ namespace Sims3.Gameplay.Roles.Misukisu
 
         public override void EndRole()
         {
-            bool isActive = base.IsActive;
-            base.RoleGivingObject.RemoveRoleGivingInteraction(base.mSim.CreatedSim);
-            UnprotectSimFromStoryProgression();
-            Sim createdSim = base.mSim.CreatedSim;
-            if (isActive && (createdSim != null))
+            if (isRoleEnabledOnThisLot())
             {
-                mIsActive = false;
-                // CreatedSim.Motives.RemoveMotive(kind);
-                createdSim.Motives.RestoreDecays();
-                createdSim.InteractionQueue.CancelAllInteractions();
-                //this.mSim.CreatedSim.SwitchToOutfitWithoutSpin(OutfitCategories.Everyday);
-                Sim.MakeSimGoHome(createdSim, false);
-                if (Message.Sender.IsDebugging())
+                bool isActive = base.IsActive;
+                base.RoleGivingObject.RemoveRoleGivingInteraction(base.mSim.CreatedSim);
+                UnprotectSimFromStoryProgression();
+
+                Sim createdSim = base.mSim.CreatedSim;
+                if (isActive && (createdSim != null))
                 {
-                    Message.Sender.Debug(this, "Sim " + mSim.FullName + " was sent home");
+                    mIsActive = false;
+                    // CreatedSim.Motives.RemoveMotive(kind);
+                    // createdSim.Motives.RestoreDecays();
+                    createdSim.InteractionQueue.CancelAllInteractions();
+                    //this.mSim.CreatedSim.SwitchToOutfitWithoutSpin(OutfitCategories.Everyday);
+                    createdSim.RemoveInteractionByType(GoToALot.Singleton);
+                    Sim.MakeSimGoHome(createdSim, false);
+                    if (Message.Sender.IsDebugging())
+                    {
+                        Message.Sender.Debug(this, "Sim " + mSim.FullName + " was sent home");
+                    }
                 }
             }
+
         }
 
 
@@ -145,6 +213,24 @@ namespace Sims3.Gameplay.Roles.Misukisu
 
         }
 
+        public static void forceSimToLot(Sim theSim)
+        {
+            InteractionInstance instance = GoToALot.Singleton.CreateInstance(
+                              theSim, theSim, new InteractionPriority(InteractionPriorityLevel.CriticalNPCBehavior), false, false);
+            theSim.InteractionQueue.AddAfterCheckingForDuplicates(instance);
+
+        }
+
+        private Lot getRoleLot()
+        {
+            Lot roleLot = null;
+            if (mRoleGivingObject != null)
+            {
+                roleLot = mRoleGivingObject.LotCurrent;
+            }
+            return roleLot;
+        }
+
         public override void StartRole()
         {
             if (Message.Sender.IsDebugging())
@@ -153,24 +239,28 @@ namespace Sims3.Gameplay.Roles.Misukisu
             }
             try
             {
-                if (!this.mIsActive && this.mSim.IsValidDescription)
+                if (isRoleEnabledOnThisLot())
                 {
-                    InstantiateSim();
-                    this.SwitchIntoOutfit();
-                    Sim sim = this.mSim.CreatedSim;
-                    if (sim != null)
+                    if (!this.mIsActive && this.mSim.IsValidDescription)
                     {
-                        AddNeededMotives();
-                        CourtesansPerfume perfume = GetPerfume();
-                        if (perfume != null)
+                        InstantiateSim();
+                        this.SwitchIntoOutfit();
+                        Sim sim = this.mSim.CreatedSim;
+                        if (sim != null)
                         {
-                            this.mIsActive = true;
-                            perfume.PayIfNecessary(sim);
-                            MakeSimComeToRoleLot();
-                            ProtectSimFromStoryProgression();
+                            AddNeededMotives();
+                            CourtesansPerfume perfume = GetPerfume();
+                            if (perfume != null)
+                            {
+                                this.mIsActive = true;
+                                sim.RemoveInteractionByType(GoToALot.Singleton);
+                                sim.AddInteraction(GoToALot.Singleton);
+                                MakeSimComeToRoleLot();
+                                ProtectSimFromStoryProgression();
 
-                            perfume.AddRoleGivingInteraction(sim);
-                            perfume.PushRoleStartingInteraction(sim);
+                                perfume.AddRoleGivingInteraction(sim);
+                                perfume.PushRoleStartingInteraction(sim);
+                            }
                         }
                     }
                 }
@@ -188,6 +278,14 @@ namespace Sims3.Gameplay.Roles.Misukisu
 
         public void MakeSimComeToRoleLot()
         {
+            if (mRoleGivingObject != null)
+            {
+                if (this.mSim.CreatedSim.LotCurrent == null || this.mSim.CreatedSim.LotCurrent != mRoleGivingObject.LotCurrent)
+                {
+                    forceSimToLot(this.mSim.CreatedSim);
+                }
+            }
+
             Lot roleLot = (base.RoleGivingObject as CourtesansPerfume).GetTargetLot();
 
             if (roleLot != null)
