@@ -86,7 +86,10 @@ namespace Misukisu.NoVampireGlow
         {
             if (sim.IsVampire && sim.CreatedSim != null)
             {
+                // old override must be removed first
                 World.ObjectSetVisualOverride(sim.CreatedSim.ObjectId, eVisualOverrideTypes.None, null);
+                //World.ObjectSetVisualOverride(sim.CreatedSim.ObjectId, eVisualOverrideTypes.Genie, null); // regular eyes
+                //World.ObjectSetVisualOverride(sim.CreatedSim.ObjectId, eVisualOverrideTypes.Werewolf, null); // regular skin
                 sim.OccultManager.UpdateOccultUI();
             }
         }
