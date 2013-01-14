@@ -60,10 +60,6 @@
       <HintPath>..\..\..\..\..\..\..\..\Temp\References\Sims3Metadata.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Sims3StoreObjects">
-      <HintPath>..\..\..\..\..\..\..\..\Temp\References\Sims3StoreObjects.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="ui">
